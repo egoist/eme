@@ -1,0 +1,17 @@
+html {
+  font-size: 12px;
+}
+
+body {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-family: Menlo,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New,monospace,serif;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  width: 100%;
+}
