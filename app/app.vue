@@ -1,3 +1,4 @@
+<style src="github-markdown-css"></style>
 <style src="./css/reset"></style>
 
 <template>

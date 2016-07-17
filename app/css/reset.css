@@ -1,12 +1,21 @@
 html {
-  font-size: 12px;
+  font-size: 14px;
 }
 
 body {
   margin: 0;
   font-size: 1rem;
   line-height: 1.5;
-  font-family: Menlo,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New,monospace,serif;
+}
+
+body,
+.CodeMirror {
+  font-family: -apple-system, BlinkMacSystemFont,
+               'avenir next', avenir,
+               helvetica, 'helvetica neue',
+               Ubuntu,
+               'segoe ui', arial,
+               sans-serif;
 }
 
 html,

@@ -19,7 +19,7 @@
       }
       .tab-title {
         margin-left: -80px;
-        -webkit-user-select: none;
+        -webkit-user-select: none ;
       }
     }
     &.single-tab {

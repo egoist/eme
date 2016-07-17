@@ -22,7 +22,7 @@
     <div class="editor">
       <textarea id="editor" v-el:editor></textarea>
     </div>
-    <div class="preview">
+    <div class="preview markdown-body">
       {{{ html }}}
     </div>
   </div>

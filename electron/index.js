@@ -22,15 +22,7 @@ function createWindow () {
     `file://${__dirname}/index.prod.html`
   )
 
-  if (isDev) {
-    BrowserWindow.addDevToolsExtension(path.join(__dirname, '../node_modules/devtron'))
 
-    const installExtension = require('electron-devtools-installer')
-
-    installExtension.default(installExtension.VUEJS_DEVTOOLS)
-      .then((name) => mainWindow.webContents.openDevTools())
-      .catch((err) => console.log('An error occurred: ', err))
-  }
 
   mainWindow.on('closed', function () {
     mainWindow = null

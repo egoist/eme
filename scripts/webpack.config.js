@@ -2,7 +2,7 @@
 const path = require('path')
 
 module.exports = {
-  entry: './app/index.js',
+  entry: ['./app/index.js'],
   output: {
     path: process.cwd() + '/electron/dist',
     filename: 'bundle.js'

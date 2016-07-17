@@ -10,7 +10,7 @@
     "start": "electron electron/",
     "build": "webpack --progress --config scripts/webpack.config.prod.js",
     "watch": "webpack --config scripts/webpack.config.js --watch",
-    "dev-server": "webpack-dev-server --config scripts/webpack.config.js --inline --hot"
+    "dev-server": "webpack-dev-server --colors --config scripts/webpack.config.js --inline --hot"
   },
   "repository": {
     "type": "git",
@@ -46,12 +46,12 @@
     "vue-html-loader": "^1.2.3",
     "vue-loader": "^8.5.3",
     "vue-style-loader": "^1.0.0",
-    "webpack": "^1.13.1",
-    "webpack-hot-server": "^0.4.3"
+    "webpack": "^1.13.1"
   },
   "dependencies": {
     "babel-runtime": "^6.9.2",
     "codemirror": "^5.16.0",
+    "github-markdown-css": "^2.3.0",
     "markdown-it": "^7.0.0",
     "vue": "^1.0.26"
   }
