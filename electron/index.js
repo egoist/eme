@@ -1,9 +1,24 @@
 'use strict'
 const path = require('path')
+const fs = require('fs')
 const {
   app,
   BrowserWindow
 } = require('electron')
+
+function checkFileExists(filePath){
+  try {
+    fs.statSync(preloadPath)
+  } catch (e) {
+    fs.writeFile(filePath)
+  } finally {
+    return true
+  }
+}
+
+let preloadPath = path.resolve(process.cwd(),'README.md')
+let preloadFile = checkFileExists(preloadPath)
+
 
 let mainWindow
 
