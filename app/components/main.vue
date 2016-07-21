@@ -36,6 +36,7 @@
   import 'codemirror/theme/base16-light'
   import 'codemirror/addon/edit/continuelist'
   import MarkdownIt from 'markdown-it'
+  import { remote, ipcRenderer } from 'electron'
 
   const md = new MarkdownIt()
 
@@ -48,11 +49,14 @@
     },
     ready() {
       this.initEditor()
+      this.listen()
     },
     methods: {
       initEditor() {
+        const initValue = remote.getGlobal('fileContent')
         const editor = CodeMirror.fromTextArea(this.$els.editor, {
           mode: 'gfm',
+          value: '',
           theme: 'base16-light',
           lineNumbers: false,
           matchBrackets: true,
@@ -65,6 +69,19 @@
         editor.on('change', e => {
           this.text = e.getValue()
           this.html = md.render(this.text)
+        })
+
+        editor.getDoc().setValue(initValue)
+      },
+      listen(){
+        ipcRenderer.on('edit', (event,message) => {
+          switch (message) {
+            case 'file-save':
+              ipcRenderer.send('save-file',this.text)
+              break;
+            default:
+              return
+          }
         })
       }
     }
