@@ -48,6 +48,12 @@ function createWindow () {
     mainWindow = null
   })
 
+
+}
+
+app.on('ready', createWindow)
+
+app.on('browser-window-focus', function(){
   globalShortcut.register('CommandOrControl+S', ()=> {
     mainWindow.webContents.send('edit','file-save')
   })
@@ -60,15 +66,18 @@ function createWindow () {
       },(result)=> {
       })  
   })
-}
+})
 
-app.on('ready', createWindow)
+app.on('browser-window-blur',function(){
+  globalShortcut.unregisterAll()
+})
 
 app.on('window-all-closed', function () {
   if (process.platform == 'darwin') {
     app.quit()
   }
 })
+
 
 app.on('activate', function () {
   if (mainWindow === null) {
