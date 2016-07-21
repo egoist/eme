@@ -36,6 +36,7 @@
   import 'codemirror/theme/base16-light'
   import 'codemirror/addon/edit/continuelist'
   import MarkdownIt from 'markdown-it'
+  import { remote } from 'electron'
 
   const md = new MarkdownIt()
 
@@ -51,8 +52,10 @@
     },
     methods: {
       initEditor() {
+        const initValue = remote.getGlobal('fileContent')
         const editor = CodeMirror.fromTextArea(this.$els.editor, {
           mode: 'gfm',
+          value: '',
           theme: 'base16-light',
           lineNumbers: false,
           matchBrackets: true,
@@ -66,6 +69,8 @@
           this.text = e.getValue()
           this.html = md.render(this.text)
         })
+
+        editor.getDoc().setValue(initValue)
       }
     }
   }

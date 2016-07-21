@@ -3,21 +3,25 @@ const path = require('path')
 const fs = require('fs')
 const {
   app,
-  BrowserWindow
+  BrowserWindow,
 } = require('electron')
 
 function checkFileExists(filePath){
   try {
     fs.statSync(preloadPath)
-  } catch (e) {
-    fs.writeFile(filePath)
-  } finally {
     return true
+  } catch (e) {
+    // fs.writeFile(filePath)
+    return false
   }
 }
 
 let preloadPath = path.resolve(process.cwd(),'README.md')
-let preloadFile = checkFileExists(preloadPath)
+let preloadFile = checkFileExists(preloadPath, '')
+if(preloadFile){
+  let fileContent = fs.readFileSync(preloadPath,'utf-8')
+  global.fileContent = fileContent
+}
 
 
 let mainWindow
@@ -36,8 +40,6 @@ function createWindow () {
     `file://${__dirname}/index.html` :
     `file://${__dirname}/index.prod.html`
   )
-
-
 
   mainWindow.on('closed', function () {
     mainWindow = null
