@@ -12,6 +12,16 @@ $ npm install
 $ npm run dev
 ```
 
+## Usage
+
+```bash
+# Install eme on global
+$ npm install eme -g
+
+# Use it
+$ eme
+```
+
 ## License
 
 MIT &copy; [EGOIST](https://github.com/egoist)
