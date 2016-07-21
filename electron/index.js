@@ -4,20 +4,23 @@ const fs = require('fs')
 const {
   app,
   BrowserWindow,
+  globalShortcut,
+  ipcMain,
+  dialog
 } = require('electron')
 
 function checkFileExists(filePath){
   try {
     fs.statSync(preloadPath)
-    return true
   } catch (e) {
-    // fs.writeFile(filePath)
-    return false
+    fs.writeFile(filePath)
+  } finally{
+    return true
   }
 }
 
 let preloadPath = path.resolve(process.cwd(),'README.md')
-let preloadFile = checkFileExists(preloadPath, '')
+let preloadFile = checkFileExists(preloadPath)
 if(preloadFile){
   let fileContent = fs.readFileSync(preloadPath,'utf-8')
   global.fileContent = fileContent
@@ -43,6 +46,19 @@ function createWindow () {
 
   mainWindow.on('closed', function () {
     mainWindow = null
+  })
+
+  globalShortcut.register('CommandOrControl+S', ()=> {
+    mainWindow.webContents.send('edit','file-save')
+  })
+
+  ipcMain.on('save-file', (event,message)=> {
+      fs.writeFile(preloadPath, message, 'utf-8')
+      dialog.showMessageBox(mainWindow,{
+        message: 'Save successful',
+        buttons: ['ok']
+      },(result)=> {
+      })  
   })
 }
 
