@@ -25,7 +25,7 @@ webpack.on('close', (code) => {
 })
 
 function runElectron() {
-  const electron = child.spawn('electron', ['electron/'])
+  const electron = child.spawn('npm', ['run', 'app'])
 
   electron.stdout.on('data', (data) => {
     console.log(`[electron] stdout: ${data}`)

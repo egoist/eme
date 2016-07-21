@@ -15,7 +15,7 @@ body,
                helvetica, 'helvetica neue',
                Ubuntu,
                'segoe ui', arial,
-               sans-serif;
+               sans-serif !important;
 }
 
 html,
