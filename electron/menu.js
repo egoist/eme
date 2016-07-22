@@ -10,6 +10,16 @@ const template = [
     label: 'File',
     submenu: [
       {
+        label: 'Open',
+        accelerator: 'CmdOrCtrl+O',
+        click(item, focusedWindow) {
+          focusedWindow.webContents.send('open-file')
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
         label: 'Save',
         accelerator: 'CmdOrCtrl+S',
         click(item, focusedWindow) {

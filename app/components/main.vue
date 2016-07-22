@@ -17,7 +17,7 @@
     }
   }
   .preview {
-    padding-right: 10px;
+    padding: 0 10px;
     .markdown-body {
       overflow: scroll;
     }
@@ -68,7 +68,7 @@
     data() {
       return {
         html: '',
-        saved: true
+        editor: null
       }
     },
     ready() {
@@ -78,7 +78,7 @@
     },
     methods: {
       initEditor() {
-        const editor = CodeMirror.fromTextArea(this.$els.editor, {
+        this.editor = CodeMirror.fromTextArea(this.$els.editor, {
           mode: 'gfm',
           theme: 'base16-light',
           lineNumbers: false,
@@ -89,7 +89,7 @@
           }
         })
 
-        editor.on('change', e => {
+        this.editor.on('change', e => {
           this.updateSaved(false)
           this.$store.dispatch('UPDATE_CONTENT', e.getValue())
           this.html = md.render(this.content)
@@ -111,35 +111,73 @@
         const previewPosition = codePort.scrollTop * ratio
         previewPort.scrollTop = previewPosition
       },
+      handleSave(cb) {
+        const save = filePath => {
+          this.$store.dispatch('UPDATE_FILE_PATH', filePath)
+          fs.writeFile(filePath, this.content, 'utf8', err => {
+            if (err) {
+              this.updateSaved(false)
+              alert(err)
+            } else {
+              console.log(`saved as ${filePath}`)
+              this.updateSaved(true)
+              if (cb) cb()
+            }
+          })
+        }
+
+        if (this.filePath) {
+          save(this.filePath)
+        } else {
+          remote.dialog.showSaveDialog({
+            filters: [
+              {name: 'Custom File Type', extensions: ['markdown', 'md', 'txt']}
+            ]
+          }, filePath => {
+            save(filePath)
+          })
+        }
+      },
+      handleOpen() {
+        remote.dialog.showOpenDialog({
+          properties: ['openFile'],
+          filters: [
+            {name: 'Custom File Type', extensions: ['markdown', 'md', 'txt']}
+          ]
+        }, files => {
+          const filePath = files[0]
+          fs.readFile(filePath, 'utf8', (err, content) => {
+            if (err) {
+              return console.log(err)
+            }
+            this.editor.getDoc().setValue(content)
+            this.$store.dispatch('UPDATE_CONTENT', content)
+            this.$store.dispatch('UPDATE_FILE_PATH', filePath)
+            this.updateSaved(true)
+          })
+        })
+      },
       listenIpc() {
         ipcRenderer.on('file-save', () => {
-          if (!this.filePath) {
-            remote.dialog.showSaveDialog({
-              filters: [
-                {name: 'Custom File Type', extensions: ['markdown', 'md', 'txt']}
-              ]
-            }, filename => {
-              this.$store.dispatch('UPDATE_FILE_PATH', filename)
-              fs.writeFile(filename, this.content, 'utf8', err => {
-                if (err) {
-                  this.updateSaved(false)
-                  alert(err)
-                } else {
-                  console.log(`saved as ${filename}`)
-                  this.updateSaved(true)
-                }
-              })
-            })
-          } else {
-            fs.writeFile(this.filePath, this.content, 'utf8', err => {
-              if (err) {
-                this.updateSaved(false)
-                alert(err)
-              } else {
-                console.log(`saved as ${this.filePath}`)
-                this.updateSaved(true)
+          this.handleSave()
+        })
+
+        ipcRenderer.on('open-file', () => {
+          if (!this.saved) {
+            remote.dialog.showMessageBox({
+              type: 'question',
+              title: 'EME',
+              message: 'Save current document before opening a new file?',
+              buttons: ['Save', 'Move on', 'Cancel']
+            }, clickedButton => {
+              if (clickedButton === 0) {
+                this.handleSave(() => this.handleOpen)
+              } else if (clickedButton === 1) {
+                this.handleOpen()
               }
             })
+          } else {
+            this.handleOpen()
           }
         })
       }
