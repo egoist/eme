@@ -3,7 +3,8 @@ const path = require('path')
 const {
   app,
   BrowserWindow,
-  Menu
+  Menu,
+  shell
 } = require('electron')
 
 const appMenu = require('./menu')
@@ -37,6 +38,11 @@ function createWindow () {
 app.on('ready', () => {
   Menu.setApplicationMenu(appMenu)
   createWindow()
+
+  mainWindow.webContents.on('new-window', (e, url) => {
+    e.preventDefault()
+    shell.openExternal(url)
+  })
 })
 
 app.on('window-all-closed', () => {
