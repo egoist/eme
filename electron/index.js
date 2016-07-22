@@ -26,11 +26,16 @@ function createWindow () {
     `file://${__dirname}/index.html`
   )
 
-
-
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+
+  if (isDev) {
+    const installExtension = require('electron-devtools-installer')
+    installExtension.default(installExtension.VUEJS_DEVTOOLS)
+      .then(name => console.log(`Added Extension:  ${name}`))
+      .catch(err => console.log('An error occurred: ', err))
+  }
 }
 
 app.on('ready', () => {
