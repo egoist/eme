@@ -9,6 +9,12 @@ module.exports = {
   },
   resolve: {
     extensions: ['', '.js', '.vue', '.css', '.json'],
+    alias: {
+      app: path.join(__dirname, '../app'),
+      utils: path.join(__dirname, '../app/utils'),
+      components: path.join(__dirname, '../app/components'),
+      css: path.join(__dirname, '../app/css')
+    }
   },
   module: {
     loaders: [

@@ -8,7 +8,7 @@
 
 <template>
   <footer class="footer">
-
+lol
   </footer>
 </template>
 

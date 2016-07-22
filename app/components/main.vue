@@ -1,19 +1,26 @@
 <style>
   .main {
+    height: calc(100% - 36px - 30px);
     display: flex;
-    height: calc(100% - 36px);
+  }
+  .editor, .preview {
+    height: 100%;
+    width: 50%;
+    overflow: scroll;
   }
   .editor {
-    overflow: auto;
-    width: 50%;
-    .CodeMirror {
+    cursor: text;
+    & .CodeMirror {
       background-color: white !important;
       padding: 0 10px;
       height: 100%;
     }
   }
   .preview {
-    width: 50%;
+    padding-right: 10px;
+    & .markdown-body {
+      overflow: scroll;
+    }
   }
 </style>
 
@@ -22,8 +29,10 @@
     <div class="editor">
       <textarea id="editor" v-el:editor></textarea>
     </div>
-    <div class="preview markdown-body">
-      {{{ html }}}
+    <div class="preview">
+      <div class="markdown-body">
+        {{{ html }}}
+      </div>
     </div>
   </div>
 </template>
@@ -36,6 +45,8 @@
   import 'codemirror/theme/base16-light'
   import 'codemirror/addon/edit/continuelist'
   import MarkdownIt from 'markdown-it'
+
+  import {$} from 'utils/dom'
 
   const md = new MarkdownIt()
 
@@ -65,7 +76,23 @@
         editor.on('change', e => {
           this.text = e.getValue()
           this.html = md.render(this.text)
+          this.handleScroll()
         })
+
+        $('.CodeMirror-scroll').addEventListener('scroll', this.handleScroll)
+      },
+      handleScroll(e) {
+        const codePort = e ? e.target : $('.CodeMirror-scroll')
+        const previewPort = $('.preview')
+        const markdownPort = $('.markdown-body')
+        const codeContent = $('.CodeMirror-sizer')
+
+        const codeHeight = codeContent.clientHeight - codePort.clientHeight
+        const markdownHeight = markdownPort.clientHeight
+        const ratio = markdownHeight / codeHeight
+
+        const previewPosition = codePort.scrollTop * ratio
+        previewPort.scrollTop = previewPosition
       }
     }
   }
