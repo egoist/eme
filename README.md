@@ -2,6 +2,8 @@
 
 Elegant Markdown Editor.
 
+![preview](https://ooo.0o0.ooo/2016/07/22/57923718bc051.png)
+
 ## Development
 
 ```bash
