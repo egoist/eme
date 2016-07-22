@@ -49,11 +49,10 @@
   import 'codemirror/theme/base16-light'
   import 'codemirror/addon/edit/continuelist'
   import 'codemirror/addon/scroll/simplescrollbars'
-  import MarkdownIt from 'markdown-it'
+  import md from 'utils/markdown'
 
   import {$} from 'utils/dom'
 
-  const md = new MarkdownIt()
 
   export default {
     vuex: {

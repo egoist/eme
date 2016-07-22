@@ -39,3 +39,8 @@ pre::-webkit-scrollbar-thumb {
   border-radius: 2px;
   border: 1px solid #e2e2e2;
 }
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 20px;
+}
