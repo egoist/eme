@@ -44,15 +44,15 @@
 </template>
 
 <script>
-  import tildify from 'tildify'
-
+  import path from 'path'
+  
   export default {
     vuex: {
       getters: {
         saved: state => state.editor.saved,
         filePath: state => {
           return state.editor.filePath ?
-            tildify(state.editor.filePath) :
+            path.basename(state.editor.filePath) :
             'untitled'
         }
       }
