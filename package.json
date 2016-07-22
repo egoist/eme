@@ -6,11 +6,15 @@
   "scripts": {
     "test": "npm test",
     "dev": "node tasks/dev.js",
+    "install:all": "npm install && cd electron && npm install",
     "app": "cd electron && NODE_ENV=development electron .",
     "start": "electron electron/",
     "build": "webpack --progress --config scripts/webpack.config.prod.js",
     "watch": "webpack --config scripts/webpack.config.dev.js --watch",
-    "dev-server": "node scripts/server.js"
+    "dev-server": "node scripts/server.js",
+    "build:macos": "electron-packager ./electron --overwrite --prune --platform=darwin --arch=x64 --out=dist --app-bundle-id=com.egoistian.eme --app-version=$npm_package_version && cd dist/EME-darwin-x64 && zip -ryq9 ../EME-darwin-${npm_package_version}.zip EME.app",
+    "build:linux": "electron-packager ./electron --overwrite --prune --platform=linux --arch=x64 --out=dist --app-bundle-id=com.egoistian.eme --app-version=$npm_package_version && cd dist/EME-linux-x64 && zip -ryq9 ../EME-linux-${npm_package_version}.zip *",
+    "build:windows": "electron-packager ./electron --overwrite --prune --platform=win32 --arch=ia32 --version-string.ProductName=$npm_package_productName --app-version=$npm_package_version"
   },
   "repository": {
     "type": "git",
@@ -34,6 +38,7 @@
     "css-loader": "^0.23.1",
     "devtron": "^1.2.1",
     "electron-devtools-installer": "^1.1.5",
+    "electron-packager": "^7.3.0",
     "electron-prebuilt": "^1.2.7",
     "json-loader": "^0.5.4",
     "postcss-import": "^8.1.2",

@@ -7,8 +7,8 @@ Elegant Markdown Editor.
 ## Development
 
 ```bash
-# Install dev dependencies
-$ npm install
+# Install all dependencies
+$ npm run install:all
 
 # Run in dev mode
 $ npm run dev
