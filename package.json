@@ -56,6 +56,7 @@
     "codemirror": "^5.16.0",
     "github-markdown-css": "^2.3.0",
     "markdown-it": "^7.0.0",
-    "vue": "^1.0.26"
+    "vue": "^1.0.26",
+    "vuex": "^1.0.0-rc.2"
   }
 }

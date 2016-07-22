@@ -27,7 +27,7 @@
 <template>
   <div class="main">
     <div class="editor">
-      <textarea id="editor" v-el:editor></textarea>
+      <textarea id="editor" v-el:editor>{{ content }}</textarea>
     </div>
     <div class="preview">
       <div class="markdown-body">
@@ -51,9 +51,13 @@
   const md = new MarkdownIt()
 
   export default {
+    vuex: {
+      getters: {
+        content: state => state.editor.content
+      }
+    },
     data() {
       return {
-        text: '',
         html: ''
       }
     },
@@ -74,8 +78,8 @@
         })
 
         editor.on('change', e => {
-          this.text = e.getValue()
-          this.html = md.render(this.text)
+          this.$store.dispatch('UPDATE_CONTENT', e.getValue())
+          this.html = md.render(this.content)
           this.handleScroll()
         })
 
