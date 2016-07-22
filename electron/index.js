@@ -22,8 +22,8 @@ function createWindow () {
 
   mainWindow.loadURL(
     isDev ?
-    `file://${__dirname}/index.html` :
-    `file://${__dirname}/index.prod.html`
+    `http://localhost:8082/index.html` :
+    `file://${__dirname}/index.html`
   )
 
 
