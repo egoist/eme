@@ -2,14 +2,14 @@
 const webpack = require('webpack')
 const config = require('./webpack.config')
 
-config.plugins = [
-  new webpack.HotModuleReplacementPlugin(),
+config.devtool = 'cheap-module-inline-source-map'
+config.plugins = config.plugins.concat([
   new webpack.NoErrorsPlugin(),
   /*eslint-disable */
   new webpack.DefinePlugin({
     __DEV__: true,
     'process.env': JSON.stringify('development')
   })
-]
+])
 
 module.exports = config

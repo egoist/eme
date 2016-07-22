@@ -1,5 +1,6 @@
 'use strict'
 const path = require('path')
+const webpack = require('webpack')
 
 module.exports = {
   entry: ['./app/index.js'],
@@ -50,5 +51,10 @@ module.exports = {
       require('postcss-mixins')
     ]
   },
-  target: 'electron'
+  target: 'electron',
+  plugins: [
+    new webpack.ExternalsPlugin('commonjs2', [
+      './vendor/markdown-it-katex'
+    ])
+  ]
 }

@@ -20,11 +20,7 @@ function createWindow () {
     titleBarStyle: 'hidden-inset'
   })
 
-  mainWindow.loadURL(
-    isDev ?
-    `http://localhost:8082/index.html` :
-    `file://${__dirname}/index.html`
-  )
+  mainWindow.loadURL(`file://${__dirname}/index.html`)
 
   mainWindow.on('closed', () => {
     mainWindow = null

@@ -6,10 +6,10 @@
   "scripts": {
     "test": "npm test",
     "dev": "node tasks/dev.js",
-    "app": "NODE_ENV=development electron electron/",
+    "app": "cd electron && NODE_ENV=development electron .",
     "start": "electron electron/",
     "build": "webpack --progress --config scripts/webpack.config.prod.js",
-    "watch": "webpack --config scripts/webpack.config.js --watch",
+    "watch": "webpack --config scripts/webpack.config.dev.js --watch",
     "dev-server": "node scripts/server.js"
   },
   "repository": {
@@ -48,12 +48,11 @@
     "vue-loader": "^8.5.3",
     "vue-style-loader": "^1.0.0",
     "webpack": "^1.13.1",
-    "webpack-hot-middleware": "^2.12.1",
-    "webpack-hot-server": "^0.4.3"
+    "webpack-hot-middleware": "^2.12.1"
   },
   "dependencies": {
     "babel-runtime": "^6.9.2",
-    "codemirror": "^5.16.0",
+    "codemirror": "^5.17.0",
     "github-markdown-css": "^2.3.0",
     "markdown-it": "^7.0.0",
     "markdown-it-task-lists": "^1.4.0",

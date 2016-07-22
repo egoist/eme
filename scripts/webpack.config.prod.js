@@ -2,7 +2,7 @@
 const webpack = require('webpack')
 const config = require('./webpack.config')
 
-config.plugins = [
+config.plugins = config.plugins.concat([
   new webpack.ExternalsPlugin('commonjs', ['electron']),
   new webpack.optimize.OccurenceOrderPlugin(),
   new webpack.optimize.UglifyJsPlugin({
@@ -17,6 +17,6 @@ config.plugins = [
       'NODE_ENV': JSON.stringify('production')
     }
   })
-]
+])
 
 module.exports = config
