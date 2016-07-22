@@ -175,7 +175,7 @@
               buttons: ['Yes', 'No', 'Cancel']
             }, clickedButton => {
               if (clickedButton === 0) {
-                this.handleSave(() => this.handleOpen)
+                this.handleSave(this.handleOpen)
               } else if (clickedButton === 1) {
                 this.handleOpen()
               }
