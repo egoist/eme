@@ -134,7 +134,7 @@
         } else {
           remote.dialog.showSaveDialog({
             filters: [
-              {name: 'Custom File Type', extensions: ['markdown', 'md', 'txt']}
+              {name: 'Markdown', extensions: ['markdown', 'md']}
             ]
           }, filePath => {
             save(filePath)
@@ -145,7 +145,7 @@
         remote.dialog.showOpenDialog({
           properties: ['openFile'],
           filters: [
-            {name: 'Custom File Type', extensions: ['markdown', 'md', 'txt']}
+            {name: 'Markdown', extensions: ['markdown', 'md']}
           ]
         }, files => {
           const filePath = files[0]
