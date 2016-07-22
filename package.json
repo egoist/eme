@@ -1,6 +1,5 @@
 {
   "name": "eme",
-  "version": "0.0.1",
   "description": "elegant markdown editor",
   "main": "electron/index.js",
   "scripts": {
@@ -12,9 +11,10 @@
     "build": "webpack --progress --config scripts/webpack.config.prod.js",
     "watch": "webpack --config scripts/webpack.config.dev.js --watch",
     "dev-server": "node scripts/server.js",
-    "build:macos": "electron-packager ./electron --overwrite --prune --platform=darwin --arch=x64 --out=dist --app-bundle-id=com.egoistian.eme --app-version=$npm_package_version && cd dist/EME-darwin-x64 && zip -ryq9 ../EME-darwin-${npm_package_version}.zip EME.app",
-    "build:linux": "electron-packager ./electron --overwrite --prune --platform=linux --arch=x64 --out=dist --app-bundle-id=com.egoistian.eme --app-version=$npm_package_version && cd dist/EME-linux-x64 && zip -ryq9 ../EME-linux-${npm_package_version}.zip *",
-    "build:windows": "electron-packager ./electron --overwrite --prune --platform=win32 --arch=ia32 --version-string.ProductName=$npm_package_productName --app-version=$npm_package_version"
+    "macos": "node tasks/build.js macos",
+    "linux": "node tasks/build.js linux",
+    "windows": "node tasks/build.js windows",
+    "all": "node tasks/build.js all"
   },
   "repository": {
     "type": "git",
@@ -41,12 +41,13 @@
     "electron-packager": "^7.3.0",
     "electron-prebuilt": "^1.2.7",
     "json-loader": "^0.5.4",
+    "minimist": "^1.2.0",
     "postcss-import": "^8.1.2",
     "postcss-loader": "^0.9.1",
     "postcss-mixins": "^5.0.0",
     "postcss-nested": "^1.0.0",
     "postcss-simple-vars": "^3.0.0",
-    "scripy": "^0.2.0",
+    "scripy": "^0.2.1",
     "style-loader": "^0.13.1",
     "vue-hot-reload-api": "^1.3.3",
     "vue-html-loader": "^1.2.3",
