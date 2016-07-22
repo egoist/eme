@@ -87,6 +87,7 @@
           matchBrackets: true,
           lineWrapping: true,
           scrollbarStyle: 'simple',
+          autofocus: true,
           extraKeys: {
             "Enter": "newlineAndIndentContinueMarkdownList"
           }
