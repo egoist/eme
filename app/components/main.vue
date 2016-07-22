@@ -1,3 +1,5 @@
+<style src="../css/editor-scrollbar"></style>
+
 <style>
   .main {
     height: calc(100% - 36px - 30px);
@@ -6,7 +8,7 @@
   .editor, .preview {
     height: 100%;
     width: 50%;
-    overflow: scroll;
+    overflow: auto;
   }
   .editor {
     cursor: text;
@@ -18,8 +20,8 @@
   }
   .preview {
     padding: 0 10px;
-    .markdown-body {
-      overflow: scroll;
+    &::-webkit-scrollbar {
+      width: 0;
     }
   }
 </style>
@@ -46,6 +48,7 @@
   import 'codemirror/mode/gfm/gfm'
   import 'codemirror/theme/base16-light'
   import 'codemirror/addon/edit/continuelist'
+  import 'codemirror/addon/scroll/simplescrollbars'
   import MarkdownIt from 'markdown-it'
 
   import {$} from 'utils/dom'
@@ -84,6 +87,7 @@
           lineNumbers: false,
           matchBrackets: true,
           lineWrapping: true,
+          scrollbarStyle: 'simple',
           extraKeys: {
             "Enter": "newlineAndIndentContinueMarkdownList"
           }
@@ -167,8 +171,8 @@
             remote.dialog.showMessageBox({
               type: 'question',
               title: 'EME',
-              message: 'Save current document before opening a new file?',
-              buttons: ['Save', 'Move on', 'Cancel']
+              message: 'Save changes to file?',
+              buttons: ['Yes', 'No', 'Cancel']
             }, clickedButton => {
               if (clickedButton === 0) {
                 this.handleSave(() => this.handleOpen)
