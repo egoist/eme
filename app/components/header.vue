@@ -1,6 +1,7 @@
 <style>
   $header-height: 36px;
   .header {
+    font-size: 12px;
     display: flex;
     height: $header-height;
     padding-left: 80px;
@@ -16,6 +17,18 @@
         -webkit-user-select: none ;
       }
     }
+
+    .unsaved-indicator {
+      height: 5px;
+      width: 5px;
+      background-color: blue;
+      border-radius: 50%;
+      display: inline-block;
+      margin-left: 5px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
   }
 </style>
 
@@ -23,17 +36,25 @@
   <header class="header">
     <div class="tab">
       <span class="tab-title">
-        untitled
+        {{ filePath || 'untitled' }}
+        <span class="unsaved-indicator" v-show="!saved"></span>
       </span>
     </div>
   </header>
 </template>
 
 <script>
+  import tildify from 'tildify'
+
   export default {
-    data() {
-      return {
-        tabs: []
+    vuex: {
+      getters: {
+        saved: state => state.editor.saved,
+        filePath: state => {
+          return state.editor.filePath ?
+            tildify(state.editor.filePath) :
+            'untitled'
+        }
       }
     }
   }

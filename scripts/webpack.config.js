@@ -49,5 +49,6 @@ module.exports = {
       require('postcss-import')(),
       require('postcss-mixins')
     ]
-  }
+  },
+  target: 'electron'
 }

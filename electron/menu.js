@@ -7,6 +7,18 @@ const {
 
 const template = [
   {
+    label: 'File',
+    submenu: [
+      {
+        label: 'Save',
+        accelerator: 'CmdOrCtrl+S',
+        click(item, focusedWindow) {
+          focusedWindow.webContents.send('file-save')
+        }
+      }
+    ]
+  },
+  {
     label: 'Edit',
     submenu: [
       {
@@ -65,19 +77,34 @@ const template = [
     role: 'window',
     submenu: [
       {
+        label: 'Close',
+        accelerator: 'CmdOrCtrl+W',
+        role: 'close'
+      },
+      {
+        label: 'Minimize',
+        accelerator: 'CmdOrCtrl+M',
         role: 'minimize'
       },
       {
-        role: 'close'
+        label: 'Zoom',
+        role: 'zoom'
       },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Bring All to Front',
+        role: 'front'
+      }
     ]
   },
   {
     role: 'help',
     submenu: [
       {
-        label: 'Learn More',
-        click() { shell.openExternal('http://github.com/egoist/eme') }
+        label: 'Report bugs',
+        click() { shell.openExternal('http://github.com/egoist/eme/issues') }
       },
     ]
   },
@@ -118,30 +145,6 @@ if (process.platform === 'darwin') {
       },
     ]
   })
-  // Window menu.
-  template[3].submenu = [
-    {
-      label: 'Close',
-      accelerator: 'CmdOrCtrl+W',
-      role: 'close'
-    },
-    {
-      label: 'Minimize',
-      accelerator: 'CmdOrCtrl+M',
-      role: 'minimize'
-    },
-    {
-      label: 'Zoom',
-      role: 'zoom'
-    },
-    {
-      type: 'separator'
-    },
-    {
-      label: 'Bring All to Front',
-      role: 'front'
-    }
-  ]
 }
 
 module.exports = Menu.buildFromTemplate(template)

@@ -10,7 +10,7 @@
   }
   .editor {
     cursor: text;
-    & .CodeMirror {
+    .CodeMirror {
       background-color: white !important;
       padding: 0 10px;
       height: 100%;
@@ -18,7 +18,7 @@
   }
   .preview {
     padding-right: 10px;
-    & .markdown-body {
+    .markdown-body {
       overflow: scroll;
     }
   }
@@ -38,6 +38,8 @@
 </template>
 
 <script>
+  import fs from 'fs'
+  import {ipcRenderer, remote} from 'electron'
   import CodeMirror from 'codemirror'
   import 'codemirror/lib/codemirror.css'
   import 'codemirror/mode/markdown/markdown'
@@ -53,16 +55,26 @@
   export default {
     vuex: {
       getters: {
-        content: state => state.editor.content
+        content: state => state.editor.content,
+        filePath: state => state.editor.filePath,
+        saved: state => state.editor.saved
+      },
+      actions: {
+        updateSaved({dispatch}, saved) {
+          dispatch('UPDATE_SAVE_STATUS', saved)
+        }
       }
     },
     data() {
       return {
-        html: ''
+        html: '',
+        saved: true
       }
     },
     ready() {
       this.initEditor()
+
+      this.listenIpc()
     },
     methods: {
       initEditor() {
@@ -78,6 +90,7 @@
         })
 
         editor.on('change', e => {
+          this.updateSaved(false)
           this.$store.dispatch('UPDATE_CONTENT', e.getValue())
           this.html = md.render(this.content)
           this.handleScroll()
@@ -97,6 +110,38 @@
 
         const previewPosition = codePort.scrollTop * ratio
         previewPort.scrollTop = previewPosition
+      },
+      listenIpc() {
+        ipcRenderer.on('file-save', () => {
+          if (!this.filePath) {
+            remote.dialog.showSaveDialog({
+              filters: [
+                {name: 'Custom File Type', extensions: ['markdown', 'md', 'txt']}
+              ]
+            }, filename => {
+              this.$store.dispatch('UPDATE_FILE_PATH', filename)
+              fs.writeFile(filename, this.content, 'utf8', err => {
+                if (err) {
+                  this.updateSaved(false)
+                  alert(err)
+                } else {
+                  console.log(`saved as ${filename}`)
+                  this.updateSaved(true)
+                }
+              })
+            })
+          } else {
+            fs.writeFile(this.filePath, this.content, 'utf8', err => {
+              if (err) {
+                this.updateSaved(false)
+                alert(err)
+              } else {
+                console.log(`saved as ${this.filePath}`)
+                this.updateSaved(true)
+              }
+            })
+          }
+        })
       }
     }
   }
