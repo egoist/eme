@@ -1,9 +1,9 @@
 .CodeMirror-simplescroll-horizontal div, .CodeMirror-simplescroll-vertical div {
   position: absolute;
-  background: #ccc;
+  background: #f0f0f0;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  border: 1px solid #bbb;
+  border: 1px solid #e2e2e2;
   border-radius: 2px;
 }
 
@@ -25,7 +25,9 @@
 .CodeMirror-simplescroll-vertical {
   right: 0; top: 0;
   width: 8px;
+  background-color: transparent;
   visibility: hidden;
+  cursor: default;
 }
 .editor:hover .CodeMirror-simplescroll-vertical {
   visibility: visible;

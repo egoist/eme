@@ -28,3 +28,14 @@ body,
   height: 100%;
   width: 100%;
 }
+
+pre::-webkit-scrollbar {
+  background-color: transparent;
+  height: 8px;
+}
+
+pre::-webkit-scrollbar-thumb {
+  background-color: #f0f0f0;
+  border-radius: 2px;
+  border: 1px solid #e2e2e2;
+}
