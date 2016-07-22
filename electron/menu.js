@@ -25,6 +25,13 @@ const template = [
         click(item, focusedWindow) {
           focusedWindow.webContents.send('file-save')
         }
+      },
+      {
+        label: 'Save As',
+        accelerator: 'CmdOrCtrl+S+Shift',
+        click(item, focusedWindow) {
+          focusedWindow.webContents.send('file-save-as')
+        }
       }
     ]
   },

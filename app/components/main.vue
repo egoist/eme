@@ -114,32 +114,46 @@
         const previewPosition = codePort.scrollTop * ratio
         previewPort.scrollTop = previewPosition
       },
+      save(filePath, cb) {
+        this.$store.dispatch('UPDATE_FILE_PATH', filePath)
+        fs.writeFile(filePath, this.content, 'utf8', err => {
+          if (err) {
+            this.updateSaved(false)
+            console.log(err)
+          } else {
+            console.log(`saved as ${filePath}`)
+            this.updateSaved(true)
+            if (cb) cb()
+          }
+        })
+      },
       handleSave(cb) {
-        const save = filePath => {
-          this.$store.dispatch('UPDATE_FILE_PATH', filePath)
-          fs.writeFile(filePath, this.content, 'utf8', err => {
-            if (err) {
-              this.updateSaved(false)
-              alert(err)
-            } else {
-              console.log(`saved as ${filePath}`)
-              this.updateSaved(true)
-              if (cb) cb()
-            }
-          })
-        }
-
         if (this.filePath) {
-          save(this.filePath)
+          this.save(this.filePath, cb)
         } else {
           remote.dialog.showSaveDialog({
             filters: [
               {name: 'Markdown', extensions: ['markdown', 'md']}
             ]
           }, filePath => {
-            save(filePath)
+            this.save(filePath, cb)
           })
         }
+      },
+      handleSaveAs() {
+        remote.dialog.showSaveDialog({
+          filters: [
+            {name: 'Markdown', extensions: ['markdown', 'md']}
+          ]
+        }, filePath => {
+          fs.writeFile(filePath, this.content, 'utf8', err => {
+            if (err) {
+              console.log(err)
+            } else {
+              console.log(`saved as ... ${filePath}`)
+            }
+          })
+        })
       },
       handleOpen() {
         remote.dialog.showOpenDialog({
@@ -182,6 +196,10 @@
           } else {
             this.handleOpen()
           }
+        })
+
+        ipcRenderer.on('file-save-as', () => {
+          this.handleSaveAs()
         })
       }
     }
