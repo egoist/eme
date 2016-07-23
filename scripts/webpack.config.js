@@ -1,6 +1,7 @@
 'use strict'
 const path = require('path')
 const webpack = require('webpack')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
   entry: ['./app/index.js'],
@@ -49,12 +50,19 @@ module.exports = {
       require('postcss-simple-vars'),
       require('postcss-import')(),
       require('postcss-mixins')
-    ]
+    ],
+    loaders: {
+      css: ExtractTextPlugin.extract(
+        'vue-style-loader',
+        'css-loader?sourceMap'
+      )
+    }
   },
   target: 'electron',
   plugins: [
     new webpack.ExternalsPlugin('commonjs2', [
       './vendor/markdown-it-katex'
-    ])
+    ]),
+    new ExtractTextPlugin('style.css')
   ]
 }

@@ -1,3 +1,4 @@
+<style src="codemirror/theme/base16-light"></style>
 <style src="../css/editor-scrollbar"></style>
 
 <style>
@@ -58,7 +59,6 @@
   import 'codemirror/lib/codemirror.css'
   import 'codemirror/mode/markdown/markdown'
   import 'codemirror/mode/gfm/gfm'
-  import 'codemirror/theme/base16-light'
   import 'codemirror/addon/edit/continuelist'
   import 'codemirror/addon/scroll/simplescrollbars'
 
