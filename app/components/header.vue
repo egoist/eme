@@ -4,7 +4,6 @@
     font-size: 12px;
     display: flex;
     height: $header-height;
-    padding-left: 80px;
     -webkit-app-region: drag;
     .tab {
       height: $header-height;
@@ -13,7 +12,6 @@
       position: relative;
       text-align: center;
       .tab-title {
-        margin-left: -80px;
         -webkit-user-select: none ;
       }
     }
@@ -46,7 +44,7 @@
 <script>
   import path from 'path'
   import {isMac} from 'utils/os'
-  
+
   export default {
     vuex: {
       getters: {

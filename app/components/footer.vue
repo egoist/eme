@@ -1,7 +1,7 @@
 <style>
   .footer {
-    height: 29px;
-    line-height: 28px;
+    height: 25px;
+    line-height: 24px;
     background-color: #f0f0f0;
     padding: 0 10px;
     font-size: 12px;
@@ -10,11 +10,17 @@
     > span {
       margin-right: 10px;
     }
+
+    &.mac-footer {
+      box-shadow: inset 0 1px 0 #f5f4f5;
+      background-image: linear-gradient(to bottom,#e8e6e8 0,#d1cfd1 100%);
+      border-top: 1px solid #c2c0c2;
+    }
   }
 </style>
 
 <template>
-  <footer class="footer">
+  <footer class="footer" :class="{'mac-footer': isMac}">
     <span class="file-path">{{ filePath }}</span>
     <span class="word-count">{{ wordCount }} words</span>
   </footer>
@@ -22,6 +28,7 @@
 
 <script>
   import tildify from 'tildify'
+  import {isMac} from 'utils/os'
 
   export default {
     vuex: {
@@ -33,6 +40,9 @@
             'untitled'
         }
       }
+    },
+    data() {
+      return {isMac}
     }
   }
 </script>

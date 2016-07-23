@@ -2,10 +2,11 @@
 
 <style>
   .main {
-    height: calc(100% - 36px - 30px);
+    /* total - header - footer */
+    height: calc(100% - 36px - 25px);
     display: flex;
     &.not-mac {
-      height: calc(100% - 30px);
+      height: calc(100% - 25px);
       .preview {
         padding: 10px;
       }
