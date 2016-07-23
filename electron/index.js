@@ -34,6 +34,10 @@ function createWindow () {
     windowCount--
   })
 
+  win.on('focus', () => {
+    win.webContents.send('win-focus')
+  })
+
   if (isDev) {
     const installExtension = require('electron-devtools-installer')
     installExtension.default(installExtension.VUEJS_DEVTOOLS)

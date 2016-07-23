@@ -231,6 +231,10 @@
           this.isFocusMode = !this.isFocusMode
           this.editor.setOption('styleActiveLine', this.isFocusMode)
         })
+
+        ipcRenderer.on('win-focus', () => {
+          this.editor.focus()
+        })
       },
       preventBeingClosed() {
         window.onbeforeunload = () => {
