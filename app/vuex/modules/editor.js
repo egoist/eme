@@ -1,3 +1,5 @@
+import path from 'path'
+
 const state = {
   wordCount: 0,
   content: '',
@@ -13,9 +15,16 @@ const mutations = {
   },
   UPDATE_FILE_PATH(state, filePath) {
     state.filePath = filePath
+    document.title = `${path.basename(filePath)} - EME`
   },
   UPDATE_SAVE_STATUS(state, saved) {
     state.saved = saved
+    const fileName = state.filePath ? path.basename(state.filePath) : 'untitled'
+    if (saved) {
+      document.title = `${fileName} - EME`
+    } else {
+      document.title = `${fileName} * - EME`
+    }
   }
 }
 

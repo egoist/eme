@@ -33,7 +33,7 @@
 </style>
 
 <template>
-  <header class="header">
+  <header class="header" v-if="isMac">
     <div class="tab">
       <span class="tab-title">
         {{ filePath || 'untitled' }}
@@ -45,6 +45,7 @@
 
 <script>
   import path from 'path'
+  import {isMac} from 'utils/os'
   
   export default {
     vuex: {
@@ -56,6 +57,9 @@
             'untitled'
         }
       }
+    },
+    data() {
+      return {isMac}
     }
   }
 </script>

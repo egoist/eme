@@ -4,6 +4,17 @@
   .main {
     height: calc(100% - 36px - 30px);
     display: flex;
+    &.not-mac {
+      height: calc(100% - 30px);
+      .preview {
+        padding: 10px;
+      }
+      .editor {
+        .CodeMirror {
+          padding: 10px;
+        }
+      }
+    }
   }
   .editor, .preview {
     height: 100%;
@@ -27,7 +38,7 @@
 </style>
 
 <template>
-  <div class="main">
+  <div class="main" :class="{'not-mac': !isMac}">
     <div class="editor">
       <textarea id="editor" v-el:editor>{{ content }}</textarea>
     </div>
@@ -49,9 +60,10 @@
   import 'codemirror/theme/base16-light'
   import 'codemirror/addon/edit/continuelist'
   import 'codemirror/addon/scroll/simplescrollbars'
-  import md from 'utils/markdown'
 
+  import md from 'utils/markdown'
   import {$} from 'utils/dom'
+  import {isMac} from 'utils/os'
 
 
   export default {
@@ -70,8 +82,12 @@
     data() {
       return {
         html: '',
-        editor: null
+        editor: null,
+        isMac
       }
+    },
+    created() {
+      document.title = 'untitled - EME'
     },
     ready() {
       this.initEditor()
