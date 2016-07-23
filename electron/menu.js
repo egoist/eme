@@ -20,7 +20,14 @@ const build = cb => {
           label: 'Open',
           accelerator: 'CmdOrCtrl+O',
           click(item, focusedWindow) {
-            focusedWindow.webContents.send('open-file')
+            if (focusedWindow) {
+              focusedWindow.webContents.send('open-file')
+            } else {
+              const win = cb.createWindow()
+              win.webContents.on('did-finish-load', () => {
+                win.webContents.send('open-file')
+              })
+            }
           }
         },
         {
@@ -30,14 +37,16 @@ const build = cb => {
           label: 'Save',
           accelerator: 'CmdOrCtrl+S',
           click(item, focusedWindow) {
-            focusedWindow.webContents.send('file-save')
+            if (focusedWindow)
+              focusedWindow.webContents.send('file-save')
           }
         },
         {
           label: 'Save As',
           accelerator: 'CmdOrCtrl+S+Shift',
           click(item, focusedWindow) {
-            focusedWindow.webContents.send('file-save-as')
+            if (focusedWindow)
+              focusedWindow.webContents.send('file-save-as')
           }
         }
       ]
@@ -81,7 +90,8 @@ const build = cb => {
           label: 'Reload',
           accelerator: 'CmdOrCtrl+R',
           click(item, focusedWindow) {
-            if (focusedWindow) focusedWindow.reload()
+            if (focusedWindow)
+              focusedWindow.reload()
           }
         },
         {
@@ -91,7 +101,8 @@ const build = cb => {
           label: 'Toggle Focus Mode',
           accelerator: 'CmdOrCtrl+\\',
           click(item, focusedWindow) {
-            focusedWindow.webContents.send('toggle-focus-mode')
+            if (focusedWindow)
+              focusedWindow.webContents.send('toggle-focus-mode')
           }
         },
         {

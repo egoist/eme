@@ -180,14 +180,8 @@
           })
         })
       },
-      handleOpen() {
-        remote.dialog.showOpenDialog({
-          properties: ['openFile'],
-          filters: [
-            {name: 'Markdown', extensions: ['markdown', 'md']}
-          ]
-        }, files => {
-          const filePath = files[0]
+      handleOpen(filePath) {
+        const openFile = filePath => {
           fs.readFile(filePath, 'utf8', (err, content) => {
             if (err) {
               return console.log(err)
@@ -197,14 +191,27 @@
             this.$store.dispatch('UPDATE_FILE_PATH', filePath)
             this.updateSaved(true)
           })
-        })
+        }
+        if (filePath) {
+          openFile(filePath)
+        } else {
+          remote.dialog.showOpenDialog({
+            properties: ['openFile'],
+            filters: [
+              {name: 'Markdown', extensions: ['markdown', 'md']}
+            ]
+          }, files => {
+            if (files) openFile(files[0])
+          })
+        }
       },
       listenIpc() {
         ipcRenderer.on('file-save', () => {
           this.handleSave()
         })
 
-        ipcRenderer.on('open-file', () => {
+        ipcRenderer.on('open-file', (e, filePath) => {
+          console.log(filePath)
           if (!this.saved) {
             remote.dialog.showMessageBox({
               type: 'question',
