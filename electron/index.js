@@ -18,6 +18,8 @@ function createWindow () {
     name: app.getName(),
     width: 800,
     height: 600,
+    minWidth: 430,
+    minHeight: 250,
     titleBarStyle: 'hidden-inset'
   })
 

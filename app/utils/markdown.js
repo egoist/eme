@@ -1,6 +1,7 @@
 import MarkdownIt from 'markdown-it'
 import taskList from 'markdown-it-task-lists'
 import katex from './vendor/markdown-it-katex'
+import frontMatter from 'markdown-it-front-matter'
 import hljs from 'highlight.js'
 
 const md = new MarkdownIt({
@@ -24,6 +25,7 @@ const md = new MarkdownIt({
 
 md.use(taskList)
 md.use(katex)
+md.use(frontMatter, fm => console.log(fm))
 
 // add target _blank
 const defaultRender = md.renderer.rules.link_open || function(tokens, idx, options, env, self) {
