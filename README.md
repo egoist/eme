@@ -2,7 +2,7 @@
 
 Elegant Markdown Editor.
 
-![preview](https://ooo.0o0.ooo/2016/07/22/57923718bc051.png)
+![preview](http://ww4.sinaimg.cn/large/a15b4afegw1f649f4qe3jj22801e0e7y)
 
 ## Features
 
