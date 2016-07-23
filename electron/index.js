@@ -6,15 +6,14 @@ const {
   Menu,
   shell
 } = require('electron')
-
-const appMenu = require('./menu')
+const buildMenu = require('./menu')
 
 let mainWindow
 
 const isDev = process.env.NODE_ENV === 'development'
 
 function createWindow () {
-  mainWindow = new BrowserWindow({
+  let win = new BrowserWindow({
     name: app.getName(),
     width: 800,
     height: 600,
@@ -23,10 +22,15 @@ function createWindow () {
     titleBarStyle: 'hidden-inset'
   })
 
-  mainWindow.loadURL(`file://${__dirname}/index.html`)
+  win.loadURL(`file://${__dirname}/index.html`)
 
-  mainWindow.on('closed', () => {
-    mainWindow = null
+  win.on('closed', () => {
+    win = null
+  })
+
+  win.webContents.on('new-window', (e, url) => {
+    e.preventDefault()
+    shell.openExternal(url)
   })
 
   if (isDev) {
@@ -35,16 +39,17 @@ function createWindow () {
       .then(name => console.log(`Added Extension:  ${name}`))
       .catch(err => console.log('An error occurred: ', err))
   }
+
+  return win
 }
+
+const appMenu = buildMenu({
+  createWindow
+})
 
 app.on('ready', () => {
   Menu.setApplicationMenu(appMenu)
-  createWindow()
-
-  mainWindow.webContents.on('new-window', (e, url) => {
-    e.preventDefault()
-    shell.openExternal(url)
-  })
+  mainWindow = createWindow()
 })
 
 app.on('window-all-closed', () => {
