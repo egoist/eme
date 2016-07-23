@@ -1,6 +1,7 @@
 import MarkdownIt from 'markdown-it'
 import taskList from 'markdown-it-task-lists'
 import katex from './vendor/markdown-it-katex'
+import hljs from 'highlight.js'
 
 const md = new MarkdownIt({
   html: true,
@@ -10,7 +11,15 @@ const md = new MarkdownIt({
   linkify: true,
   typographer: true,
   quotes: '“”‘’',
-  highlight(/*str, lang*/) { return '' }
+  highlight(str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return hljs.highlight(lang, str).value;
+      } catch (__) {}
+    }
+
+    return ''
+  }
 })
 
 md.use(taskList)

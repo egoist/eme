@@ -1,4 +1,5 @@
 <style src="codemirror/theme/base16-light"></style>
+<style src="highlight.js/styles/github"></style>
 <style src="../css/editor-scrollbar"></style>
 
 <style>
@@ -35,6 +36,9 @@
     padding: 0 10px;
     &::-webkit-scrollbar {
       width: 0;
+    }
+    pre {
+      tab-size: 2;
     }
   }
 </style>
