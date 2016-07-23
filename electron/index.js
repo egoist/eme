@@ -73,3 +73,10 @@ app.on('activate', () => {
 ipcMain.on('close-focus-window', () => {
   BrowserWindow.getFocusedWindow().close()
 })
+
+ipcMain.on('open-in-new-window', (e, filePath) => {
+  const win = createWindow()
+  win.webContents.on('did-finish-load', () => {
+    win.webContents.send('open-file', filePath)
+  })
+})

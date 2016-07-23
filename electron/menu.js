@@ -31,6 +31,16 @@ const build = cb => {
           }
         },
         {
+          label: 'Open In New Window',
+          accelerator: 'CmdOrCtrl+Shift+O',
+          click(item) {
+            const win = cb.createWindow()
+            win.webContents.on('did-finish-load', () => {
+              win.webContents.send('open-file')
+            })
+          }
+        },
+        {
           type: 'separator'
         },
         {
@@ -151,6 +161,22 @@ const build = cb => {
           label: 'Report bugs',
           click() { shell.openExternal('http://github.com/egoist/eme/issues') }
         },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Welcome Guide',
+          click(item, focusedWindow) {
+            if (focusedWindow) {
+              focusedWindow.webContents.send('open-file', __dirname + '/welcome-guide.md')
+            } else {
+              const win = cb.createWindow()
+              win.webContents.on('did-finish-load', () => {
+                win.webContents.send('open-file', __dirname + '/welcome-guide.md')
+              })
+            }
+          }
+        }
       ]
     },
   ]

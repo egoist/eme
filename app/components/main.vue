@@ -211,22 +211,10 @@
         })
 
         ipcRenderer.on('open-file', (e, filePath) => {
-          console.log(filePath)
           if (!this.saved) {
-            remote.dialog.showMessageBox({
-              type: 'question',
-              title: 'EME',
-              message: 'Save changes to file?',
-              buttons: ['Yes', 'No', 'Cancel']
-            }, clickedButton => {
-              if (clickedButton === 0) {
-                this.handleSave(this.handleOpen)
-              } else if (clickedButton === 1) {
-                this.handleOpen()
-              }
-            })
+            ipcRenderer.send('open-in-new-window', filePath)
           } else {
-            this.handleOpen()
+            this.handleOpen(filePath)
           }
         })
 
