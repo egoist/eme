@@ -65,6 +65,7 @@
   import 'codemirror/mode/gfm/gfm'
   import 'codemirror/addon/edit/continuelist'
   import 'codemirror/addon/scroll/simplescrollbars'
+  import 'codemirror/addon/selection/active-line'
 
   import md from 'utils/markdown'
   import {$} from 'utils/dom'
@@ -88,7 +89,8 @@
       return {
         html: '',
         editor: null,
-        isMac
+        isMac,
+        isFocusMode: false
       }
     },
     created() {
@@ -222,6 +224,11 @@
 
         ipcRenderer.on('file-save-as', () => {
           this.handleSaveAs()
+        })
+
+        ipcRenderer.on('toggle-focus-mode', () => {
+          this.isFocusMode = !this.isFocusMode
+          this.editor.setOption('styleActiveLine', this.isFocusMode)
         })
       }
     }

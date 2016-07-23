@@ -1,5 +1,6 @@
 <style src="github-markdown-css"></style>
 <style src="./css/reset"></style>
+<style src="./css/editor-reset"></style>
 
 <template>
   <div id="app">

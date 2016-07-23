@@ -81,6 +81,16 @@ const template = [
         role: 'togglefullscreen'
       },
       {
+        label: 'Toggle Focus Mode',
+        accelerator: 'CmdOrCtrl+\\',
+        click(item, focusedWindow) {
+          focusedWindow.webContents.send('toggle-focus-mode')
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
         label: 'Toggle Developer Tools',
         accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
         click(item, focusedWindow) {
