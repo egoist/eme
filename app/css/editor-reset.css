@@ -1,7 +1,17 @@
 .editor {
+  &.focus-mode {
+    * {
+      color: #ccc !important;
+    }
+  }
   .cm-s-base16-light {
     .CodeMirror-activeline-background {
       background-color: #f0f0f0;
+    }
+    .CodeMirror-activeline {
+      * {
+        color: #333 !important;
+      }
     }
   }
 }

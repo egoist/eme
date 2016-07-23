@@ -45,7 +45,7 @@
 
 <template>
   <div class="main" :class="{'not-mac': !isMac}">
-    <div class="editor">
+    <div class="editor" :class="{'focus-mode': isFocusMode}">
       <textarea id="editor" v-el:editor>{{ content }}</textarea>
     </div>
     <div class="preview">
