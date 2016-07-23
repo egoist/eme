@@ -100,6 +100,7 @@
       this.initEditor()
 
       this.listenIpc()
+      this.preventBeingClosed()
     },
     methods: {
       initEditor() {
@@ -230,6 +231,28 @@
           this.isFocusMode = !this.isFocusMode
           this.editor.setOption('styleActiveLine', this.isFocusMode)
         })
+      },
+      preventBeingClosed() {
+        window.onbeforeunload = () => {
+          if (!this.saved) {
+            const clickedButton = remote.dialog.showMessageBox({
+              type: 'question',
+              title: 'EME',
+              message: 'Save before close?',
+              buttons: ['Yes', 'No', 'Cancel']
+            })
+            if (clickedButton === 0) {
+              this.handleSave(() => {
+                ipcRenderer.send('close-focus-window')
+              })
+              return false
+            } else if (clickedButton === 1) {
+              return
+            } else {
+              return false
+            }
+          }
+        }
       }
     }
   }

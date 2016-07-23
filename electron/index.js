@@ -4,11 +4,12 @@ const {
   app,
   BrowserWindow,
   Menu,
-  shell
+  shell,
+  ipcMain
 } = require('electron')
 const buildMenu = require('./menu')
 
-let mainWindow
+let windowCount = 0
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -24,13 +25,13 @@ function createWindow () {
 
   win.loadURL(`file://${__dirname}/index.html`)
 
-  win.on('closed', () => {
-    win = null
-  })
-
   win.webContents.on('new-window', (e, url) => {
     e.preventDefault()
     shell.openExternal(url)
+  })
+
+  win.on('closed', () => {
+    windowCount--
   })
 
   if (isDev) {
@@ -40,6 +41,7 @@ function createWindow () {
       .catch(err => console.log('An error occurred: ', err))
   }
 
+  windowCount++
   return win
 }
 
@@ -49,7 +51,7 @@ const appMenu = buildMenu({
 
 app.on('ready', () => {
   Menu.setApplicationMenu(appMenu)
-  mainWindow = createWindow()
+  createWindow()
 })
 
 app.on('window-all-closed', () => {
@@ -59,7 +61,11 @@ app.on('window-all-closed', () => {
 })
 
 app.on('activate', () => {
-  if (mainWindow === null) {
+  if (windowCount === 0) {
     createWindow()
   }
+})
+
+ipcMain.on('close-focus-window', () => {
+  BrowserWindow.getFocusedWindow().close()
 })
