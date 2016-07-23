@@ -9,6 +9,7 @@ Elegant Markdown Editor.
 - It just suits, show editor or preview or both just as you wish.
 - Focus mode, writing without distractions.
 - Exportable, from Markdown to HTML/PDF... You name it.
+- Supporting math typesetting, good for students and professionals.
 
 ## Development
 
