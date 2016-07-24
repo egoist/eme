@@ -266,6 +266,10 @@
         ipcRenderer.on('close-current-tab', this.closeCurrentTab)
 
         ipcRenderer.on('close-all-tabs', () => {
+          if (this.tabs.length === 0) {
+            return remote.getCurrentWindow().hide()
+          }
+
           const closeInOrder = () => {
             this.$store.dispatch('SET_CURRENT_TAB', 0)
             this.closeCurrentTab(null, () => {
@@ -306,28 +310,6 @@
         } else {
           this.$store.dispatch('CLOSE_TAB', this.currentTabIndex)
           if (cb) cb()
-        }
-      },
-      preventBeingClosed() {
-        window.onbeforeunload = () => {
-          if (!this.currentTab.saved) {
-            const clickedButton = remote.dialog.showMessageBox({
-              type: 'question',
-              title: 'EME',
-              message: 'Save before close?',
-              buttons: ['Yes', 'No', 'Cancel']
-            })
-            if (clickedButton === 0) {
-              this.handleSave(() => {
-                ipcRenderer.send('close-focus-window')
-              })
-              return false
-            } else if (clickedButton === 1) {
-              return
-            } else {
-              return false
-            }
-          }
         }
       }
     }
