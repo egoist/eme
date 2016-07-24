@@ -89,7 +89,6 @@
     <div class="tab"
       @click="setCurrentTab($index)"
       v-for="tab in tabs"
-      track-by="$index"
       :class="{'current-tab': $index === currentTabIndex}">
       <span class="tab-title" v-if="tab">
         {{ tab.title || 'untitled' }}
