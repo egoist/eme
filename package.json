@@ -63,9 +63,11 @@
     "codemirror": "^5.17.0",
     "github-markdown-css": "^2.3.0",
     "highlight.js": "^9.5.0",
+    "lodash.debounce": "^4.0.6",
     "markdown-it": "^7.0.0",
     "markdown-it-front-matter": "^0.1.2",
     "markdown-it-task-lists": "^1.4.0",
+    "pify": "^2.3.0",
     "tildify": "^1.2.0",
     "vue": "^1.0.26",
     "vuex": "^1.0.0-rc.2"
