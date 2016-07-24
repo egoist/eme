@@ -134,7 +134,10 @@ const build = cb => {
         {
           label: 'Close',
           accelerator: 'CmdOrCtrl+W',
-          role: 'close'
+          click(item, focusedWindow) {
+            if (focusedWindow)
+              focusedWindow.webContents.send('close-current-tab')
+          }
         },
         {
           label: 'Minimize',

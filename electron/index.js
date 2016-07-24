@@ -30,6 +30,11 @@ function createWindow () {
     shell.openExternal(url)
   })
 
+  win.on('close', e => {
+    e.preventDefault()
+    win.webContents.send('close-all-tabs')
+  })
+
   win.on('closed', () => {
     windowCount--
   })
