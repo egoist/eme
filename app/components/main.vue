@@ -289,6 +289,10 @@
         })
 
         event.on('close-current-tab', this.closeCurrentTab)
+
+        event.on('focus-current-tab', () => {
+          this.editor.focus()
+        })
       },
       closeCurrentTab(e, cb) {
         if (!this.currentTab.saved) {

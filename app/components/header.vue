@@ -122,6 +122,9 @@
       actions: {
         setCurrentTab({dispatch}, index) {
           dispatch('SET_CURRENT_TAB', index)
+          setTimeout(() => {
+            event.emit('focus-current-tab')
+          }, 200)
         }
       }
     },
