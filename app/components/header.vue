@@ -47,6 +47,14 @@
         .tab-title {
           color: #333;
         }
+        &:first-child {
+          border-left-color: #1976D2;
+          background-color: white;
+          border-left-width: 2px;
+          .tab-title {
+            color: #333;
+          }
+        }
       }
     }
 

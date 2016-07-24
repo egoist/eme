@@ -272,12 +272,9 @@
             return remote.getCurrentWindow().hide()
           }
 
-          let index = 0
-
           const closeInOrder = () => {
-            this.closeTab(index, () => {
+            this.closeTab(0, () => {
               if (this.tabs.length > 0) {
-                index++
                 closeInOrder()
               } else {
                 remote.getCurrentWindow().hide()
@@ -300,7 +297,7 @@
           this.editor.focus()
         })
       },
-      closeTab(index = this.currentTabIndex, cb) {
+      closeTab(index, cb) {
         const tab = this.tabs[index]
         if (!tab.saved) {
           const clickedButton = remote.dialog.showMessageBox({
