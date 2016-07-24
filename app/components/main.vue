@@ -263,17 +263,21 @@
           if (this.editor) this.editor.focus()
         })
 
-        ipcRenderer.on('close-current-tab', this.closeCurrentTab)
+        ipcRenderer.on('close-current-tab', () => {
+          this.closeTab(this.currentTabIndex)
+        })
 
         ipcRenderer.on('close-all-tabs', () => {
           if (this.tabs.length === 0) {
             return remote.getCurrentWindow().hide()
           }
 
+          let index = 0
+
           const closeInOrder = () => {
-            this.$store.dispatch('SET_CURRENT_TAB', 0)
-            this.closeCurrentTab(null, () => {
+            this.closeTab(index, () => {
               if (this.tabs.length > 0) {
+                index++
                 closeInOrder()
               } else {
                 remote.getCurrentWindow().hide()
@@ -288,14 +292,17 @@
           this.createNewTab()
         })
 
-        event.on('close-current-tab', this.closeCurrentTab)
+        event.on('close-tab', index => {
+          this.closeTab(index)
+        })
 
         event.on('focus-current-tab', () => {
           this.editor.focus()
         })
       },
-      closeCurrentTab(e, cb) {
-        if (!this.currentTab.saved) {
+      closeTab(index = this.currentTabIndex, cb) {
+        const tab = this.tabs[index]
+        if (!tab.saved) {
           const clickedButton = remote.dialog.showMessageBox({
             type: 'question',
             title: 'EME',
@@ -304,15 +311,15 @@
           })
           if (clickedButton === 0) {
             this.handleSave(() => {
-              this.$store.dispatch('CLOSE_TAB', this.currentTabIndex)
+              this.$store.dispatch('CLOSE_TAB', index)
               if (cb) cb()
             })
           } else if (clickedButton === 1) {
-            this.$store.dispatch('CLOSE_TAB', this.currentTabIndex)
+            this.$store.dispatch('CLOSE_TAB', index)
             if (cb) cb()
           }
         } else {
-          this.$store.dispatch('CLOSE_TAB', this.currentTabIndex)
+          this.$store.dispatch('CLOSE_TAB', index)
           if (cb) cb()
         }
       }

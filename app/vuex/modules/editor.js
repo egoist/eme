@@ -9,6 +9,7 @@ const state = {
 const mutations = {
   INIT_NEW_TAB(state, payload) {
     state.tabs.push(payload)
+    state.currentTabIndex++
   },
   UPDATE_CONTENT(state, content) {
     const currentTab = state.tabs[state.currentTabIndex]

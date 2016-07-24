@@ -89,6 +89,7 @@
     <div class="tab"
       @click="setCurrentTab($index)"
       v-for="tab in tabs"
+      track-by="$index"
       :class="{'current-tab': $index === currentTabIndex}">
       <span class="tab-title" v-if="tab">
         {{ tab.title || 'untitled' }}
@@ -134,11 +135,7 @@
     methods: {
       closeTab(e, index) {
         e.stopPropagation()
-        const tab = this.tabs[this.currentTabIndex]
-        if (!tab.saved) {
-          this.$store.dispatch('SET_CURRENT_TAB', index)
-        }
-        event.emit('close-current-tab')
+        event.emit('close-tab', index)
       },
       createNewTab() {
         event.emit('new-tab')
