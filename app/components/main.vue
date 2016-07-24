@@ -7,17 +7,6 @@
     /* total - header - footer */
     height: calc(100% - 36px - 25px);
     display: flex;
-    &.not-mac {
-      height: calc(100% - 25px);
-      .preview {
-        padding: 10px;
-      }
-      .editor {
-        .CodeMirror {
-          padding: 10px;
-        }
-      }
-    }
   }
   .editor, .preview {
     height: 100%;
@@ -28,12 +17,15 @@
     cursor: text;
     .CodeMirror {
       background-color: white !important;
-      padding: 0 10px;
       height: 100%;
+    }
+    .CodeMirror-sizer {
+      padding-left: 10px;
+      padding-top: 10px;
     }
   }
   .preview {
-    padding: 0 10px;
+    padding: 10px;
     &::-webkit-scrollbar {
       width: 0;
     }
@@ -44,13 +36,17 @@
 </style>
 
 <template>
-  <div class="main" :class="{'not-mac': !isMac}">
-    <div class="editor" :class="{'focus-mode': isFocusMode}">
-      <textarea id="editor" v-el:editor>{{ content }}</textarea>
+  <div
+    class="main tab-body"
+    :class="'tab-body-' + $index"
+    v-for="tab in tabs"
+    v-show="$index === currentTabIndex">
+    <div class="editor" v-show="editor" :class="{'focus-mode': tab.isFocusMode}">
+      <textarea :id="'editor-' + $index">{{ tab.content }}</textarea>
     </div>
-    <div class="preview">
-      <div class="markdown-body">
-        {{{ html }}}
+    <div :class="'preview preview-' + $index">
+      <div :class="'markdown-body markdown-body-' + $index">
+        {{{ tab.html }}}
       </div>
     </div>
   </div>
@@ -58,6 +54,7 @@
 
 <script>
   import fs from 'fs'
+  import pify from 'pify'
   import {ipcRenderer, remote} from 'electron'
   import CodeMirror from 'codemirror'
   import 'codemirror/lib/codemirror.css'
@@ -67,17 +64,20 @@
   import 'codemirror/addon/scroll/simplescrollbars'
   import 'codemirror/addon/selection/active-line'
 
-  import md from 'utils/markdown'
   import {$} from 'utils/dom'
   import {isMac} from 'utils/os'
-
+  import md from 'utils/markdown'
+  import event from 'utils/event'
+  import {
+    getWordCount
+  } from 'utils/common'
 
   export default {
     vuex: {
       getters: {
-        content: state => state.editor.content,
-        filePath: state => state.editor.filePath,
-        saved: state => state.editor.saved
+        tabs: state => state.editor.tabs,
+        currentTabIndex: state => state.editor.currentTabIndex,
+        currentTab: state => state.editor.tabs[state.editor.currentTabIndex]
       },
       actions: {
         updateSaved({dispatch}, saved) {
@@ -85,63 +85,42 @@
         }
       }
     },
+    computed: {
+      editor (){
+        return this.currentTab && this.currentTab.editor
+      }
+    },
     data() {
       return {
-        html: '',
-        editor: null,
-        isMac,
-        isFocusMode: false
+        isMac
       }
     },
     created() {
       document.title = 'untitled - EME'
     },
     ready() {
-      this.initEditor()
+      this.createNewTab().catch(e => console.log(e.stack))
 
       this.listenIpc()
-      this.preventBeingClosed()
     },
     methods: {
-      initEditor() {
-        this.editor = CodeMirror.fromTextArea(this.$els.editor, {
-          mode: 'gfm',
-          theme: 'base16-light',
-          lineNumbers: false,
-          matchBrackets: true,
-          lineWrapping: true,
-          scrollbarStyle: 'simple',
-          autofocus: true,
-          extraKeys: {
-            "Enter": "newlineAndIndentContinueMarkdownList"
-          }
-        })
-
-        this.editor.on('change', e => {
-          this.updateSaved(false)
-          this.$store.dispatch('UPDATE_CONTENT', e.getValue())
-          this.html = md.render(this.content)
-          this.handleScroll()
-        })
-
-        $('.CodeMirror-scroll').addEventListener('scroll', this.handleScroll)
-      },
       handleScroll(e) {
-        const codePort = e ? e.target : $('.CodeMirror-scroll')
-        const previewPort = $('.preview')
-        const markdownPort = $('.markdown-body')
-        const codeContent = $('.CodeMirror-sizer')
-
+        const index = this.currentTabIndex
+        const codePort = e ?
+          e.target :
+          $(`.tab-body-${index}`).querySelector('.CodeMirror-scroll')
+        const previewPort = $(`.preview-${index}`)
+        const markdownPort = $(`.markdown-body-${index}`)
+        const codeContent = $(`.tab-body-${index}`).querySelector('.CodeMirror-sizer')
         const codeHeight = codeContent.clientHeight - codePort.clientHeight
         const markdownHeight = markdownPort.clientHeight
         const ratio = markdownHeight / codeHeight
-
         const previewPosition = codePort.scrollTop * ratio
         previewPort.scrollTop = previewPosition
       },
       save(filePath, cb) {
         this.$store.dispatch('UPDATE_FILE_PATH', filePath)
-        fs.writeFile(filePath, this.content, 'utf8', err => {
+        fs.writeFile(filePath, this.currentTab.content, 'utf8', err => {
           if (err) {
             this.updateSaved(false)
             console.log(err)
@@ -153,15 +132,15 @@
         })
       },
       handleSave(cb) {
-        if (this.filePath) {
-          this.save(this.filePath, cb)
+        if (this.currentTab.filePath) {
+          this.save(this.currentTab.filePath, cb)
         } else {
           remote.dialog.showSaveDialog({
             filters: [
               {name: 'Markdown', extensions: ['markdown', 'md']}
             ]
           }, filePath => {
-            this.save(filePath, cb)
+            if (filePath) this.save(filePath, cb)
           })
         }
       },
@@ -180,17 +159,74 @@
           })
         })
       },
+      async overrideTab(filePath) {
+        const content = await pify(fs.readFile)(filePath, 'utf8')
+        this.editor.getDoc().setValue(content)
+        this.$store.dispatch('UPDATE_CONTENT', content)
+        this.$store.dispatch('UPDATE_FILE_PATH', filePath)
+        this.updateSaved(true)
+      },
+      async createNewTab(filePath = '') {
+        let content = ''
+        let html = ''
+        let wordCount = 0
+        if (filePath) {
+          content = await pify(fs.readFile)(filePath, 'utf8')
+          html = md.render(content)
+          wordCount = getWordCount(content)
+        }
+        const index = this.tabs.length
+        this.$store.dispatch('INIT_NEW_TAB', {
+          wordCount,
+          content,
+          html,
+          filePath,
+          saved: true,
+          editor: null,
+          isFocusMode: false
+        })
+
+        setTimeout(() => {
+          const tabEl = $(`.tab-body-${index}`)
+          const textarea = tabEl.querySelector(`#editor-${index}`)
+          const editor = CodeMirror.fromTextArea(textarea, {
+            mode: 'gfm',
+            theme: 'base16-light',
+            lineNumbers: false,
+            matchBrackets: true,
+            lineWrapping: true,
+            scrollbarStyle: 'simple',
+            autofocus: true,
+            extraKeys: {
+              "Enter": "newlineAndIndentContinueMarkdownList"
+            }
+          })
+
+          setTimeout(() => {
+            editor.refresh()
+            editor.focus()
+          }, 200)
+
+          editor.on('change', e => {
+            this.updateSaved(false)
+            this.$store.dispatch('UPDATE_CONTENT', e.getValue())
+            this.handleScroll()
+          })
+
+          this.$store.dispatch('SET_EDITOR', {index, editor})
+
+          tabEl.querySelector('.CodeMirror-scroll').addEventListener('scroll', this.handleScroll)
+        }, 200)
+      },
       handleOpen(filePath) {
         const openFile = filePath => {
-          fs.readFile(filePath, 'utf8', (err, content) => {
-            if (err) {
-              return console.log(err)
-            }
-            this.editor.getDoc().setValue(content)
-            this.$store.dispatch('UPDATE_CONTENT', content)
-            this.$store.dispatch('UPDATE_FILE_PATH', filePath)
-            this.updateSaved(true)
-          })
+          if (this.currentTab.saved && !this.currentTab.filePath) {
+            // load file in currentTab
+            this.overrideTab(filePath)
+          } else {
+            // load file in newTab
+            this.createNewTab(filePath)
+          }
         }
         if (filePath) {
           openFile(filePath)
@@ -211,11 +247,7 @@
         })
 
         ipcRenderer.on('open-file', (e, filePath) => {
-          if (!this.saved) {
-            ipcRenderer.send('open-in-new-window', filePath)
-          } else {
-            this.handleOpen(filePath)
-          }
+          this.handleOpen(filePath)
         })
 
         ipcRenderer.on('file-save-as', () => {
@@ -223,34 +255,69 @@
         })
 
         ipcRenderer.on('toggle-focus-mode', () => {
-          this.isFocusMode = !this.isFocusMode
-          this.editor.setOption('styleActiveLine', this.isFocusMode)
+          this.currentTab.isFocusMode = !this.currentTab.isFocusMode
+          this.editor.setOption('styleActiveLine', this.currentTab.isFocusMode)
         })
 
         ipcRenderer.on('win-focus', () => {
+          if (this.editor) this.editor.focus()
+        })
+
+        ipcRenderer.on('close-current-tab', () => {
+          this.closeTab(this.currentTabIndex)
+        })
+
+        ipcRenderer.on('close-all-tabs', () => {
+          if (this.tabs.length === 0) {
+            return remote.getCurrentWindow().hide()
+          }
+
+          const closeInOrder = () => {
+            this.closeTab(0, () => {
+              if (this.tabs.length > 0) {
+                closeInOrder()
+              } else {
+                remote.getCurrentWindow().hide()
+              }
+            })
+          }
+
+          closeInOrder()
+        })
+
+        event.on('new-tab', () => {
+          this.createNewTab()
+        })
+
+        event.on('close-tab', index => {
+          this.closeTab(index)
+        })
+
+        event.on('focus-current-tab', () => {
           this.editor.focus()
         })
       },
-      preventBeingClosed() {
-        window.onbeforeunload = () => {
-          if (!this.saved) {
-            const clickedButton = remote.dialog.showMessageBox({
-              type: 'question',
-              title: 'EME',
-              message: 'Save before close?',
-              buttons: ['Yes', 'No', 'Cancel']
+      closeTab(index, cb) {
+        const tab = this.tabs[index]
+        if (!tab.saved) {
+          const clickedButton = remote.dialog.showMessageBox({
+            type: 'question',
+            title: 'EME',
+            message: 'Save before close?',
+            buttons: ['Yes', 'No', 'Cancel']
+          })
+          if (clickedButton === 0) {
+            this.handleSave(() => {
+              this.$store.dispatch('CLOSE_TAB', index)
+              if (cb) cb()
             })
-            if (clickedButton === 0) {
-              this.handleSave(() => {
-                ipcRenderer.send('close-focus-window')
-              })
-              return false
-            } else if (clickedButton === 1) {
-              return
-            } else {
-              return false
-            }
+          } else if (clickedButton === 1) {
+            this.$store.dispatch('CLOSE_TAB', index)
+            if (cb) cb()
           }
+        } else {
+          this.$store.dispatch('CLOSE_TAB', index)
+          if (cb) cb()
         }
       }
     }

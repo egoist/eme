@@ -20,9 +20,9 @@
 </style>
 
 <template>
-  <footer class="footer" :class="{'mac-footer': isMac}">
-    <span class="file-path">{{ filePath }}</span>
-    <span class="word-count">{{ wordCount }} words</span>
+  <footer class="footer" v-if="status" :class="{'mac-footer': isMac}">
+    <span class="file-path">{{ status.filePath }}</span>
+    <span class="word-count">{{ status.wordCount }} words</span>
   </footer>
 </template>
 
@@ -33,11 +33,14 @@
   export default {
     vuex: {
       getters: {
-        wordCount: state => state.editor.wordCount,
-        filePath: state => {
-          return state.editor.filePath ?
-            tildify(state.editor.filePath) :
-            'untitled'
+        status: state => {
+          const editor = state.editor.tabs[state.editor.currentTabIndex]
+          return editor && {
+            wordCount: editor.wordCount,
+            filePath: editor.filePath ?
+              tildify(editor.filePath) :
+              'untitled'
+          }
         }
       }
     },
