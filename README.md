@@ -11,6 +11,10 @@ Elegant Markdown Editor.
 - Exportable, from Markdown to HTML/PDF... You name it.
 - Supporting math typesetting, good for students and professionals.
 
+## Contributing
+
+Pull requests are always welcome! Check out the [these issues](https://github.com/egoist/eme/issues?q=is%3Aissue+is%3Aopen+label%3A%22contribution+welcome%22) to get started fast.
+
 ## Development
 
 ```bash
