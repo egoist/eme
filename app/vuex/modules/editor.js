@@ -43,7 +43,7 @@ const mutations = {
     state.currentTabIndex = index
   },
   CLOSE_TAB(state, indexToClose) {
-    if (state.currentTabIndex !== 0) {
+    if (state.currentTabIndex !== 0 && indexToClose <= state.currentTabIndex) {
       state.currentTabIndex--
     }
     state.tabs = state.tabs.filter((tab, index) => {
