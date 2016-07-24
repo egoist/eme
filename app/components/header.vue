@@ -3,10 +3,13 @@
   .header {
     font-size: 12px;
     display: flex;
-    padding-left: 80px;
+
     height: $header-height;
     border-bottom: 1px solid #ddd;
     -webkit-app-region: drag;
+    &.is-mac {
+      padding-left: 80px;
+    }
     .tab {
       height: $header-height;
       line-height: $header-height;
@@ -81,7 +84,7 @@
 
 <template>
   <header class="header"
-    :class="{'single-tab': tabs.length === 1}"
+    :class="{'single-tab': tabs.length === 1, 'is-mac': isMac}"
     @dblclick="createNewTab">
     <div class="tab"
       @click="setCurrentTab($index)"
