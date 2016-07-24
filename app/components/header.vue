@@ -3,7 +3,7 @@
   .header {
     font-size: 12px;
     display: flex;
-
+    cursor: default;
     height: $header-height;
     border-bottom: 1px solid #ddd;
     -webkit-app-region: drag;
@@ -63,7 +63,6 @@
       transform: translateY(-50%);
       transition: all .3s;
       background-color: rgba(255, 255, 255, 0.84);
-      cursor: default;
       .dot {
         width: 5px;
         height: 5px;
