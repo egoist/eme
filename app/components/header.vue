@@ -63,6 +63,7 @@
       transform: translateY(-50%);
       transition: all .3s;
       background-color: rgba(255, 255, 255, 0.84);
+      cursor: default;
       .dot {
         width: 5px;
         height: 5px;
