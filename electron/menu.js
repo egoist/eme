@@ -14,7 +14,9 @@ const build = cb => {
         {
           label: 'New File',
           accelerator: 'CmdOrCtrl+N',
-          click: cb.createWindow
+          click(item, focusedWindow) {
+            focusedWindow.webContents.send('new-tab')
+          }
         },
         {
           label: 'Open',
@@ -28,16 +30,6 @@ const build = cb => {
                 win.webContents.send('open-file')
               })
             }
-          }
-        },
-        {
-          label: 'Open In New Window',
-          accelerator: 'CmdOrCtrl+Shift+O',
-          click(item) {
-            const win = cb.createWindow()
-            win.webContents.on('did-finish-load', () => {
-              win.webContents.send('open-file')
-            })
           }
         },
         {
@@ -216,7 +208,7 @@ const build = cb => {
         },
         {
           role: 'quit'
-        },
+        }
       ]
     })
   }

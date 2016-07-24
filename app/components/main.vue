@@ -267,9 +267,13 @@
           this.closeTab(this.currentTabIndex)
         })
 
-        ipcRenderer.on('close-all-tabs', () => {
+        ipcRenderer.on('new-tab', () => {
+          this.createNewTab()
+        })
+
+        ipcRenderer.on('close-all-tabs', (cb) => {
           if (this.tabs.length === 0) {
-            return remote.getCurrentWindow().hide()
+            return remote.getCurrentWindow().destroy()
           }
 
           const closeInOrder = () => {
@@ -277,13 +281,35 @@
               if (this.tabs.length > 0) {
                 closeInOrder()
               } else {
-                remote.getCurrentWindow().hide()
+                remote.getCurrentWindow().destroy()
               }
             })
           }
 
           closeInOrder()
         })
+
+        window.onbeforeunload = e => {
+          if (this.tabs.length === 0) {
+            return
+          }
+          e.returnValue = false
+          if (this.tabs.length > 0) {
+
+            const closeInOrder = () => {
+              this.closeTab(0, () => {
+                if (this.tabs.length > 0) {
+                  closeInOrder()
+                } else {
+                  this.createNewTab()
+                }
+              })
+            }
+
+            closeInOrder()
+
+          }
+        }
 
         event.on('new-tab', () => {
           this.createNewTab()
