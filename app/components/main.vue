@@ -54,6 +54,7 @@
 
 <script>
   import fs from 'fs'
+  import path from 'path'
   import pify from 'pify'
   import {ipcRenderer, remote} from 'electron'
   import CodeMirror from 'codemirror'
@@ -311,6 +312,14 @@
           closeInOrder()
         })
 
+        window.onbeforeunload = () => {
+          if (remote.getCurrentWindow().$state.unsaved === 0) {
+            return
+          } else {
+            return false
+          }
+        }
+
         ipcRenderer.on('close-and-exit', () => {
 
           const closeInOrder = () => {
@@ -342,10 +351,11 @@
       closeTab(index, cb) {
         const tab = this.tabs[index]
         if (!tab.saved) {
+          const filename = tab.filePath ? path.basename(tab.filePath) : 'untitled'
           const clickedButton = remote.dialog.showMessageBox({
             type: 'question',
             title: 'EME',
-            message: 'Save before close?',
+            message: `Save ${filename} before close?`,
             buttons: ['Yes', 'No', 'Cancel']
           })
           if (clickedButton === 0) {

@@ -35,10 +35,7 @@ class Window {
     })
 
     win.on('close', e => {
-      if (win.$state.unsaved) {
-        e.preventDefault()
-        win.webContents.send('close-window')
-      }
+      win.webContents.send('close-window')
     })
 
     win.on('closed', () => {
