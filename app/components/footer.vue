@@ -20,7 +20,7 @@
 </style>
 
 <template>
-  <footer class="footer" v-if="status" :class="{'mac-footer': isMac}">
+  <footer class="footer" v-if="showFooter && status" :class="{'mac-footer': isMac}">
     <span class="file-path">{{ status.filePath }}</span>
     <span class="word-count">{{ status.wordCount }} words</span>
   </footer>
@@ -33,6 +33,7 @@
   export default {
     vuex: {
       getters: {
+        showFooter: state => state.editor.tabs.length > 0,
         status: state => {
           const editor = state.editor.tabs[state.editor.currentTabIndex]
           return editor && {
