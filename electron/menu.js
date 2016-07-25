@@ -15,7 +15,8 @@ const build = cb => {
           label: 'New Tab',
           accelerator: 'CmdOrCtrl+T',
           click(item, focusedWindow) {
-            focusedWindow.webContents.send('new-tab')
+            if (focusedWindow)
+              focusedWindow.webContents.send('new-tab')
           }
         },
         {
