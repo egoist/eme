@@ -15,10 +15,12 @@
   }
   .editor {
     cursor: text;
-    padding-bottom: 10px;
     .CodeMirror {
       background-color: white !important;
       height: 100%;
+    }
+    .CodeMirror-scroll {
+      padding-bottom: 15px;
     }
     .CodeMirror-sizer {
       padding-left: 10px;
