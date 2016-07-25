@@ -336,9 +336,8 @@
             buttons: ['Yes', 'No', 'Cancel']
           })
           if (clickedButton === 0) {
-            this.handleSave(() => {
+            this.handleSave(index, () => {
               this.$store.dispatch('CLOSE_TAB', index)
-              this.$store.dispatch('UPDATE_SAVE_STATUS', {index, saved: true})
               if (cb) cb()
             })
           } else if (clickedButton === 1) {
