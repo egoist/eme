@@ -15,6 +15,7 @@
   }
   .editor {
     cursor: text;
+    padding-bottom: 10px;
     .CodeMirror {
       background-color: white !important;
       height: 100%;
