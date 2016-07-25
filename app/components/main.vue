@@ -80,8 +80,8 @@
         currentTab: state => state.editor.tabs[state.editor.currentTabIndex]
       },
       actions: {
-        updateSaved({dispatch}, saved) {
-          dispatch('UPDATE_SAVE_STATUS', saved)
+        updateSaved({dispatch}, payload) {
+          dispatch('UPDATE_SAVE_STATUS', payload)
         }
       }
     },
@@ -118,39 +118,44 @@
         const previewPosition = codePort.scrollTop * ratio
         previewPort.scrollTop = previewPosition
       },
-      save(filePath, cb) {
-        this.$store.dispatch('UPDATE_FILE_PATH', filePath)
-        fs.writeFile(filePath, this.currentTab.content, 'utf8', err => {
+      save({index, filePath}, cb) {
+        const tab = this.tabs[index]
+        this.$store.dispatch('UPDATE_FILE_PATH', {
+          index,
+          filePath
+        })
+        fs.writeFile(filePath, tab.content, 'utf8', err => {
           if (err) {
-            this.updateSaved(false)
             console.log(err)
           } else {
             console.log(`saved as ${filePath}`)
-            this.updateSaved(true)
+            this.updateSaved({index, saved: true})
             if (cb) cb()
           }
         })
       },
-      handleSave(cb) {
-        if (this.currentTab.filePath) {
-          this.save(this.currentTab.filePath, cb)
+      handleSave(index, cb) {
+        const tab = this.tabs[index]
+        if (tab.filePath) {
+          this.save({index, filePath: tab.filePath}, cb)
         } else {
           remote.dialog.showSaveDialog({
             filters: [
               {name: 'Markdown', extensions: ['markdown', 'md']}
             ]
           }, filePath => {
-            if (filePath) this.save(filePath, cb)
+            if (filePath) this.save({index, filePath}, cb)
           })
         }
       },
-      handleSaveAs() {
+      handleSaveAs(index) {
+        const tab = this.tabs[index]
         remote.dialog.showSaveDialog({
           filters: [
             {name: 'Markdown', extensions: ['markdown', 'md']}
           ]
         }, filePath => {
-          fs.writeFile(filePath, this.content, 'utf8', err => {
+          fs.writeFile(tab.filePath, tab.content, 'utf8', err => {
             if (err) {
               console.log(err)
             } else {
@@ -160,11 +165,21 @@
         })
       },
       async overrideTab(filePath) {
+        const index = this.currentTabIndex
         const content = await pify(fs.readFile)(filePath, 'utf8')
         this.editor.getDoc().setValue(content)
-        this.$store.dispatch('UPDATE_CONTENT', content)
-        this.$store.dispatch('UPDATE_FILE_PATH', filePath)
-        this.updateSaved(true)
+        this.$store.dispatch('UPDATE_CONTENT', {
+          index,
+          content
+        })
+        this.$store.dispatch('UPDATE_FILE_PATH', {
+          index,
+          filePath
+        })
+        this.updateSaved({
+          index,
+          saved: true
+        })
       },
       async createNewTab(filePath = '') {
         let content = ''
@@ -208,8 +223,14 @@
           }, 200)
 
           editor.on('change', e => {
-            this.updateSaved(false)
-            this.$store.dispatch('UPDATE_CONTENT', e.getValue())
+            this.updateSaved({
+              index: this.currentTabIndex,
+              saved: false
+            })
+            this.$store.dispatch('UPDATE_CONTENT', {
+              index: this.currentTabIndex,
+              content: e.getValue()
+            })
             this.handleScroll()
           })
 
@@ -243,7 +264,7 @@
       },
       listenIpc() {
         ipcRenderer.on('file-save', () => {
-          this.handleSave()
+          this.handleSave(this.currentTabIndex)
         })
 
         ipcRenderer.on('open-file', (e, filePath) => {
@@ -251,7 +272,7 @@
         })
 
         ipcRenderer.on('file-save-as', () => {
-          this.handleSaveAs()
+          this.handleSaveAs(this.currentTabIndex)
         })
 
         ipcRenderer.on('toggle-focus-mode', () => {
@@ -264,16 +285,20 @@
         })
 
         ipcRenderer.on('close-current-tab', () => {
-          this.closeTab(this.currentTabIndex)
+          if (this.tabs.length === 0) {
+            remote.getCurrentWindow().destroy()
+          } else {
+            this.closeTab(this.currentTabIndex)
+          }
         })
 
         ipcRenderer.on('new-tab', () => {
           this.createNewTab()
         })
 
-        ipcRenderer.on('close-all-tabs', (cb) => {
+        ipcRenderer.on('close-window', () => {
           if (this.tabs.length === 0) {
-            return remote.getCurrentWindow().destroy()
+            return remote.getCurrentWindow().close()
           }
 
           const closeInOrder = () => {
@@ -281,35 +306,13 @@
               if (this.tabs.length > 0) {
                 closeInOrder()
               } else {
-                remote.getCurrentWindow().destroy()
+                remote.getCurrentWindow().close()
               }
             })
           }
 
           closeInOrder()
         })
-
-        window.onbeforeunload = e => {
-          if (this.tabs.length === 0) {
-            return
-          }
-          e.returnValue = false
-          if (this.tabs.length > 0) {
-
-            const closeInOrder = () => {
-              this.closeTab(0, () => {
-                if (this.tabs.length > 0) {
-                  closeInOrder()
-                } else {
-                  this.createNewTab()
-                }
-              })
-            }
-
-            closeInOrder()
-
-          }
-        }
 
         event.on('new-tab', () => {
           this.createNewTab()
@@ -335,9 +338,11 @@
           if (clickedButton === 0) {
             this.handleSave(() => {
               this.$store.dispatch('CLOSE_TAB', index)
+              this.$store.dispatch('UPDATE_SAVE_STATUS', {index, saved: true})
               if (cb) cb()
             })
           } else if (clickedButton === 1) {
+            this.$store.dispatch('UPDATE_SAVE_STATUS', {index, saved: true})
             this.$store.dispatch('CLOSE_TAB', index)
             if (cb) cb()
           }

@@ -1,5 +1,9 @@
 import path from 'path'
+import {remote} from 'electron'
 import md from 'utils/markdown'
+
+const win = remote.getCurrentWindow()
+win.$state.unsaved = 0
 
 const state = {
   tabs: [],
@@ -11,29 +15,33 @@ const mutations = {
     state.tabs.push(payload)
     state.currentTabIndex++
   },
-  UPDATE_CONTENT(state, content) {
-    const currentTab = state.tabs[state.currentTabIndex]
-    currentTab.content = content
-    currentTab.html = md.render(content)
-    const matchWords = currentTab.content.match(/[\u00ff-\uffff]|\S+/g)
-    currentTab.wordCount = matchWords ? matchWords.length : 0
+  UPDATE_CONTENT(state, {index, content}) {
+    const tab = state.tabs[index]
+    tab.content = content
+    tab.html = md.render(content)
+    const matchWords = tab.content.match(/[\u00ff-\uffff]|\S+/g)
+    tab.wordCount = matchWords ? matchWords.length : 0
   },
-  UPDATE_FILE_PATH(state, filePath) {
-    const currentTab = state.tabs[state.currentTabIndex]
-    currentTab.filePath = filePath
+  UPDATE_FILE_PATH(state, {index, filePath}) {
+    const tab = state.tabs[index]
+    tab.filePath = filePath
     document.title = `${path.basename(filePath)} - EME`
   },
-  UPDATE_SAVE_STATUS(state, saved) {
-    const currentTab = state.tabs[state.currentTabIndex]
-    currentTab.saved = saved
-    const fileName = currentTab.filePath ?
-      path.basename(currentTab.filePath) :
+  UPDATE_SAVE_STATUS(state, {index, saved}) {
+    const tab = state.tabs[index]
+    const fileName = tab.filePath ?
+      path.basename(tab.filePath) :
       'untitled'
+
     if (saved) {
+      if (saved !== tab.saved) win.$state.unsaved--
       document.title = `${fileName} - EME`
     } else {
+      if (saved !== tab.saved) win.$state.unsaved++
       document.title = `${fileName} * - EME`
     }
+
+    tab.saved = saved
   },
   SET_EDITOR(state, {index, editor}) {
     state.currentTabIndex = index
