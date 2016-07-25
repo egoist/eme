@@ -16,9 +16,10 @@ const appMenu = buildMenu({
   createWindow: emeWindow.createWindow
 })
 
+let mainWindow
 app.on('ready', () => {
   Menu.setApplicationMenu(appMenu)
-  emeWindow.createWindow()
+  mainWindow = emeWindow.createWindow()
 })
 
 app.on('window-all-closed', () => {
@@ -29,7 +30,7 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   if (emeWindow.wins === 0) {
-    emeWindow.createWindow()
+    mainWindow = emeWindow.createWindow()
   }
 })
 
