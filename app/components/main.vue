@@ -296,8 +296,8 @@
           }
         })
 
-        ipcRenderer.on('new-tab', () => {
-          this.createNewTab()
+        ipcRenderer.on('new-tab', (e, filePath) => {
+          this.createNewTab(filePath)
         })
 
         ipcRenderer.on('close-window', () => {
