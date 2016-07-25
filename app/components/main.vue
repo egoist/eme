@@ -297,9 +297,6 @@
         })
 
         ipcRenderer.on('close-window', () => {
-          if (this.tabs.length === 0) {
-            return remote.getCurrentWindow().close()
-          }
 
           const closeInOrder = () => {
             this.closeTab(0, () => {
@@ -307,6 +304,22 @@
                 closeInOrder()
               } else {
                 remote.getCurrentWindow().close()
+              }
+            })
+          }
+
+          closeInOrder()
+        })
+
+        ipcRenderer.on('close-and-exit', () => {
+
+          const closeInOrder = () => {
+            this.closeTab(0, () => {
+              if (this.tabs.length > 0) {
+                closeInOrder()
+              } else {
+                // any better solution?
+                remote.app.exit(0)
               }
             })
           }

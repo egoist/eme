@@ -12,8 +12,8 @@ const build = cb => {
       label: 'File',
       submenu: [
         {
-          label: 'New File',
-          accelerator: 'CmdOrCtrl+N',
+          label: 'New Tab',
+          accelerator: 'CmdOrCtrl+T',
           click(item, focusedWindow) {
             focusedWindow.webContents.send('new-tab')
           }
@@ -207,7 +207,15 @@ const build = cb => {
           type: 'separator'
         },
         {
-          role: 'quit'
+          label: 'Quit',
+          accelerator: 'Command+Q',
+          click(item, focusedWindow) {
+            if (focusedWindow) {
+              focusedWindow.webContents.send('close-and-exit')
+            } else {
+              app.exit(0)
+            }
+          }
         }
       ]
     })
