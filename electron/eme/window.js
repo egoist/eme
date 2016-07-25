@@ -61,6 +61,8 @@ class Window {
     win.$state = {
       unsaved: 0
     }
+
+    return win
   }
 }
 
