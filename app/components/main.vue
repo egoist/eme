@@ -114,6 +114,7 @@
       this.createNewTab().catch(e => console.log(e.stack))
 
       this.listenIpc()
+      this.handleDrag()
     },
     methods: {
       handleScroll(e) {
@@ -225,6 +226,7 @@
             lineWrapping: true,
             scrollbarStyle: 'simple',
             autofocus: true,
+            dragDrop: false,
             extraKeys: {
               "Enter": "newlineAndIndentContinueMarkdownList"
             }
@@ -233,7 +235,7 @@
           setTimeout(() => {
             editor.refresh()
             editor.focus()
-          }, 200)
+          }, 0)
 
           editor.on('change', e => {
             this.updateSaved({
@@ -250,7 +252,7 @@
           this.$store.dispatch('SET_EDITOR', {index, editor})
 
           tabEl.querySelector('.CodeMirror-scroll').addEventListener('scroll', this.handleScroll)
-        }, 200)
+        }, 0)
       },
       handleOpen(filePath) {
         const openFile = filePath => {
@@ -357,6 +359,7 @@
         })
 
         event.on('focus-current-tab', () => {
+          this.editor.refresh()
           this.editor.focus()
         })
       },
@@ -383,6 +386,24 @@
         } else {
           this.$store.dispatch('CLOSE_TAB', index)
           if (cb) cb()
+        }
+      },
+      handleDrag() {
+        const holder = $('#app')
+
+        holder.ondragover = () => {
+          return false
+        }
+        holder.ondragleave = holder.ondragend = () => {
+          return false
+        }
+
+        holder.ondrop = e => {
+          e.preventDefault()
+          for (let f of e.dataTransfer.files) {
+            this.createNewTab(f.path)
+          }
+          return false
         }
       }
     }
