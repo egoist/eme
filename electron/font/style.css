@@ -1,0 +1,35 @@
+@font-face {
+  font-family: 'eme';
+  src:
+    url('fonts/eme.ttf?cayqlg') format('truetype'),
+    url('fonts/eme.woff?cayqlg') format('woff'),
+    url('fonts/eme.svg?cayqlg#eme') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'eme' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-eye:before {
+  content: "\e900";
+}
+.icon-align-horizontal-middle:before {
+  content: "\e901";
+}
+.icon-pencil:before {
+  content: "\f058";
+}
+

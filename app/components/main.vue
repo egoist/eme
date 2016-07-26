@@ -10,7 +10,7 @@
   }
   .editor, .preview {
     height: 100%;
-    width: 50%;
+    flex: 1;
     overflow: auto;
   }
   .editor {
@@ -47,10 +47,15 @@
     :class="'tab-body-' + $index"
     v-for="tab in tabs"
     v-show="$index === currentTabIndex">
-    <div class="editor" :class="{'focus-mode': tab.isFocusMode}">
+    <div
+      class="editor"
+      :class="{'focus-mode': tab.isFocusMode}"
+      v-show="currentTab && currentTab.writingMode !== 'preview'">
       <textarea class="editor-input" :id="'editor-' + $index">{{ tab.content }}</textarea>
     </div>
-    <div :class="'preview preview-' + $index">
+    <div
+      :class="'preview preview-' + $index"
+      v-show="currentTab && currentTab.writingMode !== 'writing'">
       <div :class="'markdown-body markdown-body-' + $index">
         {{{ tab.html }}}
       </div>
@@ -205,7 +210,8 @@
           filePath,
           saved: true,
           editor: null,
-          isFocusMode: false
+          isFocusMode: false,
+          writingMode: 'default'
         })
 
         setTimeout(() => {
