@@ -15,6 +15,9 @@
   }
   .editor {
     cursor: text;
+    .editor-input {
+      display: none;
+    }
     .CodeMirror {
       background-color: white !important;
       height: 100%;
@@ -44,8 +47,8 @@
     :class="'tab-body-' + $index"
     v-for="tab in tabs"
     v-show="$index === currentTabIndex">
-    <div class="editor" v-show="editor" :class="{'focus-mode': tab.isFocusMode}">
-      <textarea :id="'editor-' + $index">{{ tab.content }}</textarea>
+    <div class="editor" :class="{'focus-mode': tab.isFocusMode}">
+      <textarea class="editor-input" :id="'editor-' + $index">{{ tab.content }}</textarea>
     </div>
     <div :class="'preview preview-' + $index">
       <div :class="'markdown-body markdown-body-' + $index">
@@ -245,7 +248,7 @@
       },
       handleOpen(filePath) {
         const openFile = filePath => {
-          if (this.currentTab.saved && !this.currentTab.filePath) {
+          if (this.currentTab && this.currentTab.saved && !this.currentTab.filePath) {
             // load file in currentTab
             this.overrideTab(filePath)
           } else {
