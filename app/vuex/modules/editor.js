@@ -57,6 +57,14 @@ const mutations = {
     state.tabs = state.tabs.filter((tab, index) => {
       return index !== indexToClose
     })
+  },
+  SET_WRITING_MODE(state, {index, mode}) {
+    const tab = state.tabs[index]
+    tab.writingMode = mode
+    setTimeout(() => {
+      tab.editor.refresh()
+      if (mode !== 'preview') tab.editor.focus()
+    }, 50)
   }
 }
 
