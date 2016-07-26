@@ -86,7 +86,7 @@ const build = cb => {
         },
         {
           role: 'selectall'
-        },
+        }
       ]
     },
     {
@@ -104,11 +104,22 @@ const build = cb => {
           role: 'togglefullscreen'
         },
         {
+          type: 'separator'
+        },
+        {
           label: 'Toggle Focus Mode',
           accelerator: 'CmdOrCtrl+\\',
           click(item, focusedWindow) {
             if (focusedWindow)
               focusedWindow.webContents.send('toggle-focus-mode')
+          }
+        },
+        {
+          label: 'Toggle Vim Mode',
+          accelerator: 'CmdOrCtrl+I',
+          click(item, focusedWindow) {
+            if (focusedWindow)
+              focusedWindow.webContents.send('toggle-vim-mode')
           }
         },
         {
