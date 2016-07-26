@@ -34,6 +34,11 @@ app.on('activate', () => {
   }
 })
 
+app.on('open-file', (e, filePath) => {
+  e.preventDefault()
+  console.log(filePath)
+})
+
 ipcMain.on('close-focus-window', () => {
   BrowserWindow.getFocusedWindow().close()
 })
