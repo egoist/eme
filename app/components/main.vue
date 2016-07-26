@@ -75,6 +75,7 @@
   import 'codemirror/addon/edit/continuelist'
   import 'codemirror/addon/scroll/simplescrollbars'
   import 'codemirror/addon/selection/active-line'
+  import 'codemirror/keymap/vim'
 
   import {$} from 'utils/dom'
   import {isMac} from 'utils/os'
@@ -212,7 +213,8 @@
           saved: true,
           editor: null,
           isFocusMode: false,
-          writingMode: 'default'
+          writingMode: 'default',
+          isVimMode: false
         })
 
         setTimeout(() => {
@@ -293,6 +295,15 @@
         ipcRenderer.on('toggle-focus-mode', () => {
           this.currentTab.isFocusMode = !this.currentTab.isFocusMode
           this.editor.setOption('styleActiveLine', this.currentTab.isFocusMode)
+        })
+
+        ipcRenderer.on('toggle-vim-mode', () => {
+          if (this.currentTab.isVimMode) {
+            this.editor.setOption('keyMap', 'default')
+          } else {
+            this.editor.setOption('keyMap', 'vim')
+          }
+          this.currentTab.isVimMode = !this.currentTab.isVimMode
         })
 
         ipcRenderer.on('win-focus', () => {
