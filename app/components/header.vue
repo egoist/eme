@@ -13,13 +13,18 @@
     .tab {
       height: $header-height;
       line-height: $header-height;
-      width: 260px;
+      padding: 0 10px;
       position: relative;
       text-align: center;
       border-left: 1px solid #ddd;
       .tab-title {
         color: #999;
-        -webkit-user-select: none ;
+        white-space: nowrap;
+        -webkit-user-select: none;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 220px;
+        display: inline-block;
       }
       &:last-child {
         border-right: 1px solid #ddd;
