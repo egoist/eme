@@ -30,19 +30,14 @@ class EmeApplication {
       }
     })
     app.on('activate', () => {
-      if (this.windowCount === 0) {
+      if (!this.win) {
         this.win = new Window()
       }
     })
     ipcMain.on('close-focus-window', () => {
       BrowserWindow.getFocusedWindow().close()
     })
-    ipcMain.on('open-in-new-window', (e, filePath) => {
-      const win = new Window()
-      win.webContents.on('did-finish-load', () => {
-        win.webContents.send('open-file', filePath)
-      })
-    })
+
   }
 
   openWithOption({pathsToOpen,resourcePath}){

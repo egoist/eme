@@ -46,9 +46,6 @@ module.exports = class EmeWindow {
     this.win.on('close', e => {
       this.win.webContents.send('close-window')
     })
-    this.win.on('closed', () => {
-      this.windowCount--
-    })
     this.win.on('focus', () => {
       this.win.webContents.send('win-focus')
     })
