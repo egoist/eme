@@ -29,6 +29,13 @@ $ npm run dev
 $ https_proxy=http://127.0.0.1:8787 npm run dev
 ```
 
+## Usage
+```bash
+# install app >> open EME-( Install Shell Command ) on Menu bar
+# Use on CommandLine
+$ eme foo.md
+```
+
 ## License
 
 MIT &copy; [EGOIST](https://github.com/egoist)

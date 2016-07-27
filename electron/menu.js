@@ -5,6 +5,8 @@ const {
   app
 } = require('electron')
 
+const installShell = require('./shell')
+const CommandInstaller = new installShell()
 
 const build = cb => {
   const template = [
@@ -205,6 +207,18 @@ const build = cb => {
         {
           role: 'services',
           submenu: []
+        },
+        {
+          type: 'separator'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label:'Install Shell Command',
+          click(item,focusedWindow){
+            CommandInstaller.installShellCommand()
+          }
         },
         {
           type: 'separator'
