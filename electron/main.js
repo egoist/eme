@@ -17,7 +17,7 @@ function start(){
   app.on('open-file', addPathToOpen)
   app.on('ready',() => {
 
-    EMEApplication = require(path.join(path.dirname(__dirname),dir,'application'))
+    EMEApplication = require(path.join(path.dirname(__dirname),dir,'eme','application'))
     const EME = new EMEApplication(args)
   })
 }
