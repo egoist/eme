@@ -8,13 +8,6 @@ const dir = process.env.NODE_ENV === 'development' ? 'electron' : 'app'
 function start(){
   const args = parseCommandLine()
   args.env = process.env
-
-  addPathToOpen = (event,pathsToOpen) => {
-    event.preventDefault()
-    args.pathsToOpen.push(pathsToOpen)
-  }
-
-  app.on('open-file', addPathToOpen)
   app.on('ready',() => {
 
     EMEApplication = require(path.join(path.dirname(__dirname),dir,'eme','application'))
