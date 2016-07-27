@@ -1,20 +1,20 @@
 const {BrowserWindow, Menu, app, dialog, ipcMain, shell} = require ('electron')
 const Window = require('./window')
+const buildMenu = require('./menu')
 
 const isDev = process.env.NODE_ENV === 'development'
 
 module.exports =
 class EmeApplication {
   constructor(options){
-    const {pathsToOpen, resourcePath } = options
-    this.webCount = 0
+    const { pathsToOpen, resourcePath } = options
     if( pathsToOpen && pathsToOpen.length > 0 ){
       this.openWithOption(options)
     } else {
       this.win = new Window({})
-      this.webContents ++
     }
     this.handleEvents()
+    this.setupContextMenu()
   }
 
   handleEvents(){
@@ -53,13 +53,21 @@ class EmeApplication {
     }
   }
 
+  setupContextMenu(){
+    let win = this.win
+    const appMenu = buildMenu({
+      win
+    })
+    Menu.setApplicationMenu(appMenu)
+  }
+
   openPath({pathsToOpen}){
     this.openPaths({pathsToOpen})
   }
   openPaths({pathsToOpen,resourcePath}){
     if(!pathsToOpen || pathsToOpen.length === 0)
       return
+
     this.win = new Window({pathsToOpen,resourcePath})
-    this.webContents ++
   }
 }
