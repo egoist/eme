@@ -53,11 +53,11 @@ const mutations = {
   CLOSE_TAB(state, indexToClose) {
     if (state.currentTabIndex !== 0 && indexToClose <= state.currentTabIndex) {
       state.currentTabIndex--
-      setTimeout(() => {
-        state.tabs[state.currentTabIndex].editor.refresh()
-        state.tabs[state.currentTabIndex].editor.focus()
-      }, 0)
     }
+    setTimeout(() => {
+      state.tabs[state.currentTabIndex].editor.refresh()
+      state.tabs[state.currentTabIndex].editor.focus()
+    }, 0)
     state.tabs = state.tabs.filter((tab, index) => {
       return index !== indexToClose
     })

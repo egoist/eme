@@ -3,5 +3,8 @@
   "rules": {
     "semi": ["error", "never"],
     "curly": ["error", "multi-line"]
+  },
+  "env": {
+    "browser": "true"
   }
 }
