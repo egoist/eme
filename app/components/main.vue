@@ -85,6 +85,8 @@
     getWordCount
   } from 'utils/common'
 
+  const currentWindow = remote.getCurrentWindow()
+
   export default {
     vuex: {
       getters: {
@@ -153,7 +155,7 @@
         if (tab.filePath) {
           this.save({index, filePath: tab.filePath}, cb)
         } else {
-          remote.dialog.showSaveDialog({
+          remote.dialog.showSaveDialog(currentWindow, {
             filters: [
               {name: 'Markdown', extensions: ['markdown', 'md']}
             ]
@@ -164,7 +166,7 @@
       },
       handleSaveAs(index) {
         const tab = this.tabs[index]
-        remote.dialog.showSaveDialog({
+        remote.dialog.showSaveDialog(currentWindow, {
           filters: [
             {name: 'Markdown', extensions: ['markdown', 'md']}
           ]
@@ -269,7 +271,7 @@
         if (filePath) {
           openFile(filePath)
         } else {
-          remote.dialog.showOpenDialog({
+          remote.dialog.showOpenDialog(currentWindow, {
             properties: ['openFile'],
             filters: [
               {name: 'Markdown', extensions: ['markdown', 'md']}
@@ -312,7 +314,7 @@
 
         ipcRenderer.on('close-current-tab', () => {
           if (this.tabs.length === 0) {
-            remote.getCurrentWindow().destroy()
+            currentWindow.destroy()
           } else {
             this.closeTab(this.currentTabIndex)
           }
@@ -329,7 +331,7 @@
               if (this.tabs.length > 0) {
                 closeInOrder()
               } else {
-                remote.getCurrentWindow().close()
+                currentWindow.close()
               }
             })
           }
@@ -338,7 +340,7 @@
         })
 
         window.onbeforeunload = () => {
-          if (remote.getCurrentWindow().$state.unsaved === 0) {
+          if (currentWindow.$state.unsaved === 0) {
             return
           } else {
             return false
@@ -378,18 +380,19 @@
         const tab = this.tabs[index]
         if (!tab.saved) {
           const filename = tab.filePath ? path.basename(tab.filePath) : 'untitled'
-          const clickedButton = remote.dialog.showMessageBox({
+          const clickedButton = remote.dialog.showMessageBox(currentWindow, {
             type: 'question',
             title: 'EME',
-            message: `Save ${filename} before close?`,
-            buttons: ['Yes', 'No', 'Cancel']
+            message: `Do you want to save the changes you made to ${filename} ?`,
+            detail: 'Your changes will be lost if you don\'t save them.',
+            buttons: ['Save', 'Cancel', 'Don\'t Save']
           })
           if (clickedButton === 0) {
             this.handleSave(index, () => {
               this.$store.dispatch('CLOSE_TAB', index)
               if (cb) cb()
             })
-          } else if (clickedButton === 1) {
+          } else if (clickedButton === 2) {
             this.$store.dispatch('UPDATE_SAVE_STATUS', {index, saved: true})
             this.$store.dispatch('CLOSE_TAB', index)
             if (cb) cb()

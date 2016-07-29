@@ -1,25 +1,25 @@
 'use strict'
-const path = require('path')
+const os = require('os')
 const {
   app,
   BrowserWindow,
   Menu,
-  shell,
   ipcMain
 } = require('electron')
-const buildMenu = require('./menu')
+const buildMenu = require('./eme/menu')
 const emeWindow = require('./eme/window')
-
-const isDev = process.env.NODE_ENV === 'development'
 
 const appMenu = buildMenu({
   createWindow: emeWindow.createWindow
 })
 
-let mainWindow
+let mainWindow // eslint-disable-line
 app.on('ready', () => {
   Menu.setApplicationMenu(appMenu)
   mainWindow = emeWindow.createWindow()
+  if (os.platform() === 'darwin') {
+    mainWindow.setSheetOffset(36)
+  }
 })
 
 app.on('window-all-closed', () => {

@@ -2,7 +2,7 @@
 const path = require('path')
 const {
   BrowserWindow,
-  app
+  shell
 } = require('electron')
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -24,7 +24,6 @@ class Window {
       titleBarStyle: 'hidden-inset'
     })
 
-    const id = win.id
     const web = win.webContents
 
     win.loadURL(homepage)
@@ -34,17 +33,16 @@ class Window {
       shell.openExternal(url)
     })
 
-    win.on('close', e => {
-      win.webContents.send('close-window')
+    win.on('close', () => {
+      web.send('close-window')
     })
 
     win.on('closed', () => {
       this.wins--
     })
 
-
     win.on('focus', () => {
-      win.webContents.send('win-focus')
+      web.send('win-focus')
     })
 
     if (isDev) {

@@ -3,7 +3,7 @@
   "description": "elegant markdown editor",
   "main": "electron/index.js",
   "scripts": {
-    "test": "npm test",
+    "test": "eslint electron/index.js electron/eme/*.js",
     "dev": "node tasks/dev.js",
     "install:all": "npm install && cd electron && npm install",
     "app": "cd electron && cross-env NODE_ENV=development electron .",
@@ -41,6 +41,8 @@
     "electron-devtools-installer": "^1.1.5",
     "electron-packager": "^7.3.0",
     "electron-prebuilt": "^1.2.8",
+    "eslint": "^3.1.1",
+    "eslint-config-xo-space": "^0.14.0",
     "extract-text-webpack-plugin": "^1.0.1",
     "json-loader": "^0.5.4",
     "minimist": "^1.2.0",

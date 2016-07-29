@@ -65,7 +65,6 @@
 
     .tab-indicator {
       -webkit-user-select: none;
-      height: calc(100% - 1px);
       width: 30px;
       text-align: center;
       display: inline-block;
@@ -75,7 +74,6 @@
       right: 0;
       transform: translateY(-50%);
       transition: all .3s;
-      background-color: rgba(255, 255, 255, 0.84);
       .dot {
         width: 5px;
         height: 5px;
@@ -88,9 +86,14 @@
     .close-indicator {
       display: none;
       font-weight: bold;
+      background-color: rgba(255, 255, 255, 0.84);
       &:hover {
         color: #999;
       }
+    }
+
+    .save-indicator {
+      margin-top: -1px;
     }
   }
 </style>

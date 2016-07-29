@@ -1,10 +1,10 @@
 'use strict'
+const path = require('path')
 const {
   Menu,
   shell,
   app
 } = require('electron')
-
 
 const build = cb => {
   const template = [
@@ -43,16 +43,14 @@ const build = cb => {
           label: 'Save',
           accelerator: 'CmdOrCtrl+S',
           click(item, focusedWindow) {
-            if (focusedWindow)
-              focusedWindow.webContents.send('file-save')
+            if (focusedWindow) focusedWindow.webContents.send('file-save')
           }
         },
         {
           label: 'Save As',
           accelerator: 'CmdOrCtrl+S+Shift',
           click(item, focusedWindow) {
-            if (focusedWindow)
-              focusedWindow.webContents.send('file-save-as')
+            if (focusedWindow) focusedWindow.webContents.send('file-save-as')
           }
         }
       ]
@@ -96,8 +94,7 @@ const build = cb => {
           label: 'Reload',
           accelerator: 'CmdOrCtrl+R',
           click(item, focusedWindow) {
-            if (focusedWindow)
-              focusedWindow.reload()
+            if (focusedWindow) focusedWindow.reload()
           }
         },
         {
@@ -110,16 +107,14 @@ const build = cb => {
           label: 'Toggle Focus Mode',
           accelerator: 'CmdOrCtrl+\\',
           click(item, focusedWindow) {
-            if (focusedWindow)
-              focusedWindow.webContents.send('toggle-focus-mode')
+            if (focusedWindow) focusedWindow.webContents.send('toggle-focus-mode')
           }
         },
         {
           label: 'Toggle Vim Mode',
           accelerator: 'CmdOrCtrl+I',
           click(item, focusedWindow) {
-            if (focusedWindow)
-              focusedWindow.webContents.send('toggle-vim-mode')
+            if (focusedWindow) focusedWindow.webContents.send('toggle-vim-mode')
           }
         },
         {
@@ -129,10 +124,9 @@ const build = cb => {
           label: 'Toggle Developer Tools',
           accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
           click(item, focusedWindow) {
-            if (focusedWindow)
-              focusedWindow.webContents.toggleDevTools()
+            if (focusedWindow) focusedWindow.webContents.toggleDevTools()
           }
-        },
+        }
       ]
     },
     {
@@ -142,8 +136,7 @@ const build = cb => {
           label: 'Close',
           accelerator: 'CmdOrCtrl+W',
           click(item, focusedWindow) {
-            if (focusedWindow)
-              focusedWindow.webContents.send('close-current-tab')
+            if (focusedWindow) focusedWindow.webContents.send('close-current-tab')
           }
         },
         {
@@ -169,7 +162,9 @@ const build = cb => {
       submenu: [
         {
           label: 'Report bugs',
-          click() { shell.openExternal('http://github.com/egoist/eme/issues') }
+          click() {
+            shell.openExternal('http://github.com/egoist/eme/issues')
+          }
         },
         {
           type: 'separator'
@@ -177,18 +172,19 @@ const build = cb => {
         {
           label: 'Welcome Guide',
           click(item, focusedWindow) {
+            const file = path.join(__dirname, '../welcome-guide.md')
             if (focusedWindow) {
-              focusedWindow.webContents.send('open-file', __dirname + '/welcome-guide.md')
+              focusedWindow.webContents.send('open-file', file)
             } else {
               const win = cb.createWindow()
               win.webContents.on('did-finish-load', () => {
-                win.webContents.send('open-file', __dirname + '/welcome-guide.md')
+                win.webContents.send('open-file', file)
               })
             }
           }
         }
       ]
-    },
+    }
   ]
 
   if (process.platform === 'darwin') {
@@ -238,6 +234,5 @@ const build = cb => {
 
   return Menu.buildFromTemplate(template)
 }
-
 
 module.exports = cb => build(cb)

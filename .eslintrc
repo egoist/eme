@@ -1,0 +1,7 @@
+{
+  "extends": "xo-space",
+  "rules": {
+    "semi": ["error", "never"],
+    "curly": ["error", "multi-line"]
+  }
+}
