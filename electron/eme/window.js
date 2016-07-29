@@ -1,66 +1,63 @@
 'use strict'
 const path = require('path')
+const fs = require('fs')
 const {
+  app,
   BrowserWindow,
-  app
+  Menu,
+  shell,
+  ipcMain
 } = require('electron')
+const buildMenu = require('./menu')
 
-const isDev = process.env.NODE_ENV === 'development'
+module.exports = class EmeWindow {
 
-class Window {
-  constructor() {
-    this.wins = 0
-  }
+  constructor(settings={}){
+    const { resourcePath, pathsToOpen } = settings
 
-  createWindow({
-    homepage = `file://${path.join(__dirname, '../index.html')}`
-  } = {}) {
-    const win = new BrowserWindow({
-      name: 'EME',
+    const options = {
+      name: app.getName(),
       width: 800,
       height: 600,
       minWidth: 430,
       minHeight: 250,
       titleBarStyle: 'hidden-inset'
+    }
+
+    this.locationsToOpen = `${resourcePath}/${pathsToOpen}`
+    this.win = new BrowserWindow(options)
+    this.loaded = null
+    this.handleEvents()
+
+    this.win.loadURL(`file://${path.join(__dirname, '../index.html')}`)
+    this.hasPathToOpen = !(this.locationsToOpen.length === 1 && ! this.locationsToOpen[0].pathsToOpen)
+    this.openLocations(this.hasPathToOpen && this.locationsToOpen)
+  }
+
+
+  handleEvents(){
+    this.win.webContents.on('did-finish-load', ()=> {
+      this.loaded = true
     })
-
-    const id = win.id
-    const web = win.webContents
-
-    win.loadURL(homepage)
-
-    win.webContents.on('new-window', (e, url) => {
+    this.win.on('new-window', (e, url) => {
       e.preventDefault()
       shell.openExternal(url)
     })
-
-    win.on('close', e => {
-      win.webContents.send('close-window')
+    this.win.on('close', e => {
+      this.win.webContents.send('close-window')
     })
-
-    win.on('closed', () => {
-      this.wins--
+    this.win.on('focus', () => {
+      this.win.webContents.send('win-focus')
     })
+  }
 
-
-    win.on('focus', () => {
-      win.webContents.send('win-focus')
-    })
-
-    if (isDev) {
-      const installExtension = require('electron-devtools-installer')
-      installExtension.default(installExtension.VUEJS_DEVTOOLS)
-        .then(name => console.log(`Added Extension:  ${name}`))
-        .catch(err => console.log('An error occurred: ', err))
+  openLocations(locationsToOpen){
+    if(this.loaded){
+      this.win.webContents.send('open-file', locationsToOpen)
+    }else {
+      this.win.webContents.on('did-finish-load',()=> {
+        this.openLocations(locationsToOpen)
+      })
     }
-
-    this.wins++
-    win.$state = {
-      unsaved: 0
-    }
-
-    return win
   }
 }
-
-module.exports = new Window()
