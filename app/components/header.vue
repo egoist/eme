@@ -14,6 +14,7 @@
       height: $header-height;
       line-height: $header-height;
       padding: 0 10px;
+      padding-right: 0;
       position: relative;
       text-align: center;
       border-left: 1px solid #ddd;
@@ -38,12 +39,21 @@
         }
       }
       &:hover {
-        .save-indicator {
-          display: none;
+        .tab-indicator {
+          background-color: rgba(255, 255, 255, 0.84);
+          .dot {
+            display: none;
+          }
+          .cross {
+            display: block;
+          }
+          &:hover {
+            font-weight: bold;
+          }
         }
-        .close-indicator {
-          display: inline-block;
-        }
+      }
+      >span {
+        float: left;
       }
     }
 
@@ -68,32 +78,22 @@
       width: 30px;
       text-align: center;
       display: inline-block;
-      margin-left: 5px;
-      position: absolute;
-      top: 50%;
-      right: 0;
-      transform: translateY(-50%);
-      transition: all .3s;
+      >span {
+        position: relative;
+        top: -1px;
+      }
       .dot {
         width: 5px;
         height: 5px;
-        background-color: blue;
+        background-color: #4b89ff;
         border-radius: 50%;
         display: inline-block;
       }
-    }
-
-    .close-indicator {
-      display: none;
-      font-weight: bold;
-      background-color: rgba(255, 255, 255, 0.84);
-      &:hover {
-        color: #999;
+      .cross {
+        display: none;
+        font-size: 1rem;
+        transition: all .3s;
       }
-    }
-
-    .save-indicator {
-      margin-top: -1px;
     }
   }
 </style>
@@ -109,10 +109,8 @@
       <span class="tab-title" v-if="tab">
         {{ tab.title || 'untitled' }}
       </span>
-      <span class="tab-indicator save-indicator" v-show="!tab.saved">
-        <span class="dot"></span>
-      </span>
-      <span class="tab-indicator close-indicator" @click="closeTab($event, $index)">
+      <span class="tab-indicator" @click="closeTab($event, $index)">
+        <span class="dot" v-show="!tab.saved"></span>
         <span class="cross">×</span>
       </span>
     </div>
