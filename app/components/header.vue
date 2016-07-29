@@ -78,6 +78,7 @@
       width: 30px;
       text-align: center;
       display: inline-block;
+      height: calc(100% - 1px);
       >span {
         position: relative;
         top: -1px;
