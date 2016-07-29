@@ -55,8 +55,11 @@ const mutations = {
       state.currentTabIndex--
     }
     setTimeout(() => {
-      state.tabs[state.currentTabIndex].editor.refresh()
-      state.tabs[state.currentTabIndex].editor.focus()
+      const tab = state.tabs[state.currentTabIndex]
+      if (tab && tab.editor) {
+        tab.editor.refresh()
+        tab.editor.focus()
+      }
     }, 0)
     state.tabs = state.tabs.filter((tab, index) => {
       return index !== indexToClose
