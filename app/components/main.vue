@@ -378,7 +378,7 @@
       },
       closeTab(index, cb) {
         const tab = this.tabs[index]
-        if (!tab.saved) {
+        if (tab && !tab.saved) {
           const filename = tab.filePath ? path.basename(tab.filePath) : 'untitled'
           const clickedButton = remote.dialog.showMessageBox(currentWindow, {
             type: 'question',
