@@ -55,7 +55,7 @@ a {
 
 .page-header {
   text-align: center;
-  height: 100vmin;
+  min-height: 100vmin;
   border-bottom: 1px solid #e2e2e2; }
 
 @media screen and (min-width: 64em) {
