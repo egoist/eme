@@ -2,14 +2,14 @@
 const minimist = require('minimist')
 const packager = require('electron-packager')
 const exec = require('child_process').exec
-const pkg = require('../electron/package.json')
+const pkg = require('../app/package.json')
 
 const args = minimist(process.argv.slice(2))
 const target = args._[0]
 
 const platforms = {}
 const defaults = {
-  dir: './electron',
+  dir: './app',
   'app-version': pkg.version,
   out: 'dist',
   overwrite: true,
@@ -27,7 +27,7 @@ platforms.macos = () => {
     platform: 'darwin',
     arch: 'x64',
     'app-bundle-id': 'com.egoistian.eme',
-    icon: './media/icons/icon.icns'
+    icon: './build/icon.icns'
   }), (err, paths) => {
     cb(err, paths)
     exec(`cd dist/EME-darwin-x64 && zip -ryXq9 ../EME-osx-${pkg.version}.zip EME.app`)
@@ -49,6 +49,7 @@ platforms.windows = () => {
   packager(Object.assign({}, defaults, {
     platform: 'win32',
     arch: 'ia32',
+    icon: './build/icon.ico',
     'version-string': {
       productName: pkg.productName
     }
