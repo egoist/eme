@@ -9,6 +9,7 @@ const target = args._[0]
 
 const platforms = {}
 const defaults = {
+  version: '1.3.2',
   dir: './app',
   'app-version': pkg.version,
   out: 'dist',
@@ -17,7 +18,7 @@ const defaults = {
 }
 const cb = (err, paths) => {
   if (err) {
-    return console.log(err)
+    return console.log(err.message)
   }
   console.log(paths.join('\n'))
 }
@@ -30,7 +31,7 @@ platforms.macos = () => {
     icon: './build/icon.icns'
   }), (err, paths) => {
     cb(err, paths)
-    exec(`cd dist/EME-darwin-x64 && zip -ryXq9 ../EME-osx-${pkg.version}.zip EME.app`)
+    exec(`cd dist/EME-darwin-x64 && zip -ryXq9 ../EME-macos-${pkg.version}.zip EME.app`)
   })
 }
 
