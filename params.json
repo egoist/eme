@@ -1,0 +1,6 @@
+{
+  "name": "Eme",
+  "tagline": "Elegant Markdown Editor.",
+  "body": "# EME\r\n\r\nElegant Markdown Editor.\r\n\r\n![preview](/media/preview.png)\r\n\r\n## Download\r\n\r\nYou can manually download the latest release [here](https://github.com/egoist/eme/releases)\r\n\r\n## Features\r\n\r\n- It just suits, show editor or preview or both just as you wish.\r\n- Focus mode, writing without distractions.\r\n- Exportable, from Markdown to HTML/PDF... You name it.\r\n- Supporting math typesetting, good for students and professionals.\r\n\r\n## Contributing\r\n\r\nPull requests are always welcome! Check out the [these issues](https://github.com/egoist/eme/issues?q=is%3Aissue+is%3Aopen+label%3A%22contribution+welcome%22) to get started fast.\r\n\r\n## Development\r\n\r\n```bash\r\n# Install all dependencies\r\n$ npm run install:all\r\n\r\n# Run in dev mode\r\n$ npm run dev\r\n\r\n# The first launch requires the access to google web store to download vue-devtools\r\n# So you'd better launch it with an https_proxy, like Lantern\r\n$ https_proxy=http://127.0.0.1:8787 npm run dev\r\n```\r\n\r\n## License\r\n\r\nMIT &copy; [EGOIST](https://github.com/egoist)\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
