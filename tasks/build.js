@@ -26,7 +26,8 @@ platforms.macos = () => {
   packager(Object.assign({}, defaults, {
     platform: 'darwin',
     arch: 'x64',
-    'app-bundle-id': 'com.egoistian.eme'
+    'app-bundle-id': 'com.egoistian.eme',
+    icon: './media/icons/icon.icns'
   }), (err, paths) => {
     cb(err, paths)
     exec(`cd dist/EME-darwin-x64 && zip -ryXq9 ../EME-osx-${pkg.version}.zip EME.app`)
