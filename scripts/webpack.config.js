@@ -6,16 +6,16 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 module.exports = {
   entry: ['./app/index.js'],
   output: {
-    path: process.cwd() + '/electron/dist',
+    path: process.cwd() + '/app/dist',
     filename: 'bundle.js'
   },
   resolve: {
     extensions: ['', '.js', '.vue', '.css', '.json'],
     alias: {
-      app: path.join(__dirname, '../app'),
-      utils: path.join(__dirname, '../app/utils'),
-      components: path.join(__dirname, '../app/components'),
-      css: path.join(__dirname, '../app/css')
+      src: path.join(__dirname, '../src'),
+      utils: path.join(__dirname, '../src/utils'),
+      components: path.join(__dirname, '../src/components'),
+      css: path.join(__dirname, '../src/css')
     }
   },
   module: {

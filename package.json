@@ -1,20 +1,19 @@
 {
   "name": "eme",
   "description": "elegant markdown editor",
-  "main": "electron/index.js",
+  "main": "app/index.js",
   "scripts": {
-    "test": "eslint electron/index.js electron/eme/*.js",
+    "test": "eslint app/index.js app/eme/*.js",
     "dev": "node tasks/dev.js",
     "install:all": "npm install && cd electron && npm install",
-    "app": "cd electron && cross-env NODE_ENV=development electron .",
-    "start": "electron electron/",
-    "build": "webpack --progress --config scripts/webpack.config.prod.js",
+    "app": "cd app && cross-env NODE_ENV=development electron .",
+    "start": "electron app/",
+    "build": "rm -rf app/dist && webpack --progress --config scripts/webpack.config.prod.js",
     "watch": "webpack --config scripts/webpack.config.dev.js --watch",
     "dev-server": "node scripts/server.js",
     "macos": "node tasks/build.js macos",
     "linux": "node tasks/build.js linux",
-    "windows": "node tasks/build.js windows",
-    "all": "node tasks/build.js all"
+    "windows": "node tasks/build.js windows"
   },
   "repository": {
     "type": "git",
@@ -24,12 +23,6 @@
     "markdown",
     "editor"
   ],
-  "author": "EGOIST <0x142857@gmail.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/egoist/eme/issues"
-  },
-  "homepage": "https://github.com/egoist/eme#readme",
   "devDependencies": {
     "babel-loader": "^6.2.4",
     "babel-plugin-transform-runtime": "^6.9.0",
@@ -38,6 +31,7 @@
     "cross-env": "^2.0.0",
     "css-loader": "^0.23.1",
     "devtron": "^1.2.1",
+    "electron-builder": "^5.22.2",
     "electron-devtools-installer": "^1.1.5",
     "electron-packager": "^7.3.0",
     "electron-prebuilt": "^1.2.8",

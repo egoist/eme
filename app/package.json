@@ -2,13 +2,15 @@
   "name": "electron",
   "productName": "EME",
   "version": "0.4.0",
-  "description": "",
+  "description": "Elegant Markdown Editor",
+  "author": "EGOIST <0x142857@gmail.com>",
+  "homepage": "https://github.com/egoist/eme",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "match-at": "^0.1.0"
   }
