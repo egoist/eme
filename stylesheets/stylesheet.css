@@ -198,6 +198,11 @@ a {
   background-color: #eff0f1;
   border: 0; }
 
+
+.feature {
+  text-align: center;
+}
+
 @media screen and (min-width: 64em) {
   .main-content {
     max-width: 64rem;
