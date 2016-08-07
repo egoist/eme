@@ -4,6 +4,10 @@ Elegant Markdown Editor.
 
 ![preview](/media/preview.png)
 
+## Download
+
+You can manually download the latest release [here](https://github.com/egoist/eme/releases)
+
 ## Features
 
 - It just suits, show editor or preview or both just as you wish.
