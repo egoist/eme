@@ -6,8 +6,7 @@ body {
   margin: 0;
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
-  line-height: 1.5;
-  color: #606c71; }
+  line-height: 1.5; }
 
 a {
   color: #1e6bb8;
@@ -51,6 +50,7 @@ a {
 
 .page-header {
   text-align: center;
+  height: 100vmin;
   border-bottom: 1px solid #e2e2e2; }
 
 @media screen and (min-width: 64em) {
@@ -159,6 +159,7 @@ a {
   .main-content pre code:before, .main-content pre code:after, .main-content pre tt:before, .main-content pre tt:after {
     content: normal; }
 .main-content ul, .main-content ol {
+  padding-left: 20px;
   margin-top: 0; }
 .main-content blockquote {
   padding: 0 1rem;
