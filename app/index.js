@@ -49,6 +49,7 @@ ipcMain.on('close-focus-window', () => {
 ipcMain.on('print-to-pdf', (e, html, saveTo) => {
   let tempWin = new BrowserWindow({show: false})
   const tempPath = path.join(os.tmpdir(),  `eme-export-pdf.${Date.now()}.html`)
+  console.log(tempPath)
   fs.writeFileSync(tempPath, html, 'utf8')
   tempWin.loadURL(`file://${tempPath}`)
   const page = tempWin.webContents

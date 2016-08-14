@@ -371,11 +371,13 @@
               {name: 'PDF', extensions: ['pdf']}
             ]
           }, filePath => {
-            const html = makeHTML({
-              html: `<div class="markdown-body">${this.currentTab.html}</div>`,
-              css: './vendor/github-markdown-css/github-markdown.css'
-            })
-            ipcRenderer.send('print-to-pdf', html, filePath)
+            if (filePath) {
+              const html = makeHTML({
+                html: `<div class="markdown-body">${this.currentTab.html}</div>`,
+                css: './vendor/github-markdown-css/github-markdown.css'
+              })
+              ipcRenderer.send('print-to-pdf', html, filePath)
+            }
           })
         })
 
