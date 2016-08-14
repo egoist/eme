@@ -52,6 +52,16 @@ const build = cb => {
           click(item, focusedWindow) {
             if (focusedWindow) focusedWindow.webContents.send('file-save-as')
           }
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Export as PDF',
+          accelerator: 'CmdOrCtrl+Shift+P',
+          click(item, focusedWindow) {
+            if (focusedWindow) focusedWindow.webContents.send('show-save-pdf-dialog')
+          }
         }
       ]
     },

@@ -56,7 +56,6 @@
   "dependencies": {
     "babel-runtime": "^6.9.2",
     "codemirror": "^5.17.0",
-    "github-markdown-css": "^2.3.0",
     "highlight.js": "^9.5.0",
     "lodash.debounce": "^4.0.6",
     "markdown-it": "^7.0.0",

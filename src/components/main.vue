@@ -84,6 +84,7 @@
   import {
     getWordCount
   } from 'utils/common'
+  import makeHTML from 'helpers/make-html'
 
   const currentWindow = remote.getCurrentWindow()
 
@@ -216,7 +217,8 @@
           editor: null,
           isFocusMode: false,
           writingMode: 'default',
-          isVimMode: false
+          isVimMode: false,
+          pdf: ''
         })
 
         setTimeout(() => {
@@ -361,6 +363,29 @@
           }
 
           closeInOrder()
+        })
+
+        ipcRenderer.on('show-save-pdf-dialog', () => {
+          remote.dialog.showSaveDialog(currentWindow, {
+            filters: [
+              {name: 'PDF', extensions: ['pdf']}
+            ]
+          }, filePath => {
+            const css = fs.readFileSync('./vendor/github-markdown-css/github-markdown.css', 'utf8')
+            const html = makeHTML(
+              `<style>${css}</style><div class="markdown-body">${this.currentTab.html}</div>`
+            )
+            ipcRenderer.send('print-to-pdf', html, filePath)
+          })
+        })
+
+        ipcRenderer.on('finish-exporting-pdf', (e, err, filePath) => {
+          if (!err) {
+            this.$store.dispatch('UPDATE_PDF', {
+              index: this.currentTabIndex,
+              pdf: filePath
+            })
+          }
         })
 
         event.on('new-tab', () => {

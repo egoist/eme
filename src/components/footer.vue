@@ -1,4 +1,4 @@
-<style>
+<style scoped>
   .footer {
     height: 25px;
     line-height: 24px;
@@ -54,12 +54,19 @@
       }
     }
   }
+  .clickable-link {
+    cursor: default;
+    &:hover {
+      color: #333;
+    }
+  }
 </style>
 
 <template>
   <footer class="footer" v-if="showFooter && status" :class="{'mac-footer': isMac}">
     <span class="file-path">{{ status.filePath }}</span>
     <span class="word-count">{{ status.wordCount }} words</span>
+    <span class="pdf-link clickable-link" v-if="status.pdf" @click="openPDF(status.pdf)">PDF</span>
     <div class="footer-right">
       <div class="writing-modes">
         <span
@@ -88,6 +95,7 @@
 <script>
   import tildify from 'tildify'
   import {isMac} from 'utils/os'
+  import {shell} from 'electron'
 
   export default {
     vuex: {
@@ -101,7 +109,8 @@
             filePath: editor.filePath ?
               tildify(editor.filePath) :
               'untitled',
-            writingMode: editor.writingMode
+            writingMode: editor.writingMode,
+            pdf: editor.pdf
           }
         }
       },
@@ -116,6 +125,11 @@
     },
     data() {
       return {isMac}
+    },
+    methods: {
+      openPDF(pdf) {
+        shell.openExternal(`file://${pdf}`)
+      }
     }
   }
 </script>

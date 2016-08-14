@@ -1,5 +1,7 @@
 'use strict'
+const fs = require('fs')
 const os = require('os')
+const path = require('path')
 const {
   app,
   BrowserWindow,
@@ -41,4 +43,27 @@ app.on('open-file', (e, filePath) => {
 
 ipcMain.on('close-focus-window', () => {
   BrowserWindow.getFocusedWindow().close()
+})
+
+// TODO: refactor
+ipcMain.on('print-to-pdf', (e, html, saveTo) => {
+  let tempWin = new BrowserWindow({show: false})
+  const tempPath = path.join(os.tmpdir(),  `eme-export-pdf.${Date.now()}.html`)
+  fs.writeFileSync(tempPath, html, 'utf8')
+  tempWin.loadURL(`file://${tempPath}`)
+  const page = tempWin.webContents
+  page.on('did-finish-load', () => {
+    page.printToPDF({
+      pageSize: 'A4'
+    }, (err, pdfData) => {
+      if (err) {
+        return console.log(err)
+      }
+      fs.writeFile(saveTo, pdfData, err => {
+        tempWin.destroy()
+        tempWin = undefined
+        mainWindow.webContents.send('finish-exporting-pdf', err, saveTo)
+      })
+    })
+  })
 })

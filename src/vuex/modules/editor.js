@@ -72,6 +72,10 @@ const mutations = {
       tab.editor.refresh()
       if (mode !== 'preview') tab.editor.focus()
     }, 50)
+  },
+  UPDATE_PDF(state, {index, pdf}) {
+    const tab = state.tabs[index]
+    tab.pdf = pdf
   }
 }
 
