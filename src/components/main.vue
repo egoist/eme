@@ -371,10 +371,10 @@
               {name: 'PDF', extensions: ['pdf']}
             ]
           }, filePath => {
-            const css = fs.readFileSync(path.join(__dirname, '../vendor/github-markdown-css/github-markdown.css'), 'utf8')
-            const html = makeHTML(
-              `<style>${css}</style><div class="markdown-body">${this.currentTab.html}</div>`
-            )
+            const html = makeHTML({
+              html: `<div class="markdown-body">${this.currentTab.html}</div>`,
+              css: './vendor/github-markdown-css/github-markdown.css'
+            })
             ipcRenderer.send('print-to-pdf', html, filePath)
           })
         })
