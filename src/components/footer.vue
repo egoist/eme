@@ -56,6 +56,7 @@
   }
   .clickable-link {
     cursor: default;
+    -webkit-user-select: none;
     &:hover {
       color: #333;
     }
@@ -128,7 +129,7 @@
     },
     methods: {
       openPDF(pdf) {
-        shell.openExternal(`file://${pdf}`)
+        shell.showItemInFolder(pdf)
       }
     }
   }
