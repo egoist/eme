@@ -1,7 +1,7 @@
 {
   "name": "electron",
   "productName": "EME",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Elegant Markdown Editor",
   "author": "EGOIST <0x142857@gmail.com>",
   "homepage": "https://github.com/egoist/eme",
