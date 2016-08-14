@@ -374,7 +374,7 @@
             if (filePath) {
               const html = makeHTML({
                 html: `<div class="markdown-body">${this.currentTab.html}</div>`,
-                css: './vendor/github-markdown-css/github-markdown.css'
+                css: path.join(remote.app.getAppPath(), 'vendor/github-markdown-css/github-markdown.css')
               })
               ipcRenderer.send('print-to-pdf', html, filePath)
             }
