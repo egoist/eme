@@ -1,7 +1,6 @@
 @font-face {
   font-family: 'eme';
   src:
-    url('fonts/eme.ttf?cayqlg') format('truetype'),
     url('fonts/eme.woff?cayqlg') format('woff'),
     url('fonts/eme.svg?cayqlg#eme') format('svg');
   font-weight: normal;

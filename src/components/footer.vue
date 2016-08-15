@@ -7,6 +7,10 @@
     font-size: 12px;
     color: #666;
     border-top: 1px solid #e2e2e2;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
     > span {
       margin-right: 10px;
     }
@@ -64,12 +68,12 @@
 </style>
 
 <template>
-  <footer class="footer" v-if="showFooter && status" :class="{'mac-footer': isMac}">
-    <span class="file-path">{{ status.filePath }}</span>
+  <footer class="footer" v-if="showFooter" :class="{'mac-footer': isMac}">
+    <span class="file-path" v-if="status.filePath">{{ status.filePath }}</span>
     <span class="word-count">{{ status.wordCount }} words</span>
     <span class="pdf-link clickable-link" v-if="status.pdf" @click="openPDF(status.pdf)">PDF</span>
     <div class="footer-right">
-      <div class="writing-modes">
+      <div class="writing-modes" v-if="status.writingMode">
         <span
           class="writing-mode"
           :class="{active: status.writingMode === 'writing'}"
@@ -104,15 +108,15 @@
         showFooter: state => state.editor.tabs.length > 0,
         currentTabIndex: state => state.editor.currentTabIndex,
         status: state => {
-          const editor = state.editor.tabs[state.editor.currentTabIndex]
-          return editor && {
-            wordCount: editor.wordCount,
-            filePath: editor.filePath ?
-              tildify(editor.filePath) :
-              'untitled',
-            writingMode: editor.writingMode,
-            pdf: editor.pdf
-          }
+          const editor = state.editor.tabs[state.editor.currentTabIndex] || {}
+          return {
+              wordCount: editor.wordCount || 0,
+              filePath: editor.filePath ?
+                tildify(editor.filePath) :
+                'untitled',
+              writingMode: editor.writingMode,
+              pdf: editor.pdf
+            }
         }
       },
       actions: {

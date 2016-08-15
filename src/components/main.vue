@@ -85,6 +85,7 @@
   } from 'utils/common'
   import makeHTML from 'helpers/make-html'
   import fs from 'helpers/fs-promise'
+  import {appPath} from 'helpers/resolve-path'
 
   const currentWindow = remote.getCurrentWindow()
 
@@ -360,7 +361,7 @@
           if (filePath) {
             const html = makeHTML({
               html: `<div class="markdown-body">${this.currentTab.html}</div>`,
-              css: path.join(remote.app.getAppPath(), 'vendor/github-markdown-css/github-markdown.css')
+              css: appPath('vendor/github-markdown-css/github-markdown.css')
             })
             ipcRenderer.send('print-to-pdf', html, filePath)
           }
