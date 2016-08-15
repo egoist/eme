@@ -8,6 +8,7 @@ const {
   Menu,
   ipcMain
 } = require('electron')
+const windowStateKeeper = require('electron-window-state')
 const buildMenu = require('./eme/menu')
 const emeWindow = require('./eme/window')
 
@@ -18,7 +19,13 @@ const appMenu = buildMenu({
 let mainWindow // eslint-disable-line
 app.on('ready', () => {
   Menu.setApplicationMenu(appMenu)
-  mainWindow = emeWindow.createWindow()
+  const mainWindowState = windowStateKeeper({
+    defaultWidth: 800,
+    defaultHeight: 600
+  })
+  mainWindow = emeWindow.createWindow({windowState: mainWindowState})
+  mainWindowState.manage(mainWindow)
+
   if (os.platform() === 'darwin') {
     mainWindow.setSheetOffset(36)
   }

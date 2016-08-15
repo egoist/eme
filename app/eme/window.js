@@ -13,16 +13,17 @@ class Window {
   }
 
   createWindow({
-    homepage = `file://${path.join(__dirname, '../index.html')}`
+    homepage = `file://${path.join(__dirname, '../index.html')}`,
+    windowState = {}
   } = {}) {
-    const win = new BrowserWindow({
+    const win = new BrowserWindow(Object.assign({
       name: 'EME',
       width: 800,
       height: 600,
       minWidth: 430,
       minHeight: 250,
       titleBarStyle: 'hidden-inset'
-    })
+    }, windowState))
 
     const web = win.webContents
 
