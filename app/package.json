@@ -11,7 +11,9 @@
   },
   "license": "MIT",
   "dependencies": {
+    "electron-config": "^0.2.1",
     "electron-window-state": "^3.0.3",
-    "match-at": "^0.1.0"
+    "match-at": "^0.1.0",
+    "tildify": "^1.2.0"
   }
 }

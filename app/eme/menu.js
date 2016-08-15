@@ -5,8 +5,34 @@ const {
   shell,
   app
 } = require('electron')
+const tildify = require('tildify')
+const config = require('./config')
 
 const build = cb => {
+  const openFileInWindow = (win, file) => {
+    if (win) {
+      win.webContents.send('open-file', file)
+    } else {
+      win = cb.createWindow()
+      win.webContents.on('did-finish-load', () => {
+        win.webContents.send('open-file', file)
+      })
+    }
+  }
+
+  let recentFiles = config.get('recentFiles').map(file => ({
+    label: tildify(file),
+    file,
+    click(item, focusedWindow) {
+      openFileInWindow(focusedWindow, item.file)
+    }
+  }))
+  if (recentFiles.length === 0) {
+    recentFiles = [{
+      label: '(empty)'
+    }]
+  }
+
   const template = [
     {
       label: 'File',
@@ -26,15 +52,12 @@ const build = cb => {
           label: 'Open',
           accelerator: 'CmdOrCtrl+O',
           click(item, focusedWindow) {
-            if (focusedWindow) {
-              focusedWindow.webContents.send('open-file')
-            } else {
-              const win = cb.createWindow()
-              win.webContents.on('did-finish-load', () => {
-                win.webContents.send('open-file')
-              })
-            }
+            openFileInWindow(focusedWindow)
           }
+        },
+        {
+          label: 'Open Recent',
+          submenu: recentFiles
         },
         {
           type: 'separator'
@@ -183,14 +206,7 @@ const build = cb => {
           label: 'Welcome Guide',
           click(item, focusedWindow) {
             const file = path.join(__dirname, '../welcome-guide.md')
-            if (focusedWindow) {
-              focusedWindow.webContents.send('open-file', file)
-            } else {
-              const win = cb.createWindow()
-              win.webContents.on('did-finish-load', () => {
-                win.webContents.send('open-file', file)
-              })
-            }
+            openFileInWindow(focusedWindow, file)
           }
         }
       ]

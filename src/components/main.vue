@@ -250,6 +250,7 @@
       },
       handleOpen(filePath) {
         const openFile = filePath => {
+          ipcRenderer.send('add-recent-file', filePath)
           if (this.currentTab && this.currentTab.saved && !this.currentTab.filePath) {
             // load file in currentTab
             this.overrideTab(filePath)
