@@ -16,15 +16,20 @@ const appMenu = buildMenu({
   createWindow: emeWindow.createWindow
 })
 
-let mainWindow // eslint-disable-line
-app.on('ready', () => {
-  Menu.setApplicationMenu(appMenu)
-  const mainWindowState = windowStateKeeper({
+const createMainWindow = () => {
+  const windowState = windowStateKeeper({
     defaultWidth: 800,
     defaultHeight: 600
   })
-  mainWindow = emeWindow.createWindow({windowState: mainWindowState})
-  mainWindowState.manage(mainWindow)
+  const win = emeWindow.createWindow({windowState})
+  windowState.manage(win)
+  return win
+}
+
+let mainWindow // eslint-disable-line
+app.on('ready', () => {
+  Menu.setApplicationMenu(appMenu)
+  mainWindow = createMainWindow()
 
   if (os.platform() === 'darwin') {
     mainWindow.setSheetOffset(36)
@@ -39,7 +44,7 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   if (emeWindow.wins === 0) {
-    mainWindow = emeWindow.createWindow()
+    mainWindow = createMainWindow()
   }
 })
 
