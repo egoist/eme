@@ -66,6 +66,23 @@
     }
   }
 </style>
+<style>
+  .footer-icon {
+    svg {
+      width: 12px;
+    }
+    path {
+      fill: #666;
+    }
+  }
+  .writing-mode.active {
+    .footer-icon {
+      path {
+        fill: white;
+      }
+    }
+  }
+</style>
 
 <template>
   <footer class="footer" v-if="showFooter" :class="{'mac-footer': isMac}">
@@ -78,19 +95,19 @@
           class="writing-mode"
           :class="{active: status.writingMode === 'writing'}"
           @click="setWritingMode('writing')">
-          <span class="icon-pencil"></span>
+          <svg-icon name="pencil" class="footer-icon"></svg-icon>
         </span>
         <span
           class="writing-mode"
           :class="{active: status.writingMode === 'default'}"
           @click="setWritingMode('default')">
-          <span class="icon-align-horizontal-middle"></span>
+          <svg-icon name="alignHorizontalMiddle" class="footer-icon"></svg-icon>
         </span>
         <span
           class="writing-mode"
           :class="{active: status.writingMode === 'preview'}"
           @click="setWritingMode('preview')">
-          <span class="icon-eye"></span>
+          <svg-icon name="eye" class="footer-icon"></svg-icon>
         </span>
       </div>
     </div>
@@ -101,6 +118,7 @@
   import tildify from 'tildify'
   import {isMac} from 'utils/os'
   import {shell} from 'electron'
+  import SvgIcon from 'components/svg-icon'
 
   export default {
     vuex: {
@@ -129,12 +147,17 @@
       }
     },
     data() {
-      return {isMac}
+      return {
+        isMac
+      }
     },
     methods: {
       openPDF(pdf) {
         shell.showItemInFolder(pdf)
       }
+    },
+    components: {
+      SvgIcon
     }
   }
 </script>
