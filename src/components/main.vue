@@ -401,14 +401,11 @@
           })
           if (clickedButton === 0) {
             await this.handleSave(index)
-            this.$store.dispatch('CLOSE_TAB', index)
           } else if (clickedButton === 2) {
             this.$store.dispatch('UPDATE_SAVE_STATUS', {index, saved: true})
-            this.$store.dispatch('CLOSE_TAB', index)
           }
-        } else {
-          this.$store.dispatch('CLOSE_TAB', index)
         }
+        this.$store.dispatch('CLOSE_TAB', index)
       },
       handleDrag() {
         const holder = $('#app')
