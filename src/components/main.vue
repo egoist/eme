@@ -83,9 +83,9 @@
   import {
     getWordCount
   } from 'utils/common'
-  import makeHTML from 'helpers/make-html'
-  import fs from 'helpers/fs-promise'
-  import {appPath} from 'helpers/resolve-path'
+  import makeHTML from 'utils/make-html'
+  import fs from 'utils/fs-promise'
+  import {appPath} from 'utils/resolve-path'
 
   const currentWindow = remote.getCurrentWindow()
 
