@@ -64,7 +64,6 @@
 </template>
 
 <script>
-  import fs from 'fs'
   import path from 'path'
   import pify from 'pify'
   import {ipcRenderer, remote} from 'electron'
@@ -85,6 +84,7 @@
     getWordCount
   } from 'utils/common'
   import makeHTML from 'helpers/make-html'
+  import fs from 'helpers/fs-promise'
 
   const currentWindow = remote.getCurrentWindow()
 
@@ -115,7 +115,7 @@
       document.title = 'untitled - EME'
     },
     ready() {
-      this.createNewTab().catch(e => console.log(e.stack))
+      this.createNewTab()
 
       this.listenIpc()
       this.handleDrag()
@@ -135,55 +135,42 @@
         const previewPosition = codePort.scrollTop * ratio
         previewPort.scrollTop = previewPosition
       },
-      save({index, filePath}, cb) {
+      async save({index, filePath}) {
         const tab = this.tabs[index]
         this.$store.dispatch('UPDATE_FILE_PATH', {
           index,
           filePath
         })
-        fs.writeFile(filePath, tab.content, 'utf8', err => {
-          if (err) {
-            console.log(err)
-          } else {
-            console.log(`saved as ${filePath}`)
-            this.updateSaved({index, saved: true})
-            if (cb) cb()
-          }
-        })
+        await fs.writeFile(filePath, tab.content, 'utf8')
+        console.log(`saved as ${filePath}`)
+        this.updateSaved({index, saved: true})
       },
-      handleSave(index, cb) {
+      async handleSave(index) {
         const tab = this.tabs[index]
         if (tab.filePath) {
-          this.save({index, filePath: tab.filePath}, cb)
+          await this.save({index, filePath: tab.filePath})
         } else {
-          remote.dialog.showSaveDialog(currentWindow, {
+          const filePath = remote.dialog.showSaveDialog(currentWindow, {
             filters: [
               {name: 'Markdown', extensions: ['markdown', 'md']}
             ]
-          }, filePath => {
-            if (filePath) this.save({index, filePath}, cb)
           })
+          if (filePath) await this.save({index, filePath})
         }
       },
-      handleSaveAs(index) {
+      async handleSaveAs(index) {
         const tab = this.tabs[index]
-        remote.dialog.showSaveDialog(currentWindow, {
+        const filePath = remote.dialog.showSaveDialog(currentWindow, {
           filters: [
             {name: 'Markdown', extensions: ['markdown', 'md']}
           ]
-        }, filePath => {
-          fs.writeFile(tab.filePath, tab.content, 'utf8', err => {
-            if (err) {
-              console.log(err)
-            } else {
-              console.log(`saved as ... ${filePath}`)
-            }
-          })
         })
+        await fs.writeFile(filePath, tab.content, 'utf8')
+        console.log(`saved as ... ${filePath}`)
       },
       async overrideTab(filePath) {
         const index = this.currentTabIndex
-        const content = await pify(fs.readFile)(filePath, 'utf8')
+        const content = await fs.readFile(filePath, 'utf8')
         this.editor.getDoc().setValue(content)
         this.$store.dispatch('UPDATE_CONTENT', {
           index,
@@ -203,7 +190,7 @@
         let html = ''
         let wordCount = 0
         if (filePath) {
-          content = await pify(fs.readFile)(filePath, 'utf8')
+          content = await fs.readFile(filePath, 'utf8')
           html = md.render(content)
           wordCount = getWordCount(content)
         }
@@ -273,14 +260,13 @@
         if (filePath) {
           openFile(filePath)
         } else {
-          remote.dialog.showOpenDialog(currentWindow, {
+          const files = remote.dialog.showOpenDialog(currentWindow, {
             properties: ['openFile'],
             filters: [
               {name: 'Markdown', extensions: ['markdown', 'md']}
             ]
-          }, files => {
-            if (files) openFile(files[0])
           })
+          if (files) openFile(files[0])
         }
       },
       listenIpc() {
@@ -329,7 +315,7 @@
         ipcRenderer.on('close-window', () => {
 
           const closeInOrder = () => {
-            this.closeTab(0, () => {
+            this.closeTab(0).then(() => {
               if (this.tabs.length > 0) {
                 closeInOrder()
               } else {
@@ -352,7 +338,7 @@
         ipcRenderer.on('close-and-exit', () => {
 
           const closeInOrder = () => {
-            this.closeTab(0, () => {
+            this.closeTab(0).then(() => {
               if (this.tabs.length > 0) {
                 closeInOrder()
               } else {
@@ -366,19 +352,18 @@
         })
 
         ipcRenderer.on('show-save-pdf-dialog', () => {
-          remote.dialog.showSaveDialog(currentWindow, {
+          const filePath = remote.dialog.showSaveDialog(currentWindow, {
             filters: [
               {name: 'PDF', extensions: ['pdf']}
             ]
-          }, filePath => {
-            if (filePath) {
-              const html = makeHTML({
-                html: `<div class="markdown-body">${this.currentTab.html}</div>`,
-                css: path.join(remote.app.getAppPath(), 'vendor/github-markdown-css/github-markdown.css')
-              })
-              ipcRenderer.send('print-to-pdf', html, filePath)
-            }
           })
+          if (filePath) {
+            const html = makeHTML({
+              html: `<div class="markdown-body">${this.currentTab.html}</div>`,
+              css: path.join(remote.app.getAppPath(), 'vendor/github-markdown-css/github-markdown.css')
+            })
+            ipcRenderer.send('print-to-pdf', html, filePath)
+          }
         })
 
         ipcRenderer.on('finish-exporting-pdf', (e, err, filePath) => {
@@ -403,7 +388,7 @@
           this.editor.focus()
         })
       },
-      closeTab(index, cb) {
+      async closeTab(index) {
         const tab = this.tabs[index]
         if (tab && !tab.saved) {
           const filename = tab.filePath ? path.basename(tab.filePath) : 'untitled'
@@ -415,18 +400,14 @@
             buttons: ['Save', 'Cancel', 'Don\'t Save']
           })
           if (clickedButton === 0) {
-            this.handleSave(index, () => {
-              this.$store.dispatch('CLOSE_TAB', index)
-              if (cb) cb()
-            })
+            await this.handleSave(index)
+            this.$store.dispatch('CLOSE_TAB', index)
           } else if (clickedButton === 2) {
             this.$store.dispatch('UPDATE_SAVE_STATUS', {index, saved: true})
             this.$store.dispatch('CLOSE_TAB', index)
-            if (cb) cb()
           }
         } else {
           this.$store.dispatch('CLOSE_TAB', index)
-          if (cb) cb()
         }
       },
       handleDrag() {
