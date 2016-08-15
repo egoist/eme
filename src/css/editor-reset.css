@@ -6,7 +6,7 @@
   }
   .cm-s-base16-light {
     .CodeMirror-activeline-background {
-      background-color: #f0f0f0;
+      background-color: transparent;
     }
     .CodeMirror-activeline {
       * {
