@@ -83,14 +83,22 @@ ipcMain.on('print-to-pdf', (e, html, saveTo) => {
 
 ipcMain.on('add-recent-file', (e, filePath) => {
   const files = config.get('recentFiles')
-  if (files.indexOf(filePath) === -1) {
+  const existing = files.indexOf(filePath)
+  if (existing === -1) {
+    // add to the head
     files.unshift(filePath)
     if (files.length > 10) {
       files.pop()
     }
-    config.set('recentFiles', files)
+  } else {
+    // remove the existing one
+    // add to the head
+    files.splice(existing, 1)
+    files.unshift(filePath)
+  }
+
+  config.set('recentFiles', files)
     Menu.setApplicationMenu(buildMenu({
       createWindow: emeWindow.createWindow
     }))
-  }
 })
