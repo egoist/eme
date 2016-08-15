@@ -5,6 +5,21 @@ import md from 'utils/markdown'
 const win = remote.getCurrentWindow()
 win.$state.unsaved = 0
 
+const renderHTML = tab => {
+  return md.render(tab.content).replace(/src=\"([^\"]+)\"/g, (m, p1) => {
+    if (p1[0] === '.') {
+      p1 = path.join(path.dirname(tab.filePath), p1)
+      return `src="${p1}"`
+    }
+    return m
+  })
+}
+
+const getWordCount = text => {
+  const m = text.match(/[\u00ff-\uffff]|\S+/g)
+  return m ? m.length : 0
+}
+
 const state = {
   tabs: [],
   currentTabIndex: 0
@@ -12,15 +27,19 @@ const state = {
 
 const mutations = {
   INIT_NEW_TAB(state, payload) {
-    state.tabs.push(payload)
+    const tab = {
+      ...payload,
+      html: renderHTML(payload),
+      wordCount: getWordCount(payload.content)
+    }
+    state.tabs.push(tab)
     state.currentTabIndex++
   },
   UPDATE_CONTENT(state, {index, content}) {
     const tab = state.tabs[index]
     tab.content = content
-    tab.html = md.render(content)
-    const matchWords = tab.content.match(/[\u00ff-\uffff]|\S+/g)
-    tab.wordCount = matchWords ? matchWords.length : 0
+    tab.html = renderHTML(tab)
+    tab.wordCount = getWordCount(tab.content)
   },
   UPDATE_FILE_PATH(state, {index, filePath}) {
     const tab = state.tabs[index]

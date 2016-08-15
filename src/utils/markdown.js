@@ -1,8 +1,8 @@
 import MarkdownIt from 'markdown-it'
 import taskList from 'markdown-it-task-lists'
-import katex from './vendor/markdown-it-katex'
-import frontMatter from 'markdown-it-front-matter'
 import hljs from 'highlight.js'
+import frontMatter from 'markdown-it-front-matter'
+import katex from './vendor/markdown-it-katex'
 
 const md = new MarkdownIt({
   html: true,

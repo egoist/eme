@@ -188,18 +188,13 @@
       },
       async createNewTab(filePath = '') {
         let content = ''
-        let html = ''
         let wordCount = 0
         if (filePath) {
           content = await fs.readFile(filePath, 'utf8')
-          html = md.render(content)
-          wordCount = getWordCount(content)
         }
         const index = this.tabs.length
         this.$store.dispatch('INIT_NEW_TAB', {
-          wordCount,
           content,
-          html,
           filePath,
           saved: true,
           editor: null,
