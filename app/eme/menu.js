@@ -8,7 +8,7 @@ const {
 const tildify = require('tildify')
 const config = require('./config')
 
-const build = cb => {
+module.exports = cb => {
   const openFileInWindow = (win, file) => {
     if (win) {
       win.webContents.send('open-file', file)
@@ -260,5 +260,3 @@ const build = cb => {
 
   return Menu.buildFromTemplate(template)
 }
-
-module.exports = cb => build(cb)
