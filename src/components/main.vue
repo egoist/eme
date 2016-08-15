@@ -173,12 +173,9 @@
         const index = this.currentTabIndex
         const content = await fs.readFile(filePath, 'utf8')
         this.editor.getDoc().setValue(content)
-        this.$store.dispatch('UPDATE_CONTENT', {
+        this.$store.dispatch('UPDATE_CONTENT_WITH_FILEPATH', {
           index,
-          content
-        })
-        this.$store.dispatch('UPDATE_FILE_PATH', {
-          index,
+          content,
           filePath
         })
         this.updateSaved({

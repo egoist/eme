@@ -46,6 +46,17 @@ const mutations = {
     tab.filePath = filePath
     document.title = `${path.basename(filePath)} - EME`
   },
+  UPDATE_CONTENT_WITH_FILEPATH(state, {index, content, filePath}) {
+    const tab = state.tabs[index]
+    tab.content = content
+    tab.html = renderHTML({
+      ...tab,
+      content,
+      filePath
+    })
+    tab.filePath = filePath
+    document.title = `${path.basename(filePath)} - EME`
+  },
   UPDATE_SAVE_STATUS(state, {index, saved}) {
     const tab = state.tabs[index]
     const fileName = tab.filePath ?
