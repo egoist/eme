@@ -2,6 +2,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const appPkg = require('../app/package')
 
 module.exports = {
   entry: ['./src/index.js'],
@@ -65,8 +66,8 @@ module.exports = {
   target: 'electron',
   plugins: [
     new webpack.ExternalsPlugin('commonjs2', [
-      './vendor/markdown-it-katex'
-    ]),
+      './vendor/markdown-it-katex',
+    ].concat(appPkg.dependencies)),
     new ExtractTextPlugin('style.css')
   ]
 }
