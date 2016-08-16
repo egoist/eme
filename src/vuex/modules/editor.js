@@ -1,6 +1,7 @@
 import path from 'path'
 import {remote} from 'electron'
 import md from 'utils/markdown'
+import wordCount from 'word-count'
 
 const win = remote.getCurrentWindow()
 win.$state.unsaved = 0
@@ -15,11 +16,6 @@ const renderHTML = tab => {
   })
 }
 
-const getWordCount = text => {
-  const m = text.match(/[\u00ff-\uffff]|\S+/g)
-  return m ? m.length : 0
-}
-
 const state = {
   tabs: [],
   currentTabIndex: 0
@@ -30,7 +26,7 @@ const mutations = {
     const tab = {
       ...payload,
       html: renderHTML(payload),
-      wordCount: getWordCount(payload.content)
+      wordCount: wordCount(payload.content)
     }
     state.tabs.push(tab)
     state.currentTabIndex++
@@ -39,7 +35,7 @@ const mutations = {
     const tab = state.tabs[index]
     tab.content = content
     tab.html = renderHTML(tab)
-    tab.wordCount = getWordCount(tab.content)
+    tab.wordCount = wordCount(tab.content)
   },
   UPDATE_FILE_PATH(state, {index, filePath}) {
     const tab = state.tabs[index]
