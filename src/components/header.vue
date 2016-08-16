@@ -18,6 +18,7 @@
       position: relative;
       text-align: center;
       border-left: 1px solid #ddd;
+      display: flex;
       .tab-title {
         color: #999;
         white-space: nowrap;
@@ -25,7 +26,6 @@
         overflow: hidden;
         text-overflow: ellipsis;
         max-width: 220px;
-        display: inline-block;
       }
       &:last-child {
         border-right: 1px solid #ddd;
@@ -52,9 +52,6 @@
           }
         }
       }
-      >span {
-        float: left;
-      }
     }
 
     &.single-tab {
@@ -77,7 +74,6 @@
       -webkit-user-select: none;
       width: 30px;
       text-align: center;
-      display: inline-block;
       height: calc(100% - 1px);
       >span {
         position: relative;
