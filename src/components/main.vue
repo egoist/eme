@@ -178,6 +178,38 @@
         await fs.writeFile(filePath, tab.content, 'utf8')
         console.log(`saved as ... ${filePath}`)
       },
+      async handleRename(index) {
+        const tab = this.tabs[index]
+        if (tab.filePath) {
+          this.$store.dispatch('UPDATE_RENAME_STATUS', {
+            index,
+            rename: true
+          })
+        } else {
+          this.handleSave(index)
+        }
+      },
+      async handleRenamed(name, index) {
+        const tab = this.tabs[index]
+        const newPath = path.join(path.dirname(tab.filePath), name)
+
+        this.$store.dispatch('UPDATE_RENAME_STATUS', {
+          index,
+          rename: false
+        })
+
+        try {
+          await fs.access(newPath, fs.constants.F_OK)
+          alert(`"${name}" already exists.`)
+        } catch(e) {
+          await fs.rename(tab.filePath, newPath)
+          this.$store.dispatch('UPDATE_FILE_PATH', {
+            index,
+            filePath: newPath
+          })
+          console.log(`rename as ... ${newPath}`)
+        }
+      },
       async overrideTab(filePath) {
         const index = this.currentTabIndex
         const content = await fs.readFile(filePath, 'utf8')
@@ -207,7 +239,10 @@
           isFocusMode: false,
           writingMode: 'default',
           isVimMode: false,
-          pdf: ''
+          pdf: '',
+
+          //state
+          rename: false
         })
 
         setTimeout(() => {
@@ -283,6 +318,10 @@
 
         ipcRenderer.on('file-save-as', () => {
           this.handleSaveAs(this.currentTabIndex)
+        })
+
+        ipcRenderer.on('file-rename', () => {
+          this.handleRename(this.currentTabIndex)
         })
 
         ipcRenderer.on('toggle-focus-mode', () => {
@@ -391,6 +430,14 @@
 
         event.on('close-tab', index => {
           this.closeTab(index)
+        })
+
+        event.on('close-tab', index => {
+          this.closeTab(index)
+        })
+
+        event.on('file-rename', (index, name) => {
+          this.handleRenamed(index, name)
         })
 
         event.on('focus-current-tab', () => {

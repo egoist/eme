@@ -131,6 +131,13 @@ module.exports = cb => {
           }
         },
         {
+          label: 'Rename',
+          accelerator: 'CmdOrCtrl+Shift+R',
+          click(item, focusedWindow) {
+            if (focusedWindow) focusedWindow.webContents.send('file-rename')
+          }
+        },
+        {
           type: 'separator'
         },
         {
