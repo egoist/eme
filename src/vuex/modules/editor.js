@@ -69,6 +69,9 @@ const mutations = {
 
     tab.saved = saved
   },
+  UPDATE_RENAME_STATUS(state, {index, rename}) {
+    state.tabs[index].rename = rename
+  },
   SET_EDITOR(state, {index, editor}) {
     state.currentTabIndex = index
     state.tabs[index].editor = editor
