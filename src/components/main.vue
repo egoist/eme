@@ -74,7 +74,7 @@
 <script>
   import path from 'path'
   import pify from 'pify'
-  import {ipcRenderer, remote} from 'electron'
+  import {ipcRenderer, remote, shell} from 'electron'
   import CodeMirror from 'codemirror'
   import 'codemirror/lib/codemirror.css'
   import 'codemirror/mode/markdown/markdown'
@@ -375,6 +375,13 @@
               index: this.currentTabIndex,
               pdf: filePath
             })
+            const notie = new Notification('PDF exported!', {
+              body: filePath
+            })
+            notie.onclick = e => {
+              e.preventDefault()
+              shell.showItemInFolder(filePath)
+            }
           }
         })
 
