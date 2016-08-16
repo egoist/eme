@@ -33,7 +33,7 @@ const checkForUpdates = {
           dialog.showMessageBox(focusedWindow, {
             type: 'info',
             message: 'No Updates',
-            detail: `Current version ${version} is already update to date!`,
+            detail: `Current version ${version} is already up to date!`,
             buttons: ['OK']
           })
         }
