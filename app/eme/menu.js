@@ -272,7 +272,9 @@ module.exports = cb => {
     template.unshift({
       label: name,
       submenu: [
-        about,
+        {
+          role: 'about'
+        },
         {
           type: 'separator'
         },
