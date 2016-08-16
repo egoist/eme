@@ -103,8 +103,15 @@
       @click="setCurrentTab($index)"
       v-for="tab in tabs"
       :class="{'current-tab': $index === currentTabIndex}">
-      <span class="tab-title" v-if="tab">
+      <span class="tab-title" v-if="tab && !tab.rename">
         {{ tab.title || 'untitled' }}
+      </span>
+      <span class="tab-title" v-if="tab && tab.rename">
+        <input type="text" 
+          @click.stop 
+          v-on:keyup.enter="renameCurrentFile($event, $index)" 
+          v-bind:value="tab.title"
+          autofocus/>
       </span>
       <span class="tab-indicator" @click="closeTab($event, $index)">
         <span class="dot" v-show="!tab.saved"></span>
@@ -125,7 +132,8 @@
         tabs: state => state.editor.tabs.map(tab => {
           return {
             title: path.basename(tab.filePath),
-            saved: tab.saved
+            saved: tab.saved,
+            rename: tab.rename
           }
         }),
         currentTabIndex: state => state.editor.currentTabIndex
@@ -149,6 +157,17 @@
       },
       createNewTab() {
         event.emit('new-tab')
+      },
+      renameCurrentFile(e, index) {
+        const name = e.target.value
+        if (name) {
+          event.emit('file-rename', name, index)
+        } else {
+          this.$store.dispatch('UPDATE_RENAME_STATUS', {
+            index,
+            rename: false
+          })
+        }
       }
     }
   }
