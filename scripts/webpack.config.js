@@ -67,7 +67,7 @@ module.exports = {
   plugins: [
     new webpack.ExternalsPlugin('commonjs2', [
       './vendor/markdown-it-katex',
-    ].concat(appPkg.dependencies)),
+    ].concat(Object.keys(appPkg.dependencies))),
     new ExtractTextPlugin('style.css')
   ]
 }
