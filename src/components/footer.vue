@@ -92,18 +92,21 @@
     <div class="footer-right">
       <div class="writing-modes" v-if="status.writingMode">
         <span
+          title="Writing mode: writing"
           class="writing-mode"
           :class="{active: status.writingMode === 'writing'}"
           @click="setWritingMode('writing')">
           <svg-icon name="pencil" class="footer-icon"></svg-icon>
         </span>
         <span
+          title="Wirting mode: default"
           class="writing-mode"
           :class="{active: status.writingMode === 'default'}"
           @click="setWritingMode('default')">
           <svg-icon name="alignHorizontalMiddle" class="footer-icon"></svg-icon>
         </span>
         <span
+          title="Writing mode: preview"
           class="writing-mode"
           :class="{active: status.writingMode === 'preview'}"
           @click="setWritingMode('preview')">
