@@ -43,6 +43,24 @@ const checkForUpdates = {
       })
   }
 }
+const about = {
+  label: 'About',
+  click(item, focusedWindow) {
+    dialog.showMessageBox(focusedWindow, {
+      message: 'EME',
+      type: 'info',
+      buttons: ['OK'],
+      detail: [
+        'Elegant Markdown Editor',
+        '',
+        `EME: ${version}`,
+        `Node.js: ${process.version.substr(1)}`,
+        `Electron: ${process.versions.electron}`,
+        `Chrome: ${process.versions.chrome}`
+      ].join('\n')
+    })
+  }
+}
 
 module.exports = cb => {
   const openFileInWindow = (win, file) => {
@@ -254,9 +272,7 @@ module.exports = cb => {
     template.unshift({
       label: name,
       submenu: [
-        {
-          role: 'about'
-        },
+        about,
         {
           type: 'separator'
         },
@@ -299,9 +315,7 @@ module.exports = cb => {
         type: 'separator'
       },
       checkForUpdates,
-      {
-        role: 'about'
-      }
+      about
     )
   }
 
