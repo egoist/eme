@@ -1,5 +1,6 @@
-<style src="../css/base16-light"></style>
 <style src="highlight.js/styles/github"></style>
+<style src="../css/base16-light"></style>
+<style src="../css/editor-dialog"></style>
 <style src="../css/editor-scrollbar"></style>
 
 <style>
@@ -7,6 +8,13 @@
     /* total - header - footer */
     height: calc(100% - 36px - 25px);
     display: flex;
+    &.vim-mode {
+      /* height - editorDialog */
+      .CodeMirror-scroll {
+        padding-bottom: 40px;
+        height: calc(100% - 1.75rem);
+      }
+    }
   }
   .editor, .preview {
     height: 100%;
@@ -44,7 +52,7 @@
 <template>
   <div
     class="main tab-body"
-    :class="'tab-body-' + $index"
+    :class="['tab-body-' + $index, {'vim-mode': currentTab && currentTab.isVimMode}]"
     v-for="tab in tabs"
     v-show="$index === currentTabIndex">
     <div
@@ -74,6 +82,7 @@
   import 'codemirror/addon/edit/continuelist'
   import 'codemirror/addon/scroll/simplescrollbars'
   import 'codemirror/addon/selection/active-line'
+  import 'codemirror/addon/dialog/dialog.js'
   import 'codemirror/keymap/vim'
 
   import {$} from 'utils/dom'

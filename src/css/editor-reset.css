@@ -14,4 +14,7 @@
       }
     }
   }
+  .CodeMirror-dialog input {
+    font-family: inherit !important;
+  }
 }
