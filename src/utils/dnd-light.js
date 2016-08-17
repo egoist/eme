@@ -17,6 +17,9 @@ const DragAndDrop = Vue => {
         this.vm._dragSrcEl = e.target
         e.dataTransfer.effectAllowed = 'move'
         e.dataTransfer.setData('text', '*')
+        if (typeof (this.vm[this.params.dragStart]) === 'function') {
+          this.vm[this.params.dragStart].call(this, e.target)
+        }
       }
       this.handleDragOver = e => {
         if (e.preventDefault) {
@@ -24,16 +27,28 @@ const DragAndDrop = Vue => {
         }
         e.dataTransfer.dropEffect = 'move'
         e.target.classList.add('drag-over')
+        if (typeof (this.vm[this.params.dragOver]) === 'function') {
+          this.vm[this.params.dragOver].call(this, e.target)
+        }
         return false
       }
       this.handleDragEnter = e => {
+        if (typeof (this.vm[this.params.dragEnter]) === 'function') {
+          this.vm[this.params.dragEnter].call(this, e.target)
+        }
         e.target.classList.add('drag-enter')
       }
       this.handleDragLeave = e => {
+        if (typeof (this.vm[this.params.dragLeave]) === 'function') {
+          this.vm[this.params.dragLeave].call(this, e.target)
+        }
         e.target.classList.remove('drag-enter')
       }
       this.handleDragEnd = e => {
         e.target.classList.remove('dragging', 'drag-over', 'drag-enter')
+        if (this.vm && typeof (this.vm[this.params.dragEnd]) === 'function') {
+          this.vm[this.params.dragEnd].call(this, e.target)
+        }
       }
       this.handleDrop = e => {
         if (e.stopPropagation) {

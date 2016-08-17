@@ -28,6 +28,13 @@
         text-overflow: ellipsis;
         max-width: 220px;
       }
+      .dragzone {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: -1px;
+        right: -1px;
+      }
       &:last-child {
         border-right: 1px solid #ddd;
       }
@@ -39,7 +46,28 @@
           color: #333;
         }
       }
-      &:hover {
+      &.dragging {
+        border-left: 1px solid #ddd;
+        background-color: white;
+      }
+      &.drag-over {
+        border-left-color: #1976D2;
+        border-left-width: 2px;
+        .dragzone {
+          left: -2px;
+        }
+        &:before {
+          content:"";
+          border-style: solid;
+          border-width: 5px 5px 5px 5px;
+          border-color: transparent transparent transparent #1976D2;
+          position: absolute;
+          top: calc($header-height / 2);
+          left: 0;
+          transform: translateY(-50%);
+        }
+      }
+      &.hover {
         .tab-indicator {
           background-color: rgba(255, 255, 255, 0.84);
           .dot {
@@ -102,11 +130,19 @@
     @dblclick="createNewTab">
     <div class="tab"
       @click="setCurrentTab($index)"
+      id="tab{{ $index }}"
       data-index="{{ $index }}"
       v-for="tab in tabs"
       :class="{'current-tab': $index === currentTabIndex}"
       drop="handleDragAndDrop"
+      drag-start="handleDragStart"
+      drag-enter="handleDragEnter"
+      drag-leave="handleDragLeave"
+      drag-end="handleDragEnd"
+      v-on:mouseover="hoverTab($index)"
+      v-on:mouseleave="unhoverTab($index)"
       v-drag-and-drop>
+      <div :class="{'dragzone': dragging}"></div>
       <span class="tab-title" v-if="tab && !tab.rename">
         {{ tab.title || 'untitled' }}
       </span>
@@ -119,10 +155,14 @@
           @keyup.esc="cancelRename($event, $index)"
           :value="tab.title" />
       </span>
-      <span class="tab-indicator" @click.stop="closeTab($event, $index)">
+      <span
+        class="tab-indicator"
+        @click.stop="closeTab($event, $index)"
+        v-if="!dragging">
         <span class="dot" v-show="!tab.saved"></span>
         <span class="cross">×</span>
       </span>
+      <span class="tab-indicator" v-if="dragging"></span>
     </div>
   </header>
 </template>
@@ -131,6 +171,7 @@
   import path from 'path'
   import {isMac} from 'utils/os'
   import event from 'utils/event'
+  import {$$, $} from 'utils/dom'
 
   export default {
     vuex: {
@@ -142,7 +183,8 @@
             rename: tab.rename
           }
         }),
-        currentTabIndex: state => state.editor.currentTabIndex
+        currentTabIndex: state => state.editor.currentTabIndex,
+        dragging: state => state.editor.draggingTab
       },
       actions: {
         setCurrentTab({dispatch}, index) {
@@ -158,6 +200,19 @@
             newIndex: Number(newIndex),
             oldIndex: Number(oldIndex)
           })
+          dispatch('UPDATE_DRAGGING_STATUS', false)
+          event.emit('focus-current-tab')
+          $$('.header .hover').forEach(el => el.classList.remove('hover'))
+        },
+        handleDragStart({dispatch}) {
+          dispatch('UPDATE_DRAGGING_STATUS', true)
+        },
+        handleDragEnd({dispatch}) {
+          if (this.dragging) {
+            dispatch('UPDATE_DRAGGING_STATUS', false)
+            event.emit('focus-current-tab')
+            $$('.header .hover').forEach(el => el.classList.remove('hover'))
+          }
         }
       }
     },
@@ -187,6 +242,34 @@
           index,
           rename: false
         })
+      },
+      getTab(target) {
+        const isTab = target.classList.contains('tab')
+        const isDragzone = target.classList.contains('dragzone')
+        if (isTab) {
+          return target
+        } else if (isDragzone) {
+          return target.parentNode
+        }
+        return false
+      },
+      handleDragEnter(target) {
+        const tab = this.getTab(target)
+        if (tab) {
+          tab.classList.add('drag-over')
+        }
+      },
+      handleDragLeave(target) {
+        const tab = this.getTab(target)
+        if (tab) {
+          tab.classList.remove('drag-over')
+        }
+      },
+      hoverTab(index) {
+        $(`#tab${index}`).classList.add('hover')
+      },
+      unhoverTab(index) {
+        $(`#tab${index}`).classList.remove('hover')
       }
     }
   }
