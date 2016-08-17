@@ -61,6 +61,7 @@
     "babel-runtime": "^6.9.2",
     "codemirror": "^5.17.0",
     "highlight.js": "^9.5.0",
+    "hint.css": "2.3.2",
     "lodash.debounce": "^4.0.6",
     "markdown-it": "^7.0.0",
     "markdown-it-front-matter": "^0.1.2",
