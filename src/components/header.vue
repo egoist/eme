@@ -67,7 +67,7 @@
           transform: translateY(-50%);
         }
       }
-      &:hover {
+      &.hover {
         .tab-indicator {
           background-color: rgba(255, 255, 255, 0.84);
           .dot {
@@ -130,6 +130,7 @@
     @dblclick="createNewTab">
     <div class="tab"
       @click="setCurrentTab($index)"
+      id="tab{{ $index }}"
       data-index="{{ $index }}"
       v-for="tab in tabs"
       :class="{'current-tab': $index === currentTabIndex}"
@@ -138,6 +139,8 @@
       drag-enter="handleDragEnter"
       drag-leave="handleDragLeave"
       drag-end="handleDragEnd"
+      v-on:mouseover="hoverTab($index)"
+      v-on:mouseleave="unhoverTab($index)"
       v-drag-and-drop>
       <div :class="{'dragzone': dragging}"></div>
       <span class="tab-title" v-if="tab && !tab.rename">
@@ -168,6 +171,7 @@
   import path from 'path'
   import {isMac} from 'utils/os'
   import event from 'utils/event'
+  import {$$, $} from 'utils/dom'
 
   export default {
     vuex: {
@@ -196,16 +200,20 @@
             newIndex: Number(newIndex),
             oldIndex: Number(oldIndex)
           })
-          setTimeout(() => {
-            dispatch('UPDATE_DRAGGING_STATUS', false)
-          }, 200)
+          dispatch('UPDATE_DRAGGING_STATUS', false)
+          event.emit('focus-current-tab')
+          $$('.header .hover').forEach(el => el.classList.remove('hover'))
         },
         handleDragStart({dispatch}) {
           dispatch('UPDATE_DRAGGING_STATUS', true)
         },
         handleDragEnd({dispatch}) {
-          dispatch('UPDATE_DRAGGING_STATUS', false)
-        }
+          if (this.dragging) {
+            dispatch('UPDATE_DRAGGING_STATUS', false)
+            event.emit('focus-current-tab')
+            $$('.header .hover').forEach(el => el.classList.remove('hover'))
+          }
+        },
       }
     },
     data() {
@@ -256,6 +264,12 @@
         if (tab) {
           tab.classList.remove('drag-over')
         }
+      },
+      hoverTab(index) {
+        $(`#tab${index}`).classList.add('hover')
+      },
+      unhoverTab(index) {
+        $(`#tab${index}`).classList.remove('hover')
       }
     }
   }
