@@ -1,6 +1,4 @@
-# EME
-
-Elegant Markdown Editor.
+# EME ![version](https://img.shields.io/github/tag/egoist/eme.svg?style=flat-square) ![downloads](https://img.shields.io/github/downloads/egoist/eme/total.svg?style=flat-square) ![downloads latest](https://img.shields.io/github/downloads/egoist/eme/latest/total.svg?style=flat-square)  ![build](https://img.shields.io/circleci/project/egoist/eme/dev.svg?style=flat-square)
 
 ![preview](/media/preview.png)
 
