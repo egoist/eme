@@ -1,3 +1,4 @@
+<style src="hint.css/hint.css"></style>
 <style src="./css/reset"></style>
 <style src="./css/editor-reset"></style>
 

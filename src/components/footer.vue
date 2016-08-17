@@ -97,7 +97,7 @@
           @click="setWritingMode('writing')">
           <span
             aria-label="Editor only"
-            class="hint--top-left">
+            class="hint--top-left hint--rounded">
             <svg-icon name="pencil" class="footer-icon"></svg-icon>
           </span>
         </span>
@@ -107,7 +107,7 @@
           @click="setWritingMode('default')">
           <span
             aria-label="Editor and Preview"
-            class="hint--top-left">
+            class="hint--top-left hint--rounded">
           <svg-icon name="alignHorizontalMiddle" class="footer-icon"></svg-icon>
           </span>
         </span>
@@ -117,7 +117,7 @@
           @click="setWritingMode('preview')">
           <span
             aria-label="Preview only"
-            class="hint--top-left">
+            class="hint--top-left hint--rounded">
             <svg-icon name="eye" class="footer-icon"></svg-icon>
           </span>
         </span>
