@@ -213,7 +213,7 @@
             event.emit('focus-current-tab')
             $$('.header .hover').forEach(el => el.classList.remove('hover'))
           }
-        },
+        }
       }
     },
     data() {
