@@ -19,6 +19,7 @@
       text-align: center;
       border-left: 1px solid #ddd;
       display: flex;
+      -webkit-app-region: no-drag;
       .tab-title {
         color: #999;
         white-space: nowrap;
@@ -101,8 +102,11 @@
     @dblclick="createNewTab">
     <div class="tab"
       @click="setCurrentTab($index)"
+      data-index="{{ $index }}"
       v-for="tab in tabs"
-      :class="{'current-tab': $index === currentTabIndex}">
+      :class="{'current-tab': $index === currentTabIndex}"
+      drop="handleDragAndDrop"
+      v-drag-and-drop>
       <span class="tab-title" v-if="tab && !tab.rename">
         {{ tab.title || 'untitled' }}
       </span>
@@ -146,6 +150,14 @@
           setTimeout(() => {
             event.emit('focus-current-tab')
           }, 200)
+        },
+        handleDragAndDrop({dispatch}, draggedElement, droppedOnElement) {
+          const newIndex = droppedOnElement.getAttribute('data-index')
+          const oldIndex = draggedElement.getAttribute('data-index')
+          dispatch('REORDER_TABS', {
+            newIndex: Number(newIndex),
+            oldIndex: Number(oldIndex)
+          });
         }
       }
     },
