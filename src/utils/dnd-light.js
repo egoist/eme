@@ -1,17 +1,19 @@
-var DragAndDrop = {}
+const DragAndDrop = {}
+
+const params = [
+  'drag-and-drop',
+  'drag-start',
+  'drag',
+  'drag-over',
+  'drag-enter',
+  'drag-leave',
+  'drag-end',
+  'drop'
+]
 
 DragAndDrop.install = Vue => {
   Vue.directive('drag-and-drop', {
-    params: [
-      'drag-and-drop',
-      'drag-start',
-      'drag',
-      'drag-over',
-      'drag-enter',
-      'drag-leave',
-      'drag-end',
-      'drop'
-    ],
+    params: [...params],
     bind: function () {
       this.vm._dragSrcEl = null
       this.handleDragStart = e => {
