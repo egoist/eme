@@ -108,12 +108,12 @@
       </span>
       <span class="tab-title" v-if="tab && tab.rename">
         <input type="text"
+          class="rename-input"
           @dblclick.stop
           @click.stop
           @keyup.enter="renameCurrentFile($event, $index)"
           @keyup.esc="cancelRename($event, $index)"
-          :value="tab.title"
-          autofocus/>
+          :value="tab.title" />
       </span>
       <span class="tab-indicator" @click="closeTab($event, $index)">
         <span class="dot" v-show="!tab.saved"></span>

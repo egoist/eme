@@ -190,6 +190,9 @@
             index,
             rename: true
           })
+          setTimeout(() => {
+            $('.current-tab').querySelector('.rename-input').focus()
+          }, 0)
         } else {
           this.handleSave(index).catch(handleError)
         }
