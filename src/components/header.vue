@@ -119,7 +119,7 @@
           @keyup.esc="cancelRename($event, $index)"
           :value="tab.title" />
       </span>
-      <span class="tab-indicator" @click="closeTab($event, $index)">
+      <span class="tab-indicator" @click.stop="closeTab($event, $index)">
         <span class="dot" v-show="!tab.saved"></span>
         <span class="cross">×</span>
       </span>
@@ -166,7 +166,6 @@
     },
     methods: {
       closeTab(e, index) {
-        e.stopPropagation()
         event.emit('close-tab', index)
       },
       createNewTab() {

@@ -445,10 +445,6 @@
           this.closeTab(index)
         })
 
-        event.on('close-tab', index => {
-          this.closeTab(index)
-        })
-
         event.on('file-rename', (index, name) => {
           this.handleRenamed(index, name)
         })
