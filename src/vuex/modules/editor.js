@@ -18,6 +18,7 @@ const renderHTML = tab => {
 
 const state = {
   tabs: [],
+  draggingTab: false,
   currentTabIndex: 0
 }
 
@@ -71,6 +72,9 @@ const mutations = {
   },
   UPDATE_RENAME_STATUS(state, {index, rename}) {
     state.tabs[index].rename = rename
+  },
+  UPDATE_DRAGGING_STATUS(state, dragging) {
+    state.draggingTab = dragging
   },
   SET_EDITOR(state, {index, editor}) {
     state.currentTabIndex = index
