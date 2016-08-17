@@ -107,10 +107,12 @@
         {{ tab.title || 'untitled' }}
       </span>
       <span class="tab-title" v-if="tab && tab.rename">
-        <input type="text" 
-          @click.stop 
-          v-on:keyup.enter="renameCurrentFile($event, $index)" 
-          v-bind:value="tab.title"
+        <input type="text"
+          @dblclick.stop
+          @click.stop
+          @keyup.enter="renameCurrentFile($event, $index)"
+          @keyup.esc="cancelRename($event, $index)"
+          :value="tab.title"
           autofocus/>
       </span>
       <span class="tab-indicator" @click="closeTab($event, $index)">
@@ -168,6 +170,12 @@
             rename: false
           })
         }
+      },
+      cancelRename(e, index) {
+        this.$store.dispatch('UPDATE_RENAME_STATUS', {
+          index,
+          rename: false
+        })
       }
     }
   }

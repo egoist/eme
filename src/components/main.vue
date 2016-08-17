@@ -95,6 +95,7 @@
   import makeHTML from 'utils/make-html'
   import fs from 'utils/fs-promise'
   import {appPath} from 'utils/resolve-path'
+  import handleError from 'utils/handle-error'
 
   const currentWindow = remote.getCurrentWindow()
 
@@ -156,16 +157,20 @@
         this.updateSaved({index, saved: true})
       },
       async handleSave(index) {
-        const tab = this.tabs[index]
-        if (tab.filePath) {
-          await this.save({index, filePath: tab.filePath})
-        } else {
-          const filePath = remote.dialog.showSaveDialog(currentWindow, {
-            filters: [
-              {name: 'Markdown', extensions: ['markdown', 'md']}
-            ]
-          })
-          if (filePath) await this.save({index, filePath})
+        try {
+          const tab = this.tabs[index]
+          if (tab.filePath) {
+            await this.save({index, filePath: tab.filePath})
+          } else {
+            const filePath = remote.dialog.showSaveDialog(currentWindow, {
+              filters: [
+                {name: 'Markdown', extensions: ['markdown', 'md']}
+              ]
+            })
+            if (filePath) await this.save({index, filePath})
+          }
+        } catch (err) {
+          handleError(err)
         }
       },
       async handleSaveAs(index) {
@@ -186,7 +191,7 @@
             rename: true
           })
         } else {
-          this.handleSave(index)
+          this.handleSave(index).catch(handleError)
         }
       },
       async handleRenamed(name, index) {
@@ -198,10 +203,15 @@
           rename: false
         })
 
+        if (newPath === tab.filePath) return
+
         try {
           await fs.access(newPath, fs.constants.F_OK)
-          alert(`"${name}" already exists.`)
-        } catch(e) {
+          handleError({
+            name: 'Rename Error',
+            message: `"${name}" already exists.`
+          })
+        } catch (e) {
           await fs.rename(tab.filePath, newPath)
           this.$store.dispatch('UPDATE_FILE_PATH', {
             index,
@@ -289,10 +299,10 @@
           ipcRenderer.send('add-recent-file', filePath)
           if (this.currentTab && this.currentTab.saved && !this.currentTab.filePath) {
             // load file in currentTab
-            this.overrideTab(filePath)
+            this.overrideTab(filePath).catch(handleError)
           } else {
             // load file in newTab
-            this.createNewTab(filePath)
+            this.createNewTab(filePath).catch(handleError)
           }
         }
         if (filePath) {
@@ -309,7 +319,7 @@
       },
       listenIpc() {
         ipcRenderer.on('file-save', () => {
-          this.handleSave(this.currentTabIndex)
+          this.handleSave(this.currentTabIndex).catch(handleError)
         })
 
         ipcRenderer.on('open-file', (e, filePath) => {
@@ -317,7 +327,7 @@
         })
 
         ipcRenderer.on('file-save-as', () => {
-          this.handleSaveAs(this.currentTabIndex)
+          this.handleSaveAs(this.currentTabIndex).catch(handleError)
         })
 
         ipcRenderer.on('file-rename', () => {
@@ -351,7 +361,7 @@
         })
 
         ipcRenderer.on('new-tab', (e, filePath) => {
-          this.createNewTab(filePath)
+          this.createNewTab(filePath).catch(handleError)
         })
 
         ipcRenderer.on('close-window', () => {
