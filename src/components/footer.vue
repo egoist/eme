@@ -95,19 +95,31 @@
           class="writing-mode"
           :class="{active: status.writingMode === 'writing'}"
           @click="setWritingMode('writing')">
-          <svg-icon name="pencil" class="footer-icon"></svg-icon>
+          <span
+            aria-label="Editor only"
+            class="hint--top-left">
+            <svg-icon name="pencil" class="footer-icon"></svg-icon>
+          </span>
         </span>
         <span
           class="writing-mode"
           :class="{active: status.writingMode === 'default'}"
           @click="setWritingMode('default')">
+          <span
+            aria-label="Editor and Preview"
+            class="hint--top-left">
           <svg-icon name="alignHorizontalMiddle" class="footer-icon"></svg-icon>
+          </span>
         </span>
         <span
           class="writing-mode"
           :class="{active: status.writingMode === 'preview'}"
           @click="setWritingMode('preview')">
-          <svg-icon name="eye" class="footer-icon"></svg-icon>
+          <span
+            aria-label="Preview only"
+            class="hint--top-left">
+            <svg-icon name="eye" class="footer-icon"></svg-icon>
+          </span>
         </span>
       </div>
     </div>
