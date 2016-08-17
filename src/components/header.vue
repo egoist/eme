@@ -33,7 +33,7 @@
         top: 0;
         bottom: 0;
         left: -1px;
-        right: 0;
+        right: -1px;
       }
       &:last-child {
         border-right: 1px solid #ddd;
@@ -48,6 +48,7 @@
       }
       &.dragging {
         border-left: 1px solid #ddd;
+        background-color: white;
       }
       &.drag-over {
         border-left-color: #1976D2;
@@ -136,6 +137,7 @@
       drag-start="handleDragStart"
       drag-enter="handleDragEnter"
       drag-leave="handleDragLeave"
+      drag-end="handleDragEnd"
       v-drag-and-drop>
       <div :class="{'dragzone': dragging}"></div>
       <span class="tab-title" v-if="tab && !tab.rename">
@@ -194,10 +196,15 @@
             newIndex: Number(newIndex),
             oldIndex: Number(oldIndex)
           })
-          dispatch('UPDATE_DRAGGING_STATUS', false)
+          setTimeout(() => {
+            dispatch('UPDATE_DRAGGING_STATUS', false)
+          }, 200)
         },
         handleDragStart({dispatch}) {
           dispatch('UPDATE_DRAGGING_STATUS', true)
+        },
+        handleDragEnd({dispatch}) {
+          dispatch('UPDATE_DRAGGING_STATUS', false)
         }
       }
     },
