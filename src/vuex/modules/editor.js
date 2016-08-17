@@ -18,6 +18,7 @@ const renderHTML = tab => {
 
 const state = {
   tabs: [],
+  draggingTab: false,
   currentTabIndex: 0
 }
 
@@ -72,6 +73,9 @@ const mutations = {
   UPDATE_RENAME_STATUS(state, {index, rename}) {
     state.tabs[index].rename = rename
   },
+  UPDATE_DRAGGING_STATUS(state, dragging) {
+    state.draggingTab = dragging
+  },
   SET_EDITOR(state, {index, editor}) {
     state.currentTabIndex = index
     state.tabs[index].editor = editor
@@ -105,6 +109,17 @@ const mutations = {
   UPDATE_PDF(state, {index, pdf}) {
     const tab = state.tabs[index]
     tab.pdf = pdf
+  },
+  REORDER_TABS(state, {oldIndex, newIndex}) {
+    const tabs = state.tabs
+    if (newIndex >= tabs.length) {
+      let k = newIndex - tabs.length
+      while ((k--) + 1) {
+        tabs.push(undefined)
+      }
+    }
+    tabs.splice(newIndex, 0, tabs.splice(oldIndex, 1)[0])
+    state.currentTabIndex = newIndex
   }
 }
 

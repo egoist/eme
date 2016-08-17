@@ -19,6 +19,7 @@
       text-align: center;
       border-left: 1px solid #ddd;
       display: flex;
+      -webkit-app-region: no-drag;
       .tab-title {
         color: #999;
         white-space: nowrap;
@@ -26,6 +27,13 @@
         overflow: hidden;
         text-overflow: ellipsis;
         max-width: 220px;
+      }
+      .dragzone {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: -1px;
+        right: 0;
       }
       &:last-child {
         border-right: 1px solid #ddd;
@@ -36,6 +44,26 @@
         border-left-width: 2px;
         .tab-title {
           color: #333;
+        }
+      }
+      &.dragging {
+        border-left: 1px solid #ddd;
+      }
+      &.drag-over {
+        border-left-color: #1976D2;
+        border-left-width: 2px;
+        .dragzone {
+          left: -2px;
+        }
+        &:before {
+          content:"";
+          border-style: solid;
+          border-width: 5px 5px 5px 5px;
+          border-color: transparent transparent transparent #1976D2;
+          position: absolute;
+          top: calc($header-height / 2);
+          left: 0;
+          transform: translateY(-50%);
         }
       }
       &:hover {
@@ -101,8 +129,15 @@
     @dblclick="createNewTab">
     <div class="tab"
       @click="setCurrentTab($index)"
+      data-index="{{ $index }}"
       v-for="tab in tabs"
-      :class="{'current-tab': $index === currentTabIndex}">
+      :class="{'current-tab': $index === currentTabIndex}"
+      drop="handleDragAndDrop"
+      drag-start="handleDragStart"
+      drag-enter="handleDragEnter"
+      drag-leave="handleDragLeave"
+      v-drag-and-drop>
+      <div :class="{'dragzone': dragging}"></div>
       <span class="tab-title" v-if="tab && !tab.rename">
         {{ tab.title || 'untitled' }}
       </span>
@@ -116,8 +151,8 @@
           :value="tab.title" />
       </span>
       <span class="tab-indicator" @click="closeTab($event, $index)">
-        <span class="dot" v-show="!tab.saved"></span>
-        <span class="cross">×</span>
+        <span class="dot" v-show="!tab.saved && !dragging"></span>
+        <span class="cross" v-show="!dragging">×</span>
       </span>
     </div>
   </header>
@@ -138,7 +173,8 @@
             rename: tab.rename
           }
         }),
-        currentTabIndex: state => state.editor.currentTabIndex
+        currentTabIndex: state => state.editor.currentTabIndex,
+        dragging: state => state.editor.draggingTab
       },
       actions: {
         setCurrentTab({dispatch}, index) {
@@ -146,6 +182,18 @@
           setTimeout(() => {
             event.emit('focus-current-tab')
           }, 200)
+        },
+        handleDragAndDrop({dispatch}, draggedElement, droppedOnElement) {
+          const newIndex = droppedOnElement.getAttribute('data-index')
+          const oldIndex = draggedElement.getAttribute('data-index')
+          dispatch('REORDER_TABS', {
+            newIndex: Number(newIndex),
+            oldIndex: Number(oldIndex)
+          });
+          dispatch('UPDATE_DRAGGING_STATUS', false)
+        },
+        handleDragStart({dispatch}, target) {
+          dispatch('UPDATE_DRAGGING_STATUS', true)
         }
       }
     },
@@ -176,6 +224,28 @@
           index,
           rename: false
         })
+      },
+      getTab(target) {
+        const isTab = target.classList.contains('tab')
+        const isDragzone = target.classList.contains('dragzone')
+        if (isTab) {
+          return target
+        } else if (isDragzone) {
+          return target.parentNode
+        }
+        return false
+      },
+      handleDragEnter(target) {
+        const tab = this.getTab(target);
+        if (tab) {
+          tab.classList.add('drag-over')
+        }
+      },
+      handleDragLeave(target) {
+        const tab = this.getTab(target);
+        if (tab) {
+          tab.classList.remove('drag-over')
+        }
       }
     }
   }
