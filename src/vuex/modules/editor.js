@@ -105,6 +105,17 @@ const mutations = {
   UPDATE_PDF(state, {index, pdf}) {
     const tab = state.tabs[index]
     tab.pdf = pdf
+  },
+  REORDER_TABS(state, {oldIndex, newIndex}) {
+    const tabs = state.tabs
+    if (newIndex >= tabs.length) {
+      let k = newIndex - tabs.length
+      while ((k--) + 1) {
+        tabs.push(undefined)
+      }
+    }
+    tabs.splice(newIndex, 0, tabs.splice(oldIndex, 1)[0])
+    state.currentTabIndex = newIndex
   }
 }
 
