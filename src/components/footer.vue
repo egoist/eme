@@ -92,34 +92,25 @@
     <div class="footer-right">
       <div class="writing-modes" v-if="status.writingMode">
         <span
-          class="writing-mode"
+          aria-label="Editor only"
+          class="writing-mode hint--top-left hint--rounded"
           :class="{active: status.writingMode === 'writing'}"
           @click="setWritingMode('writing')">
-          <span
-            aria-label="Editor only"
-            class="hint--top-left hint--rounded">
-            <svg-icon name="pencil" class="footer-icon"></svg-icon>
-          </span>
+          <svg-icon name="pencil" class="footer-icon"></svg-icon>
         </span>
         <span
-          class="writing-mode"
+          aria-label="Editor and Preview"
+          class="writing-mode hint--top-left hint--rounded"
           :class="{active: status.writingMode === 'default'}"
           @click="setWritingMode('default')">
-          <span
-            aria-label="Editor and Preview"
-            class="hint--top-left hint--rounded">
           <svg-icon name="alignHorizontalMiddle" class="footer-icon"></svg-icon>
-          </span>
         </span>
         <span
-          class="writing-mode"
+          aria-label="Preview only"
+          class="writing-mode hint--top-left hint--rounded"
           :class="{active: status.writingMode === 'preview'}"
           @click="setWritingMode('preview')">
-          <span
-            aria-label="Preview only"
-            class="hint--top-left hint--rounded">
-            <svg-icon name="eye" class="footer-icon"></svg-icon>
-          </span>
+          <svg-icon name="eye" class="footer-icon"></svg-icon>
         </span>
       </div>
     </div>
