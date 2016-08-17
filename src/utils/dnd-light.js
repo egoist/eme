@@ -14,7 +14,7 @@ const params = [
 DragAndDrop.install = Vue => {
   Vue.directive('drag-and-drop', {
     params: [...params],
-    bind: function () {
+    bind() {
       this.vm._dragSrcEl = null
       this.handleDragStart = e => {
         e.target.classList.add('dragging')
@@ -62,10 +62,10 @@ DragAndDrop.install = Vue => {
       this.el.addEventListener('drop', this.handleDrop, false)
       this.el.addEventListener('dragend', this.handleDragEnd, false)
     },
-    update: function (newValue, oldValue) {
+    update(newValue, oldValue) {
       // console.log(this);
     },
-    unbind: function () {
+    unbind() {
       this.el.classList.remove('dragging', 'drag-over', 'drag-enter')
       this.el.removeAttribute('draggable')
       this.el.removeEventListener('dragstart', this.handleDragStart)
