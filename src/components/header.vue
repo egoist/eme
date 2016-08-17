@@ -189,10 +189,10 @@
           dispatch('REORDER_TABS', {
             newIndex: Number(newIndex),
             oldIndex: Number(oldIndex)
-          });
+          })
           dispatch('UPDATE_DRAGGING_STATUS', false)
         },
-        handleDragStart({dispatch}, target) {
+        handleDragStart({dispatch}) {
           dispatch('UPDATE_DRAGGING_STATUS', true)
         }
       }
@@ -235,13 +235,13 @@
         return false
       },
       handleDragEnter(target) {
-        const tab = this.getTab(target);
+        const tab = this.getTab(target)
         if (tab) {
           tab.classList.add('drag-over')
         }
       },
       handleDragLeave(target) {
-        const tab = this.getTab(target);
+        const tab = this.getTab(target)
         if (tab) {
           tab.classList.remove('drag-over')
         }
