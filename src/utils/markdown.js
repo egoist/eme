@@ -1,3 +1,4 @@
+/* eslint-disable camelcase, max-params */
 import MarkdownIt from 'markdown-it'
 import taskList from 'markdown-it-task-lists'
 import hljs from 'highlight.js'
@@ -15,7 +16,7 @@ const md = new MarkdownIt({
   highlight(str, lang) {
     if (lang && hljs.getLanguage(lang)) {
       try {
-        return hljs.highlight(lang, str).value;
+        return hljs.highlight(lang, str).value
       } catch (__) {}
     }
 
@@ -28,11 +29,11 @@ md.use(katex)
 md.use(frontMatter, fm => console.log(fm))
 
 // add target _blank
-const defaultRender = md.renderer.rules.link_open || function(tokens, idx, options, env, self) {
+const defaultRender = md.renderer.rules.link_open || function (tokens, idx, options, env, self) {
   return self.renderToken(tokens, idx, options)
 }
 md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
-  var aIndex = tokens[idx].attrIndex('target')
+  const aIndex = tokens[idx].attrIndex('target')
 
   if (aIndex < 0) {
     tokens[idx].attrPush(['target', '_blank'])

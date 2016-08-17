@@ -61,7 +61,7 @@ ipcMain.on('close-focus-window', () => {
 // TODO: refactor
 ipcMain.on('print-to-pdf', (e, html, saveTo) => {
   let tempWin = new BrowserWindow({show: false})
-  const tempPath = path.join(os.tmpdir(),  `eme-export-pdf.${Date.now()}.html`)
+  const tempPath = path.join(os.tmpdir(), `eme-export-pdf.${Date.now()}.html`)
   fs.writeFileSync(tempPath, html, 'utf8')
   tempWin.loadURL(`file://${tempPath}`)
   const page = tempWin.webContents
@@ -98,7 +98,7 @@ ipcMain.on('add-recent-file', (e, filePath) => {
   }
 
   config.set('recentFiles', files)
-    Menu.setApplicationMenu(buildMenu({
-      createWindow: emeWindow.createWindow
-    }))
+  Menu.setApplicationMenu(buildMenu({
+    createWindow: emeWindow.createWindow
+  }))
 })
