@@ -150,10 +150,14 @@
           @keyup.esc="cancelRename($event, $index)"
           :value="tab.title" />
       </span>
-      <span class="tab-indicator" @click.stop="closeTab($event, $index)">
-        <span class="dot" v-show="!tab.saved && !dragging"></span>
-        <span class="cross" v-show="!dragging">×</span>
+      <span
+        class="tab-indicator"
+        @click.stop="closeTab($event, $index)"
+        v-if="!dragging">
+        <span class="dot" v-show="!tab.saved"></span>
+        <span class="cross">×</span>
       </span>
+      <span class="tab-indicator" v-if="dragging"></span>
     </div>
   </header>
 </template>
