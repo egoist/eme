@@ -1,19 +1,15 @@
-const DragAndDrop = {}
-
-const params = [
-  'drag-and-drop',
-  'drag-start',
-  'drag',
-  'drag-over',
-  'drag-enter',
-  'drag-leave',
-  'drag-end',
-  'drop'
-]
-
-DragAndDrop.install = Vue => {
+const DragAndDrop = Vue => {
   Vue.directive('drag-and-drop', {
-    params: [...params],
+    params: [
+      'drag-and-drop',
+      'drag-start',
+      'drag',
+      'drag-over',
+      'drag-enter',
+      'drag-leave',
+      'drag-end',
+      'drop'
+    ],
     bind() {
       this.vm._dragSrcEl = null
       this.handleDragStart = e => {
@@ -62,9 +58,6 @@ DragAndDrop.install = Vue => {
       this.el.addEventListener('drop', this.handleDrop, false)
       this.el.addEventListener('dragend', this.handleDragEnd, false)
     },
-    update(newValue, oldValue) {
-      // console.log(this);
-    },
     unbind() {
       this.el.classList.remove('dragging', 'drag-over', 'drag-enter')
       this.el.removeAttribute('draggable')
@@ -77,4 +70,4 @@ DragAndDrop.install = Vue => {
   })
 }
 
-module.exports = DragAndDrop
+export default DragAndDrop
