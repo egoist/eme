@@ -157,7 +157,7 @@
           dispatch('REORDER_TABS', {
             newIndex: Number(newIndex),
             oldIndex: Number(oldIndex)
-          });
+          })
         }
       }
     },

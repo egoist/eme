@@ -131,13 +131,13 @@
         status: state => {
           const editor = state.editor.tabs[state.editor.currentTabIndex] || {}
           return {
-              wordCount: editor.wordCount || 0,
-              filePath: editor.filePath ?
-                tildify(editor.filePath) :
-                'untitled',
-              writingMode: editor.writingMode,
-              pdf: editor.pdf
-            }
+            wordCount: editor.wordCount || 0,
+            filePath: editor.filePath ?
+              tildify(editor.filePath) :
+              'untitled',
+            writingMode: editor.writingMode,
+            pdf: editor.pdf
+          }
         }
       },
       actions: {

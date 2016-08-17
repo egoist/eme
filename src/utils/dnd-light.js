@@ -42,7 +42,7 @@ const DragAndDrop = Vue => {
 
         if (this.vm._dragSrcEl !== e.target) {
           if (typeof (this.vm[this.params.drop]) === 'function') {
-            var el = (e.target.draggable) ? e.target : e.target.parentElement
+            const el = (e.target.draggable) ? e.target : e.target.parentElement
             this.vm[this.params.drop].call(this, this.vm._dragSrcEl, el)
           }
         }

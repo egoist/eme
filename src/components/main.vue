@@ -73,7 +73,6 @@
 
 <script>
   import path from 'path'
-  import pify from 'pify'
   import {ipcRenderer, remote, shell} from 'electron'
   import CodeMirror from 'codemirror'
   import 'codemirror/lib/codemirror.css'
@@ -87,11 +86,7 @@
 
   import {$} from 'utils/dom'
   import {isMac} from 'utils/os'
-  import md from 'utils/markdown'
   import event from 'utils/event'
-  import {
-    getWordCount
-  } from 'utils/common'
   import makeHTML from 'utils/make-html'
   import fs from 'utils/fs-promise'
   import {appPath} from 'utils/resolve-path'
@@ -113,7 +108,7 @@
       }
     },
     computed: {
-      editor (){
+      editor() {
         return this.currentTab && this.currentTab.editor
       }
     },
@@ -239,7 +234,6 @@
       },
       async createNewTab(filePath = '') {
         let content = ''
-        let wordCount = 0
         if (filePath) {
           content = await fs.readFile(filePath, 'utf8')
         }
@@ -253,8 +247,6 @@
           writingMode: 'default',
           isVimMode: false,
           pdf: '',
-
-          //state
           rename: false
         })
 
@@ -271,7 +263,7 @@
             autofocus: true,
             dragDrop: false,
             extraKeys: {
-              "Enter": "newlineAndIndentContinueMarkdownList"
+              Enter: 'newlineAndIndentContinueMarkdownList'
             }
           })
 
@@ -368,7 +360,6 @@
         })
 
         ipcRenderer.on('close-window', () => {
-
           const closeInOrder = () => {
             this.closeTab(0).then(() => {
               if (this.tabs.length > 0) {
@@ -385,13 +376,11 @@
         window.onbeforeunload = () => {
           if (currentWindow.$state.unsaved === 0) {
             return
-          } else {
-            return false
           }
+          return false
         }
 
         ipcRenderer.on('close-and-exit', () => {
-
           const closeInOrder = () => {
             this.closeTab(0).then(() => {
               if (this.tabs.length > 0) {
@@ -485,7 +474,7 @@
 
         holder.ondrop = e => {
           e.preventDefault()
-          for (let f of e.dataTransfer.files) {
+          for (const f of e.dataTransfer.files) {
             this.createNewTab(f.path)
           }
           return false
