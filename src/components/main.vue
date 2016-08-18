@@ -13,6 +13,9 @@
       .editor {
         cursor: ew-resize;
       }
+      .preview {
+        -webkit-user-select: none;
+      }
     }
     &.vim-mode {
       /* height - editorDialog */
