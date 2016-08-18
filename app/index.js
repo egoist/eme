@@ -13,6 +13,8 @@ const buildMenu = require('./eme/menu')
 const emeWindow = require('./eme/window')
 const config = require('./eme/config')
 
+const platform = os.platform()
+
 const appMenu = buildMenu({
   createWindow: emeWindow.createWindow
 })
@@ -22,7 +24,7 @@ const createMainWindow = () => {
     defaultWidth: 800,
     defaultHeight: 600
   })
-  if (process.platform === 'linux') {
+  if (platform === 'linux') {
     windowState.icon = path.join(__dirname, 'resources/icon.png')
   }
   const win = emeWindow.createWindow({windowState})
@@ -35,13 +37,13 @@ app.on('ready', () => {
   Menu.setApplicationMenu(appMenu)
   mainWindow = createMainWindow()
 
-  if (os.platform() === 'darwin') {
+  if (platform === 'darwin') {
     mainWindow.setSheetOffset(36)
   }
 })
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+  if (platform !== 'darwin') {
     app.quit()
   }
 })
@@ -49,6 +51,9 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   if (emeWindow.wins === 0) {
     mainWindow = createMainWindow()
+    if (platform === 'darwin') {
+      mainWindow.setSheetOffset(36)
+    }
   }
 })
 
