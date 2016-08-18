@@ -23,7 +23,7 @@ const createMainWindow = () => {
     defaultHeight: 600
   })
   if (process.platform === 'linux') {
-    windowState.icon = path.join(__dirname, '../icon.png')
+    windowState.icon = path.join(__dirname, 'resources/icon.png')
   }
   const win = emeWindow.createWindow({windowState})
   windowState.manage(win)

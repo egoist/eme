@@ -1,6 +1,8 @@
+/* eslint-disable quote-props */
 'use strict'
 const minimist = require('minimist')
 const packager = require('electron-packager')
+const deb = require('electron-installer-debian')
 const exec = require('child_process').exec
 const pkg = require('../app/package.json')
 
@@ -18,9 +20,10 @@ const defaults = {
 }
 const cb = (err, paths) => {
   if (err) {
-    return console.log(err.message)
+    console.log(err.message)
+    process.exit(1)
   }
-  console.log(paths.join('\n'))
+  if (paths) console.log(paths.join('\n'))
 }
 
 platforms.macos = () => {
@@ -42,7 +45,14 @@ platforms.linux = () => {
     'app-bundle-id': 'com.egoistian.eme'
   }), (err, paths) => {
     cb(err, paths)
-    exec(`cd dist/EME-linux-x64 && zip -ryXq9 ../EME-linux-${pkg.version}.zip *`)
+    deb({
+      src: 'dist/EME-linux-x64',
+      dest: 'dist/installers',
+      arch: 'amd64',
+      icon: 'app/resources/icon.png'
+    }, err => {
+      cb(err)
+    })
   })
 }
 
