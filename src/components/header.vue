@@ -138,8 +138,8 @@
       drag-enter="handleDragEnter"
       drag-leave="handleDragLeave"
       drag-end="handleDragEnd"
-      v-on:mouseover="hoverTab($index)"
-      v-on:mouseleave="unhoverTab($index)"
+      @mouseover="hoverTab($index)"
+      @mouseleave="unhoverTab($index)"
       v-drag-and-drop>
       <div :class="{'dragzone': dragging}"></div>
       <span class="tab-title" v-if="tab && !tab.rename">

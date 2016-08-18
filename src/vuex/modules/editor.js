@@ -84,6 +84,9 @@ const mutations = {
   UPDATE_DRAGGING_STATUS(state, dragging) {
     state.draggingTab = dragging
   },
+  UPDATE_EDITOR_SPLIT(state, {index, split}) {
+    state.tabs[index].split = split
+  },
   SET_EDITOR(state, {index, editor}) {
     state.currentTabIndex = index
     state.tabs[index].editor = editor

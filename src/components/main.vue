@@ -8,6 +8,12 @@
     /* total - header - footer */
     height: calc(100% - 36px - 25px);
     display: flex;
+    &.resizing {
+      cursor: ew-resize;
+      .editor {
+        cursor: ew-resize;
+      }
+    }
     &.vim-mode {
       /* height - editorDialog */
       .CodeMirror-scroll {
@@ -18,11 +24,13 @@
   }
   .editor, .preview {
     height: 100%;
-    flex: 1;
     overflow: auto;
   }
   .editor {
     cursor: text;
+    overflow-x: hidden !important;
+    position: relative;
+    border-right: 1px solid #e3e3e3;
     .editor-input {
       display: none;
     }
@@ -47,22 +55,37 @@
       tab-size: 2;
     }
   }
+  .resize-bar {
+    position: absolute;
+    z-index: 99;
+    top: 0;
+    bottom: 0;
+    right: -5px;
+    width: 10px;
+    cursor: ew-resize;
+  }
 </style>
 
 <template>
   <div
     class="main tab-body"
-    :class="['tab-body-' + $index, {'vim-mode': currentTab && currentTab.isVimMode}]"
+    :class="['tab-body-' + $index, {'vim-mode': currentTab && currentTab.isVimMode, 'resizing': resizing}]"
     v-for="tab in tabs"
+    @mousemove="resizeMove($event, $index)"
+    @mouseup="resizeEnd"
+    @mouseleave="resizeEnd"
     v-show="$index === currentTabIndex">
     <div
       class="editor"
       :class="{'focus-mode': tab.isFocusMode}"
+      :style="{ width: tab.split + '%' }"
       v-show="currentTab && currentTab.writingMode !== 'preview'">
       <textarea class="editor-input" :id="'editor-' + $index">{{ tab.content }}</textarea>
+      <div class="resize-bar" @mousedown="resizeStart($event, $index)"></div>
     </div>
     <div
       :class="'preview preview-' + $index"
+      :style="{ width: (100 - tab.split) + '%' }"
       v-show="currentTab && currentTab.writingMode !== 'writing'">
       <div :class="'markdown-body markdown-body-' + $index">
         {{{ tab.html }}}
@@ -114,7 +137,8 @@
     },
     data() {
       return {
-        isMac
+        isMac,
+        resizing: false
       }
     },
     created() {
@@ -249,7 +273,8 @@
           writingMode: 'default',
           isVimMode: false,
           pdf: '',
-          rename: false
+          rename: false,
+          split: 50
         })
 
         setTimeout(() => {
@@ -491,6 +516,27 @@
           }
           return false
         }
+      },
+      resizeStart(e, index) {
+        this.resizing = true
+        this.startX = e.pageX
+        this.startSplit = this.tabs[index].split
+      },
+      resizeMove(e, index) {
+        if (this.resizing) {
+          const tab = this.tabs[index]
+          const dx = e.pageX - this.startX
+          const totalWidth = this.$el.parentNode.offsetWidth
+          this.$store.dispatch('UPDATE_EDITOR_SPLIT', {
+            index,
+            split: this.startSplit + (dx / totalWidth * 100)
+          })
+        }
+      },
+      resizeEnd() {
+        this.resizing = false
+        this.editor.refresh()
+        this.editor.focus()
       }
     }
   }
