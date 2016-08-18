@@ -6,6 +6,14 @@ import wordCount from 'word-count'
 const win = remote.getCurrentWindow()
 win.$state.unsaved = 0
 
+const focusEditor = (tabs, index) => {
+  const tab = tabs[index]
+  if (tab && tab.editor) {
+    tab.editor.refresh()
+    tab.editor.focus()
+  }
+}
+
 const renderHTML = tab => {
   return md.render(tab.content).replace(/src="([^"]+)"/g, (m, p1) => {
     if (p1[0] === '.') {
@@ -88,11 +96,7 @@ const mutations = {
       state.currentTabIndex--
     }
     setTimeout(() => {
-      const tab = state.tabs[state.currentTabIndex]
-      if (tab && tab.editor) {
-        tab.editor.refresh()
-        tab.editor.focus()
-      }
+      focusEditor(state.tabs, state.currentTabIndex)
     }, 0)
     state.tabs = state.tabs.filter((tab, index) => {
       return index !== indexToClose
@@ -120,6 +124,9 @@ const mutations = {
     }
     tabs.splice(newIndex, 0, tabs.splice(oldIndex, 1)[0])
     state.currentTabIndex = newIndex
+    setTimeout(() => {
+      focusEditor(state.tabs, state.currentTabIndex)
+    }, 0)
   }
 }
 
