@@ -180,13 +180,16 @@
           const tab = this.tabs[index]
           if (tab.filePath) {
             await this.save({index, filePath: tab.filePath})
-          } else {
-            const filePath = remote.dialog.showSaveDialog(currentWindow, {
-              filters: [
-                {name: 'Markdown', extensions: ['markdown', 'md']}
-              ]
-            })
-            if (filePath) await this.save({index, filePath})
+            return true
+          }
+          const filePath = remote.dialog.showSaveDialog(currentWindow, {
+            filters: [
+              {name: 'Markdown', extensions: ['markdown', 'md']}
+            ]
+          })
+          if (filePath) {
+            await this.save({index, filePath})
+            return true
           }
         } catch (err) {
           handleError(err)
@@ -486,9 +489,11 @@
             buttons: ['Save', 'Cancel', 'Don\'t Save']
           })
           if (clickedButton === 0) {
-            await this.handleSave(index)
-            this.$store.dispatch('CLOSE_TAB', index)
-            return true
+            const saved = await this.handleSave(index)
+            if (saved) {
+              this.$store.dispatch('CLOSE_TAB', index)
+              return true
+            }
           } else if (clickedButton === 2) {
             this.$store.dispatch('UPDATE_SAVE_STATUS', {index, saved: true})
             this.$store.dispatch('CLOSE_TAB', index)
