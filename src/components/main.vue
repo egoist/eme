@@ -163,9 +163,13 @@
     methods: {
       restoreAppState(state) {
         state.tabs.forEach(tab => {
-          this.createNewTab(tab.filePath, tab)
+          this.createNewTab(tab.filePath, tab, () => this.$store.dispatch('SET_CURRENT_TAB', state.currentTabIndex))
         })
-        this.$store.dispatch('SET_CURRENT_TAB', state.currentTabIndex)
+        
+        setTimeout(() => {
+          this.editor.refresh()
+          this.editor.focus()
+        }, 200)
       },
       handleScroll(e) {
         const index = this.currentTabIndex
@@ -181,9 +185,13 @@
         const previewPosition = codePort.scrollTop * ratio
         previewPort.scrollTop = previewPosition
       },
-      async saveAppState(tabsToSave, activeTabIndex) {
+      saveAppState(tabsToSave) {
         const tabs = []
-        tabsToSave.forEach(tab => {
+        let activeTabIndex = 0
+        tabsToSave.forEach((tab, index) => {
+          if (tab.active) {
+            activeTabIndex = index
+          }
           tabs.push({
             filePath: tab.filePath,
             isFocusMode: tab.isFocusMode,
@@ -194,10 +202,10 @@
           })
         })
         if (tabs.length === 0) {
-          await config.set('lastAppState', null)
+          config.set('lastAppState', null)
         } else {
-          await config.set('lastAppState', {
-            currentTabIndex: activeTabIndex || 0,
+          config.set('lastAppState', {
+            currentTabIndex: activeTabIndex,
             tabs
           })
         }
@@ -298,7 +306,7 @@
           saved: true
         })
       },
-      async createNewTab(filePath = '', tabParams = {}) {
+      async createNewTab(filePath = '', tabParams = {}, created = () => {}) {
         let content = ''
         if (filePath) {
           content = await fs.readFile(filePath, 'utf8')
@@ -354,6 +362,7 @@
           this.$store.dispatch('SET_EDITOR', {index, editor})
 
           tabEl.querySelector('.CodeMirror-scroll').addEventListener('scroll', this.handleScroll)
+          created()
         }, 0)
       },
       handleOpen(filePath) {
@@ -426,33 +435,26 @@
           this.createNewTab(filePath).catch(handleError)
         })
 
-        ipcRenderer.on('close-window', () => {
+        ipcRenderer.on('close-window', callback => {
           const tabs = []
-          let activeTabIndex = this.currentTabIndex
-          let tabIndexToSave = null
           const closeInOrder = () => {
             const tab = this.tabs[0]
             this.closeTab(0).then(closed => {
               if (closed) {
                 if (closed.saved) {
                   tabs.push(tab)
-                  if (this.currentTabIndex === 0) {
-                    tabIndexToSave = activeTabIndex
-                  }
-                } else {
-                  activeTabIndex--
                 }
                 if (this.tabs.length > 0) {
-                  closeInOrder()
+                  closeInOrder(callback)
                 } else {
+                  callback()
                   currentWindow.close()
                 }
               }
             })
           }
 
-          closeInOrder()
-          this.saveAppState(tabs, tabIndexToSave)
+          closeInOrder(() => this.saveAppState(tabs))
         })
 
         window.onbeforeunload = () => {
@@ -464,19 +466,13 @@
 
         ipcRenderer.on('close-and-exit', () => {
           const tabs = []
-          let activeTabIndex = this.currentTabIndex
-          let tabIndexToSave = null
+          this.tabs[this.currentTabIndex].active = true
           const closeInOrder = callback => {
             const tab = this.tabs[0]
             this.closeTab(0).then(closed => {
               if (closed) {
                 if (closed.saved) {
                   tabs.push(tab)
-                  if (this.currentTabIndex === 0) {
-                    tabIndexToSave = activeTabIndex
-                  }
-                } else {
-                  activeTabIndex--
                 }
                 if (this.tabs.length > 0) {
                   closeInOrder(callback)
@@ -489,7 +485,7 @@
             })
           }
 
-          closeInOrder(() => this.saveAppState(tabs, tabIndexToSave))
+          closeInOrder(() => this.saveAppState(tabs))
         })
 
         ipcRenderer.on('show-save-pdf-dialog', () => {
