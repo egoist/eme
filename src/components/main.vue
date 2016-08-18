@@ -363,11 +363,13 @@
 
         ipcRenderer.on('close-window', () => {
           const closeInOrder = () => {
-            this.closeTab(0).then(() => {
-              if (this.tabs.length > 0) {
-                closeInOrder()
-              } else {
-                currentWindow.close()
+            this.closeTab(0).then(closed => {
+              if (closed) {
+                if (this.tabs.length > 0) {
+                  closeInOrder()
+                } else {
+                  currentWindow.close()
+                }
               }
             })
           }
@@ -384,12 +386,14 @@
 
         ipcRenderer.on('close-and-exit', () => {
           const closeInOrder = () => {
-            this.closeTab(0).then(() => {
-              if (this.tabs.length > 0) {
-                closeInOrder()
-              } else {
-                // any better solution?
-                remote.app.exit(0)
+            this.closeTab(0).then(closed => {
+              if (closed) {
+                if (this.tabs.length > 0) {
+                  closeInOrder()
+                } else {
+                  // any better solution?
+                  remote.app.exit(0)
+                }
               }
             })
           }
@@ -459,13 +463,16 @@
           if (clickedButton === 0) {
             await this.handleSave(index)
             this.$store.dispatch('CLOSE_TAB', index)
+            return true
           } else if (clickedButton === 2) {
             this.$store.dispatch('UPDATE_SAVE_STATUS', {index, saved: true})
             this.$store.dispatch('CLOSE_TAB', index)
+            return true
           }
-        } else {
-          this.$store.dispatch('CLOSE_TAB', index)
+          return false
         }
+        this.$store.dispatch('CLOSE_TAB', index)
+        return true
       },
       handleDrag() {
         const holder = $('#app')
