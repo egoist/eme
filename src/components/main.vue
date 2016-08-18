@@ -532,7 +532,6 @@
       },
       resizeMove(e, index) {
         if (this.resizing) {
-          const tab = this.tabs[index]
           const dx = e.pageX - this.startX
           const totalWidth = this.$el.parentNode.offsetWidth
           this.$store.dispatch('UPDATE_EDITOR_SPLIT', {
