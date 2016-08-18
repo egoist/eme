@@ -16,7 +16,8 @@ module.exports = {
       src: path.join(__dirname, '../src'),
       utils: path.join(__dirname, '../src/utils'),
       components: path.join(__dirname, '../src/components'),
-      css: path.join(__dirname, '../src/css')
+      css: path.join(__dirname, '../src/css'),
+      directives: path.join(__dirname, '../src/directives')
     }
   },
   module: {
@@ -66,7 +67,7 @@ module.exports = {
   target: 'electron',
   plugins: [
     new webpack.ExternalsPlugin('commonjs2', [
-      './vendor/markdown-it-katex',
+      './vendor/markdown-it-katex'
     ].concat(Object.keys(appPkg.dependencies))),
     new ExtractTextPlugin('style.css')
   ]

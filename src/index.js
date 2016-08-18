@@ -1,7 +1,8 @@
+/* eslint-disable no-new */
 import Vue from 'vue'
 import store from './vuex/store'
 import app from './app'
-import DnD from 'utils/dnd-light'
+import DnD from 'directives/dnd'
 
 Vue.use(DnD)
 

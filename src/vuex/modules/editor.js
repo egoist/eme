@@ -7,7 +7,7 @@ const win = remote.getCurrentWindow()
 win.$state.unsaved = 0
 
 const renderHTML = tab => {
-  return md.render(tab.content).replace(/src=\"([^\"]+)\"/g, (m, p1) => {
+  return md.render(tab.content).replace(/src="([^"]+)"/g, (m, p1) => {
     if (p1[0] === '.') {
       p1 = path.join(path.dirname(tab.filePath), p1)
       return `src="${p1}"`
