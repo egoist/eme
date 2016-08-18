@@ -26,6 +26,7 @@
     }
   }
   .editor, .preview {
+    min-width: 100px;
     height: 100%;
     overflow: auto;
   }
