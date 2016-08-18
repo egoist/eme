@@ -175,8 +175,10 @@
             {name: 'Markdown', extensions: ['markdown', 'md']}
           ]
         })
-        await fs.writeFile(filePath, tab.content, 'utf8')
-        console.log(`saved as ... ${filePath}`)
+        if (filePath) {
+          await fs.writeFile(filePath, tab.content, 'utf8')
+          console.log(`saved as ... ${filePath}`)
+        }
       },
       async handleRename(index) {
         const tab = this.tabs[index]
