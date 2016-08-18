@@ -118,6 +118,7 @@
   import fs from 'utils/fs-promise'
   import {appPath} from 'utils/resolve-path'
   import handleError from 'utils/handle-error'
+  import config from 'utils/config'
 
   const currentWindow = remote.getCurrentWindow()
 
@@ -149,12 +150,23 @@
       document.title = 'untitled - EME'
     },
     ready() {
-      this.createNewTab()
+      const lastAppState = config.get('lastAppState')
+      if (lastAppState && lastAppState.tabs) {
+        this.restoreAppState(lastAppState)
+      } else {
+        this.createNewTab()
+      }
 
       this.listenIpc()
       this.handleDrag()
     },
     methods: {
+      restoreAppState(state) {
+        state.tabs.forEach(tab => {
+          this.createNewTab(tab.filePath, tab)
+        })
+        this.$store.dispatch('SET_CURRENT_TAB', state.currentTabIndex)
+      },
       handleScroll(e) {
         const index = this.currentTabIndex
         const codePort = e ?
@@ -168,6 +180,27 @@
         const ratio = markdownHeight / codeHeight
         const previewPosition = codePort.scrollTop * ratio
         previewPort.scrollTop = previewPosition
+      },
+      async saveAppState(tabsToSave, activeTabIndex) {
+        const tabs = []
+        tabsToSave.forEach(tab => {
+          tabs.push({
+            filePath: tab.filePath,
+            isFocusMode: tab.isFocusMode,
+            writingMode: tab.writingMode,
+            isVimMode: tab.isVimMode,
+            pdf: tab.pdf,
+            split: tab.split
+          })
+        })
+        if (tabs.length === 0) {
+          await config.set('lastAppState', null)
+        } else {
+          await config.set('lastAppState', {
+            currentTabIndex: activeTabIndex || 0,
+            tabs
+          })
+        }
       },
       async save({index, filePath}) {
         const tab = this.tabs[index]
@@ -265,13 +298,13 @@
           saved: true
         })
       },
-      async createNewTab(filePath = '') {
+      async createNewTab(filePath = '', tabParams = {}) {
         let content = ''
         if (filePath) {
           content = await fs.readFile(filePath, 'utf8')
         }
         const index = this.tabs.length
-        this.$store.dispatch('INIT_NEW_TAB', {
+        const tabDefaults = {
           content,
           filePath,
           saved: true,
@@ -282,8 +315,8 @@
           pdf: '',
           rename: false,
           split: 50
-        })
-
+        }
+        this.$store.dispatch('INIT_NEW_TAB', Object.assign(tabDefaults, tabParams))
         setTimeout(() => {
           const tabEl = $(`.tab-body-${index}`)
           const textarea = tabEl.querySelector(`#editor-${index}`)
@@ -394,9 +427,21 @@
         })
 
         ipcRenderer.on('close-window', () => {
+          const tabs = []
+          let activeTabIndex = this.currentTabIndex
+          let tabIndexToSave = null
           const closeInOrder = () => {
+            const tab = this.tabs[0]
             this.closeTab(0).then(closed => {
               if (closed) {
+                if (closed.saved) {
+                  tabs.push(tab)
+                  if (this.currentTabIndex === 0) {
+                    tabIndexToSave = activeTabIndex
+                  }
+                } else {
+                  activeTabIndex--
+                }
                 if (this.tabs.length > 0) {
                   closeInOrder()
                 } else {
@@ -407,6 +452,7 @@
           }
 
           closeInOrder()
+          this.saveAppState(tabs, tabIndexToSave)
         })
 
         window.onbeforeunload = () => {
@@ -417,20 +463,33 @@
         }
 
         ipcRenderer.on('close-and-exit', () => {
-          const closeInOrder = () => {
+          const tabs = []
+          let activeTabIndex = this.currentTabIndex
+          let tabIndexToSave = null
+          const closeInOrder = callback => {
+            const tab = this.tabs[0]
             this.closeTab(0).then(closed => {
               if (closed) {
+                if (closed.saved) {
+                  tabs.push(tab)
+                  if (this.currentTabIndex === 0) {
+                    tabIndexToSave = activeTabIndex
+                  }
+                } else {
+                  activeTabIndex--
+                }
                 if (this.tabs.length > 0) {
-                  closeInOrder()
+                  closeInOrder(callback)
                 } else {
                   // any better solution?
+                  callback()
                   remote.app.exit(0)
                 }
               }
             })
           }
 
-          closeInOrder()
+          closeInOrder(() => this.saveAppState(tabs, tabIndexToSave))
         })
 
         ipcRenderer.on('show-save-pdf-dialog', () => {
@@ -496,17 +555,20 @@
             const saved = await this.handleSave(index)
             if (saved) {
               this.$store.dispatch('CLOSE_TAB', index)
-              return true
+              return {saved: true}
             }
           } else if (clickedButton === 2) {
             this.$store.dispatch('UPDATE_SAVE_STATUS', {index, saved: true})
             this.$store.dispatch('CLOSE_TAB', index)
-            return true
+            return {saved: false}
           }
           return false
         }
         this.$store.dispatch('CLOSE_TAB', index)
-        return true
+        if (tab.filePath) {
+          return {saved: true}
+        }
+        return {saved: false}
       },
       handleDrag() {
         const holder = $('#app')
