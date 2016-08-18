@@ -13,6 +13,10 @@ You can manually download the latest release [here](https://github.com/egoist/em
 - Exportable, from Markdown to HTML/PDF... You name it.
 - Supporting math typesetting, good for students and professionals.
 
+## Wiki
+
+- [Key bindings](https://github.com/egoist/eme/wiki/Key-bindings)
+
 ## Contributing
 
 Pull requests are always welcome! Check out the [these issues](https://github.com/egoist/eme/issues?q=is%3Aissue+is%3Aopen+label%3A%22contribution+welcome%22) to get started fast.
