@@ -4,8 +4,16 @@ const {
   BrowserWindow,
   shell
 } = require('electron')
+const Config = require('electron-config')
 
 const isDev = process.env.NODE_ENV === 'development'
+
+const config = new Config({
+  defaults: {
+    lastAppState: null
+  },
+  name: 'app'
+})
 
 class Window {
   constructor() {
@@ -57,6 +65,7 @@ class Window {
     win.$state = {
       unsaved: 0
     }
+    win.configs = config
 
     return win
   }

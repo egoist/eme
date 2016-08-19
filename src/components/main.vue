@@ -118,10 +118,10 @@
   import fs from 'utils/fs-promise'
   import {appPath} from 'utils/resolve-path'
   import handleError from 'utils/handle-error'
-  import config from 'utils/config'
 
   const currentWindow = remote.getCurrentWindow()
-
+  const config = currentWindow.configs
+  
   export default {
     vuex: {
       getters: {
