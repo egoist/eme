@@ -437,9 +437,9 @@
           this.createNewTab(filePath).catch(handleError)
         })
 
-        ipcRenderer.on('close-window', callback => {
+        ipcRenderer.on('close-window', () => {
           const tabs = []
-          const closeInOrder = () => {
+          const closeInOrder = callback => {
             const tab = this.tabs[0]
             this.closeTab(0).then(closed => {
               if (closed) {
