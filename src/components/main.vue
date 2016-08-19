@@ -120,7 +120,7 @@
   import handleError from 'utils/handle-error'
 
   const currentWindow = remote.getCurrentWindow()
-  const config = currentWindow.configs
+  const config = currentWindow.$config
 
   export default {
     vuex: {
