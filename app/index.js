@@ -110,3 +110,7 @@ ipcMain.on('add-recent-file', (e, filePath) => {
     createWindow: emeWindow.createWindow
   }))
 })
+
+ipcMain.on('log', (e, msg) => {
+  console.log(JSON.stringify(msg, null, 2))
+})

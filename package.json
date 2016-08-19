@@ -73,6 +73,7 @@
     "markdown-it": "^7.0.0",
     "markdown-it-front-matter": "^0.1.2",
     "markdown-it-task-lists": "^1.4.0",
+    "object-picker": "^0.2.0",
     "pify": "^2.3.0",
     "tildify": "^1.2.0",
     "vue": "^1.0.26",

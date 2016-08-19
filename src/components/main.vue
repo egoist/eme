@@ -110,6 +110,7 @@
   import 'codemirror/addon/selection/active-line'
   import 'codemirror/addon/dialog/dialog.js'
   import 'codemirror/keymap/vim'
+  import objectPicker from 'object-picker'
 
   import {$} from 'utils/dom'
   import {isMac} from 'utils/os'
@@ -182,28 +183,22 @@
         const previewPosition = codePort.scrollTop * ratio
         previewPort.scrollTop = previewPosition
       },
-      saveAppState(tabsToSave) {
-        const tabs = []
-        let activeTabIndex = 0
-        tabsToSave.forEach((tab, index) => {
-          if (tab.active) {
-            activeTabIndex = index
-          }
-          tabs.push({
-            filePath: tab.filePath,
-            isFocusMode: tab.isFocusMode,
-            writingMode: tab.writingMode,
-            isVimMode: tab.isVimMode,
-            pdf: tab.pdf,
-            split: tab.split
-          })
-        })
+      saveAppState({tabs, currentTabIndex}) {
         if (tabs.length === 0) {
-          config.set('lastAppState', null)
+          config.set('lastAppState', {
+            currentTabIndex: null,
+            tabs: []
+          })
         } else {
           config.set('lastAppState', {
-            currentTabIndex: activeTabIndex,
-            tabs
+            currentTabIndex,
+            tabs: tabs.map(tab => objectPicker(tab, [
+              'filePath',
+              'isFocusMode',
+              'isVimMode',
+              'pdf',
+              'split'
+            ]))
           })
         }
       },
@@ -441,6 +436,7 @@
 
         ipcRenderer.on('close-window', () => {
           const tabs = []
+          const currentTabIndex = this.currentTabIndex
           const closeInOrder = callback => {
             const tab = this.tabs[0]
             this.closeTab(0).then(closed => {
@@ -458,7 +454,7 @@
             })
           }
 
-          closeInOrder(() => this.saveAppState(tabs))
+          closeInOrder(() => this.saveAppState({tabs, currentTabIndex}))
         })
 
         window.onbeforeunload = () => {
@@ -470,7 +466,7 @@
 
         ipcRenderer.on('close-and-exit', () => {
           const tabs = []
-          this.tabs[this.currentTabIndex].active = true
+          const currentTabIndex = this.currentTabIndex
           const closeInOrder = callback => {
             const tab = this.tabs[0]
             this.closeTab(0).then(closed => {
@@ -489,7 +485,7 @@
             })
           }
 
-          closeInOrder(() => this.saveAppState(tabs))
+          closeInOrder(() => this.saveAppState({tabs, currentTabIndex}))
         })
 
         ipcRenderer.on('show-save-pdf-dialog', () => {
