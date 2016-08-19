@@ -4,6 +4,7 @@ const {
   BrowserWindow,
   shell
 } = require('electron')
+const config = require('./config')
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -57,6 +58,7 @@ class Window {
     win.$state = {
       unsaved: 0
     }
+    win.$config = config
 
     return win
   }

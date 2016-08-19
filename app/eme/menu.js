@@ -110,6 +110,13 @@ module.exports = cb => {
           }
         },
         {
+          label: 'Open last session',
+          accelerator: 'CmdOrCtrl+L',
+          click(item, focusedWindow) {
+            if (focusedWindow) focusedWindow.webContents.send('open-last-session')
+          }
+        },
+        {
           label: 'Open Recent',
           submenu: recentFiles
         },
