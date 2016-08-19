@@ -157,9 +157,9 @@
     },
     methods: {
       restoreAppState(state) {
-        const startTabsCount = this.tabs.length;
+        const startTabsCount = this.tabs.length
         state.tabs.forEach(tab => {
-          this.createNewTab(tab.filePath, tab, () => this.$store.dispatch('SET_CURRENT_TAB', startTabsCount +state.currentTabIndex))
+          this.createNewTab(tab.filePath, tab, () => this.$store.dispatch('SET_CURRENT_TAB', startTabsCount + state.currentTabIndex))
         })
         setTimeout(() => {
           this.editor.refresh()
@@ -395,7 +395,7 @@
         ipcRenderer.on('open-last-session', () => {
           const lastAppState = config.get('lastAppState')
           if (lastAppState && lastAppState.tabs) {
-              this.restoreAppState(lastAppState)
+            this.restoreAppState(lastAppState)
           }
         })
 
