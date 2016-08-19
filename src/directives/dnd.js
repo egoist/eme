@@ -44,7 +44,14 @@ const DragAndDrop = Vue => {
         }
         e.target.classList.remove('drag-enter')
       }
+      const vm = this.vm
       this.handleDragEnd = e => {
+        console.log(this.vm)
+        // why this.vm is null inside the closure
+        // when you drag a tab over another and release ?
+        if (typeof (vm[this.params.dragEnd]) === 'function') {
+          vm[this.params.dragEnd]()
+        }
         e.target.classList.remove('dragging', 'drag-over', 'drag-enter')
         if (this.vm && typeof (this.vm[this.params.dragEnd]) === 'function') {
           this.vm[this.params.dragEnd](e.target)
