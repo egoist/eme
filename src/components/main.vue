@@ -150,20 +150,16 @@
       document.title = 'untitled - EME'
     },
     ready() {
-      const lastAppState = config.get('lastAppState')
-      if (lastAppState && lastAppState.tabs) {
-        this.restoreAppState(lastAppState)
-      } else {
-        this.createNewTab()
-      }
+      this.createNewTab()
 
       this.listenIpc()
       this.handleDrag()
     },
     methods: {
       restoreAppState(state) {
+        const startTabsCount = this.tabs.length;
         state.tabs.forEach(tab => {
-          this.createNewTab(tab.filePath, tab, () => this.$store.dispatch('SET_CURRENT_TAB', state.currentTabIndex))
+          this.createNewTab(tab.filePath, tab, () => this.$store.dispatch('SET_CURRENT_TAB', startTabsCount +state.currentTabIndex))
         })
         setTimeout(() => {
           this.editor.refresh()
@@ -394,6 +390,13 @@
 
         ipcRenderer.on('open-file', (e, filePath) => {
           this.handleOpen(filePath)
+        })
+
+        ipcRenderer.on('open-last-session', () => {
+          const lastAppState = config.get('lastAppState')
+          if (lastAppState && lastAppState.tabs) {
+              this.restoreAppState(lastAppState)
+          }
         })
 
         ipcRenderer.on('file-save-as', () => {
