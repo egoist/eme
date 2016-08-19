@@ -12,6 +12,7 @@ const windowStateKeeper = require('electron-window-state')
 const buildMenu = require('./eme/menu')
 const emeWindow = require('./eme/window')
 const config = require('./eme/config')
+const {parseShellCommand} = require('./eme/shell')
 
 const appMenu = buildMenu({
   createWindow: emeWindow.createWindow
@@ -29,8 +30,25 @@ const createMainWindow = () => {
 
 let mainWindow // eslint-disable-line
 app.on('ready', () => {
+  const args = parseShellCommand()
   Menu.setApplicationMenu(appMenu)
   mainWindow = createMainWindow()
+
+  if (args) {
+    const {pathsToOpen, resourcePath} = args
+    console.log(args)
+    if (pathsToOpen) {
+      const pathToOpen = pathsToOpen[0]
+      const locationToOpen = `${resourcePath}/${pathToOpen}`
+      console.log(locationToOpen)
+      mainWindow.webContents.on('did-finish-load', () => {
+        mainWindow.webContents.send('open-file', locationToOpen)
+      })
+    } else {
+      // open dirctory
+      // mainWindow.send('open-dirctory', resourcePath)
+    }
+  }
 
   if (os.platform() === 'darwin') {
     mainWindow.setSheetOffset(36)
