@@ -3,7 +3,10 @@ const Config = require('electron-config')
 const config = new Config({
   defaults: {
     recentFiles: [],
-    lastAppState: null
+    lastAppState: {
+      tabs: [],
+      currentTabIndex: null
+    }
   }
 })
 
