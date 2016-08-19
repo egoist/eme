@@ -180,10 +180,6 @@
           state.tabs.forEach(tab => {
             this.createNewTab(tab.filePath, tab, () => this.$store.dispatch('SET_CURRENT_TAB', startTabsCount + state.currentTabIndex))
           })
-          setTimeout(() => {
-            this.editor.refresh()
-            this.editor.focus()
-          }, 0)
         }
       },
       handleScroll(e) {
