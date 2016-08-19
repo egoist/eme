@@ -2,7 +2,8 @@
 const Config = require('electron-config')
 const config = new Config({
   defaults: {
-    recentFiles: []
+    recentFiles: [],
+    lastAppState: null
   }
 })
 
