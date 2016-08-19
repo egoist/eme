@@ -158,7 +158,7 @@
     },
     methods: {
       restoreAppState(state) {
-        if (state.tabs) {
+        if (state.tabs.length > 0) {
           const startTabsCount = this.tabs.length
           state.tabs.forEach(tab => {
             this.createNewTab(tab.filePath, tab, () => this.$store.dispatch('SET_CURRENT_TAB', startTabsCount + state.currentTabIndex))
