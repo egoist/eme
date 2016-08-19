@@ -10,6 +10,7 @@ const tildify = require('tildify')
 const axios = require('axios')
 const compare = require('semver-compare')
 const config = require('./config')
+const {InstallShell} = require('./shell')
 
 const version = app.getVersion()
 const checkForUpdates = {
@@ -296,6 +297,18 @@ module.exports = cb => {
         {
           role: 'services',
           submenu: []
+        },
+        {
+          type: 'separator'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Install Shell Command',
+          click() {
+            new InstallShell().installShell()
+          }
         },
         {
           type: 'separator'

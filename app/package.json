@@ -19,6 +19,7 @@
     "electron-window-state": "^3.0.3",
     "match-at": "^0.1.0",
     "semver-compare": "^1.0.0",
-    "tildify": "^1.2.0"
+    "tildify": "^1.2.0",
+    "yargs": "^5.0.0"
   }
 }
