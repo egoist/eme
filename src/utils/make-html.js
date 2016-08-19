@@ -4,7 +4,7 @@ export default ({html, css}) => {
     <html>
       <head>
         <meta charset="utf-8" />
-        ${css ? `<link rel="stylesheet" href="${css}" />` : ''}
+        ${css ? css.map(style => `<link rel="stylesheet" href="${style}" />`).join('\n') : ''}
         <title>EME</title>
       <head>
       <body>
