@@ -68,12 +68,24 @@
     width: 10px;
     cursor: ew-resize;
   }
+  .writing-mode-writing .editor,
+  .writing-mode-preview .preview {
+    width: 100% !important;
+    border-right: none;
+  }
 </style>
 
 <template>
   <div
     class="main tab-body"
-    :class="['tab-body-' + $index, {'vim-mode': currentTab && currentTab.isVimMode, 'resizing': resizing}]"
+    :class="[
+      'tab-body-' + $index,
+      writingModeClassName,
+      {
+        'vim-mode': currentTab && currentTab.isVimMode,
+        resizing: resizing
+      }
+    ]"
     v-for="tab in tabs"
     @mousemove="resizeMove($event, $index)"
     @mouseup="resizeEnd"
@@ -139,6 +151,11 @@
     computed: {
       editor() {
         return this.currentTab && this.currentTab.editor
+      },
+      writingModeClassName() {
+        return this.currentTab ?
+          `writing-mode-${this.currentTab.writingMode}` :
+          'writing-mode-default'
       }
     },
     data() {
