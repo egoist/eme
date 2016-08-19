@@ -12,6 +12,7 @@ const compare = require('semver-compare')
 const config = require('./config')
 const {InstallShell} = require('./shell')
 
+
 const version = app.getVersion()
 const checkForUpdates = {
   label: 'Check for Updates',
@@ -308,6 +309,18 @@ module.exports = cb => {
           type: 'separator'
         },
         checkForUpdates,
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Install Shell Command',
+          click() {
+            new InstallShell().installShell()
+          }
+        },
+        {
+          type: 'separator'
+        },
         {
           type: 'separator'
         },
