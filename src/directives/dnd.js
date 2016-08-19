@@ -26,6 +26,10 @@ const DragAndDrop = Vue => {
           e.preventDefault()
         }
         e.dataTransfer.dropEffect = 'move'
+        e.target.classList.add('drag-over')
+        if (typeof (this.vm[this.params.dragOver]) === 'function') {
+          this.vm[this.params.dragOver](e.target)
+        }
         return false
       }
       this.handleDragEnter = e => {
@@ -42,6 +46,9 @@ const DragAndDrop = Vue => {
       }
       this.handleDragEnd = e => {
         e.target.classList.remove('dragging', 'drag-over', 'drag-enter')
+        if (this.vm && typeof (this.vm[this.params.dragEnd]) === 'function') {
+          this.vm[this.params.dragEnd](e.target)
+        }
       }
       this.handleDrop = e => {
         if (e.stopPropagation) {
