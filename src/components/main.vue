@@ -121,7 +121,7 @@
 
   const currentWindow = remote.getCurrentWindow()
   const config = currentWindow.configs
-  
+
   export default {
     vuex: {
       getters: {
