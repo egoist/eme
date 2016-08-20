@@ -35,17 +35,15 @@ const createMainWindow = () => {
 
 let mainWindow // eslint-disable-line
 app.on('ready', () => {
-  const args = parseShellCommand()
+  const argv = parseShellCommand()
   Menu.setApplicationMenu(appMenu)
   mainWindow = createMainWindow()
 
-  if (args) {
-    const {pathsToOpen, resourcePath} = args
-    console.log(args)
+  const {pathsToOpen, resourcePath} = argv
+  if (pathsToOpen.length > 0) {
     if (pathsToOpen) {
       const pathToOpen = pathsToOpen[0]
       const locationToOpen = `${resourcePath}/${pathToOpen}`
-      console.log(locationToOpen)
       mainWindow.webContents.on('did-finish-load', () => {
         mainWindow.webContents.send('open-file', locationToOpen)
       })

@@ -47,30 +47,34 @@ function writeFullVersion() {
 }
 
 function parseShellCommand() {
-  const options = yargs(process.argv.slice(1))
-  options.usage(
+  const options = yargs
+    .usage(
       `
-      Eme Editor
+      EME - Elegant Markdown Editor
 
       Usage: eme [options] [path ...]
       `
     )
-  options.alias('h', 'help').boolean('h').describe('h', 'Print this usage message.')
-  options.alias('v', 'version').boolean('v').describe('v', 'Print the version information.')
+    .alias('h', 'help')
+      .boolean('h')
+      .describe('h', 'Print this usage message.')
+    .alias('v', 'version')
+      .boolean('v')
+      .describe('v', 'Print the version information.')
 
-  const args = options.argv
-  if (args.help) {
-    process.stdout.write(options.help())
-    process.exit(0)
-  }
-
-  if (args.version) {
+  const argv = options.argv
+  if (argv.version) {
     writeFullVersion()
     process.exit(0)
   }
 
-  const pathsToOpen = args._
-  const resourcePath = args.executedFrom
+  if (args.help) {
+    process.stdout.write(options.showHelp())
+    process.exit(0)
+  }
+
+  const pathsToOpen = argv._
+  const resourcePath = argv.executedFrom
   return {
     resourcePath, pathsToOpen
   }

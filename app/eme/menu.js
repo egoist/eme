@@ -295,13 +295,6 @@ module.exports = cb => {
         },
         checkForUpdates,
         {
-          role: 'services',
-          submenu: []
-        },
-        {
-          type: 'separator'
-        },
-        {
           type: 'separator'
         },
         {
