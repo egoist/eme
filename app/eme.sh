@@ -46,7 +46,7 @@ fi
 
 if [ $OS == 'Mac' ]; then
   EME_APP_NAME="EME.app"
-  if [ -z "${EME_PATH}"]; then
+  if [ -z "${EME_PATH}" ]; then
     if [ -x "/Applications/$EME_APP_NAME" ]; then
       EME_PATH="/Applications"
     elif [ -x "$HOME/Applications/$EME_APP_NAME" ]; then
@@ -60,9 +60,9 @@ if [ $OS == 'Mac' ]; then
   fi
 
   if [ $EXPECT_OUTPUT ]; then
-    "$EME_PATH/$EME_APP_NAME/Contents/MacOS/EME" --executed-from="$(pwd)" --pid=$$ "$@"
+    "$EME_PATH/$EME_APP_NAME/Contents/MacOS/EME" --executed-from="$(pwd)" --pid=$$ $*
     exit $?
   else
-    open -a "$EME_PATH/$EME_APP_NAME" -n --args --executed-from="$(pwd)" --pid=$$ --path-environment="$PATH" "$@"
+    open -a "$EME_PATH/$EME_APP_NAME" -n --args --executed-from="$(pwd)" --pid=$$ --path-environment="$PATH" $*
   fi
 fi

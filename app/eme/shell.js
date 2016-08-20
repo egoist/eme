@@ -47,7 +47,7 @@ function writeFullVersion() {
 }
 
 function parseShellCommand() {
-  const options = yargs
+  const options = yargs(process.argv.slice(1))
     .usage(
       `
       EME - Elegant Markdown Editor
