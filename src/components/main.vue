@@ -5,8 +5,11 @@
 
 <style>
   .main {
-    /* total - header - footer */
     height: calc(100% - 36px - 25px);
+  }
+  .tab-body {
+    /* total - header - footer */
+    height: 100%;
     display: flex;
     &.resizing {
       cursor: ew-resize;
@@ -76,35 +79,38 @@
 </style>
 
 <template>
-  <div
-    class="main tab-body"
-    :class="[
-      'tab-body-' + $index,
-      writingModeClassName,
-      {
-        'vim-mode': currentTab && currentTab.isVimMode,
-        resizing: resizing
-      }
-    ]"
-    v-for="tab in tabs"
-    @mousemove="resizeMove($event, $index)"
-    @mouseup="resizeEnd"
-    @mouseleave="resizeEnd"
-    v-show="$index === currentTabIndex">
+  <div class="main">
+    <tip v-if="tabs.length === 0"></tip>
     <div
-      class="editor"
-      :class="{'focus-mode': tab.isFocusMode}"
-      :style="{ width: tab.split + '%' }"
-      v-show="currentTab && currentTab.writingMode !== 'preview'">
-      <textarea class="editor-input" :id="'editor-' + $index">{{ tab.content }}</textarea>
-      <div class="resize-bar" @mousedown="resizeStart($event, $index)"></div>
-    </div>
-    <div
-      :class="'preview preview-' + $index"
-      :style="{ width: (100 - tab.split) + '%' }"
-      v-show="currentTab && currentTab.writingMode !== 'writing'">
-      <div :class="'markdown-body markdown-body-' + $index">
-        {{{ tab.html }}}
+      class="tab-body"
+      :class="[
+        'tab-body-' + $index,
+        writingModeClassName,
+        {
+          'vim-mode': currentTab && currentTab.isVimMode,
+          resizing: resizing
+        }
+      ]"
+      v-for="tab in tabs"
+      @mousemove="resizeMove($event, $index)"
+      @mouseup="resizeEnd"
+      @mouseleave="resizeEnd"
+      v-show="$index === currentTabIndex">
+      <div
+        class="editor"
+        :class="{'focus-mode': tab.isFocusMode}"
+        :style="{ width: tab.split + '%' }"
+        v-show="currentTab && currentTab.writingMode !== 'preview'">
+        <textarea class="editor-input" :id="'editor-' + $index">{{ tab.content }}</textarea>
+        <div class="resize-bar" @mousedown="resizeStart($event, $index)"></div>
+      </div>
+      <div
+        :class="'preview preview-' + $index"
+        :style="{ width: (100 - tab.split) + '%' }"
+        v-show="currentTab && currentTab.writingMode !== 'writing'">
+        <div :class="'markdown-body markdown-body-' + $index">
+          {{{ tab.html }}}
+        </div>
       </div>
     </div>
   </div>
@@ -131,6 +137,7 @@
   import fs from 'utils/fs-promise'
   import {appPath} from 'utils/resolve-path'
   import handleError from 'utils/handle-error'
+  import tip from 'components/tip'
 
   const currentWindow = remote.getCurrentWindow()
   const config = currentWindow.$config
@@ -624,6 +631,9 @@
         this.editor.refresh()
         this.editor.focus()
       }
+    },
+    components: {
+      tip
     }
   }
 </script>

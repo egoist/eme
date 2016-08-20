@@ -76,6 +76,7 @@
     "object-picker": "^0.2.0",
     "pify": "^2.3.0",
     "tildify": "^1.2.0",
+    "unique-random-array": "^1.0.0",
     "vue": "^1.0.26",
     "vuex": "^1.0.0-rc.2",
     "word-count": "^0.2.2"
