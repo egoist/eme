@@ -68,7 +68,7 @@ function parseShellCommand() {
     process.exit(0)
   }
 
-  if (args.help) {
+  if (argv.help) {
     process.stdout.write(options.showHelp())
     process.exit(0)
   }
