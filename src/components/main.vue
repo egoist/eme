@@ -510,7 +510,10 @@
           if (filePath) {
             const html = makeHTML({
               html: `<div class="markdown-body">${this.currentTab.html}</div>`,
-              css: appPath('vendor/github-markdown-css/github-markdown.css')
+              css: [
+                appPath('vendor/github-markdown-css/github-markdown.css'),
+                appPath('vendor/katex/katex.min.css')
+              ]
             })
             ipcRenderer.send('print-to-pdf', html, filePath)
           }
