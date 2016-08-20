@@ -178,7 +178,7 @@
         if (state.tabs.length > 0) {
           const startTabsCount = this.tabs.length
           state.tabs.forEach(tab => {
-            this.createNewTab(tab.filePath, tab, () => this.$store.dispatch('SET_CURRENT_TAB', startTabsCount + state.currentTabIndex))
+            this.createNewTab(tab, () => this.$store.dispatch('SET_CURRENT_TAB', startTabsCount + state.currentTabIndex))
           })
         }
       },
@@ -311,15 +311,15 @@
           saved: true
         })
       },
-      async createNewTab(filePath = '', tabParams = {}, created = () => {}) {
+      async createNewTab(tab = {}, created = () => {}) {
         let content = ''
+        const filePath = tab.filePath || ''
         if (filePath) {
           content = await fs.readFile(filePath, 'utf8')
         }
         const index = this.tabs.length
         const tabDefaults = {
           content,
-          filePath,
           saved: true,
           editor: null,
           isFocusMode: false,
@@ -329,7 +329,11 @@
           rename: false,
           split: 50
         }
-        this.$store.dispatch('INIT_NEW_TAB', Object.assign(tabDefaults, tabParams))
+        this.$store.dispatch('INIT_NEW_TAB', {
+          ...tabDefaults,
+          ...tab,
+          filePath
+        })
         setTimeout(() => {
           const tabEl = $(`.tab-body-${index}`)
           const textarea = tabEl.querySelector(`#editor-${index}`)
@@ -378,7 +382,7 @@
             this.overrideTab(filePath).catch(handleError)
           } else {
             // load file in newTab
-            this.createNewTab(filePath).catch(handleError)
+            this.createNewTab({filePath}).catch(handleError)
           }
         }
         if (filePath) {
@@ -444,7 +448,7 @@
         })
 
         ipcRenderer.on('new-tab', (e, filePath) => {
-          this.createNewTab(filePath).catch(handleError)
+          this.createNewTab({filePath}).catch(handleError)
         })
 
         ipcRenderer.on('close-window', () => {
@@ -595,7 +599,7 @@
         holder.ondrop = e => {
           e.preventDefault()
           for (const f of e.dataTransfer.files) {
-            this.createNewTab(f.path)
+            this.createNewTab({filePath: f.path})
           }
           return false
         }
