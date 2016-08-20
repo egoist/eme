@@ -25,6 +25,9 @@
       }
     }
   }
+  .tab-body {
+    height: 100%;
+  }
   .editor, .preview {
     min-width: 100px;
     height: 100%;
@@ -76,35 +79,35 @@
 </style>
 
 <template>
-  <div
-    class="main tab-body"
-    :class="[
-      'tab-body-' + $index,
-      writingModeClassName,
-      {
-        'vim-mode': currentTab && currentTab.isVimMode,
-        resizing: resizing
-      }
-    ]"
-    v-for="tab in tabs"
-    @mousemove="resizeMove($event, $index)"
-    @mouseup="resizeEnd"
-    @mouseleave="resizeEnd"
-    v-show="$index === currentTabIndex">
+  <div class="main">
     <div
-      class="editor"
-      :class="{'focus-mode': tab.isFocusMode}"
-      :style="{ width: tab.split + '%' }"
-      v-show="currentTab && currentTab.writingMode !== 'preview'">
-      <textarea class="editor-input" :id="'editor-' + $index">{{ tab.content }}</textarea>
-      <div class="resize-bar" @mousedown="resizeStart($event, $index)"></div>
-    </div>
-    <div
-      :class="'preview preview-' + $index"
-      :style="{ width: (100 - tab.split) + '%' }"
-      v-show="currentTab && currentTab.writingMode !== 'writing'">
-      <div :class="'markdown-body markdown-body-' + $index">
-        {{{ tab.html }}}
+      class="tab-body"
+      :class="[
+        'tab-body-' + index,
+        writingModeClassName,
+        {
+          'vim-mode': currentTab && currentTab.isVimMode,
+          resizing: resizing
+        }
+      ]"
+      v-for="(tab, index) in tabs"
+      @mousemove="resizeMove($event, index)"
+      @mouseup="resizeEnd"
+      @mouseleave="resizeEnd"
+      v-show="index === currentTabIndex">
+      <div
+        class="editor"
+        :class="{'focus-mode': tab.isFocusMode}"
+        :style="{ width: tab.split + '%' }"
+        v-show="currentTab && currentTab.writingMode !== 'preview'">
+        <textarea class="editor-input" :id="'editor-' + index">{{ tab.content }}</textarea>
+        <div class="resize-bar" @mousedown="resizeStart($event, index)"></div>
+      </div>
+      <div
+        :class="'preview preview-' + index"
+        :style="{ width: (100 - tab.split) + '%' }"
+        v-show="currentTab && currentTab.writingMode !== 'writing'">
+        <div :class="'markdown-body markdown-body-' + index" v-html="tab.html"></div>
       </div>
     </div>
   </div>
@@ -167,7 +170,7 @@
     created() {
       document.title = 'untitled - EME'
     },
-    ready() {
+    mounted() {
       this.createNewTab()
 
       this.listenIpc()

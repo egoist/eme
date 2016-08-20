@@ -128,18 +128,18 @@
     :class="{'single-tab': tabs.length === 1, 'is-mac': isMac}"
     @dblclick="createNewTab">
     <div class="tab"
-      @click="setCurrentTab($index)"
-      id="tab{{ $index }}"
-      data-index="{{ $index }}"
-      v-for="tab in tabs"
-      :class="{'current-tab': $index === currentTabIndex}"
+      @click="setCurrentTab(index)"
+      :id="'tab-' + index"
+      :data-index="index"
+      v-for="(tab, index) in tabs"
+      :class="{'current-tab': index === currentTabIndex}"
       drop="handleDragAndDrop"
       drag-start="handleDragStart"
       drag-enter="handleDragEnter"
       drag-leave="handleDragLeave"
       drag-end="handleDragEnd"
-      @mouseover="hoverTab($index)"
-      @mouseleave="unhoverTab($index)"
+      @mouseover="hoverTab(index)"
+      @mouseleave="unhoverTab(index)"
       v-drag-and-drop>
       <div :class="{'dragzone': dragging}"></div>
       <span class="tab-title" v-if="tab && !tab.rename">
@@ -150,13 +150,13 @@
           class="rename-input"
           @dblclick.stop
           @click.stop
-          @keyup.enter="renameCurrentFile($event, $index)"
-          @keyup.esc="cancelRename($event, $index)"
+          @keyup.enter="renameCurrentFile($event, index)"
+          @keyup.esc="cancelRename($event, index)"
           :value="tab.title" />
       </span>
       <span
         class="tab-indicator"
-        @click.stop="closeTab($event, $index)"
+        @click.stop="closeTab($event, index)"
         v-if="!dragging">
         <span class="dot" v-show="!tab.saved"></span>
         <span class="cross">×</span>
@@ -265,10 +265,10 @@
         }
       },
       hoverTab(index) {
-        $(`#tab${index}`).classList.add('hover')
+        $(`#tab-${index}`).classList.add('hover')
       },
       unhoverTab(index) {
-        $(`#tab${index}`).classList.remove('hover')
+        $(`#tab-${index}`).classList.remove('hover')
       }
     }
   }
