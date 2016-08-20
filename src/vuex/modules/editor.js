@@ -43,7 +43,10 @@ const mutations = {
   UPDATE_CONTENT(state, {index, content}) {
     const tab = state.tabs[index]
     tab.content = content
-    tab.html = renderHTML(tab)
+    // do not render html is editor-only modes
+    if (tab.writingMode !== 'writing') {
+      tab.html = renderHTML(tab)
+    }
     tab.wordCount = wordCount(tab.content)
   },
   UPDATE_FILE_PATH(state, {index, filePath}) {
@@ -107,7 +110,14 @@ const mutations = {
   },
   SET_WRITING_MODE(state, {index, mode}) {
     const tab = state.tabs[index]
+
+    // if previous mode is writing mode
+    // render html before switching
+    if (tab.writingMode === 'writing') {
+      tab.html = renderHTML(tab)
+    }
     tab.writingMode = mode
+
     setTimeout(() => {
       tab.editor.refresh()
       if (mode !== 'preview') tab.editor.focus()

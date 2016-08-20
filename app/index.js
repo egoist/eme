@@ -13,6 +13,9 @@ const buildMenu = require('./eme/menu')
 const emeWindow = require('./eme/window')
 const config = require('./eme/config')
 const {parseShellCommand} = require('./eme/shell')
+const {
+  isDev
+} = require('./eme/utils')
 
 const platform = os.platform()
 
@@ -39,17 +42,19 @@ app.on('ready', () => {
   Menu.setApplicationMenu(appMenu)
   mainWindow = createMainWindow()
 
-  const {pathsToOpen, resourcePath} = argv
-  if (pathsToOpen.length > 0) {
-    if (pathsToOpen) {
-      const pathToOpen = pathsToOpen[0]
-      const locationToOpen = `${resourcePath}/${pathToOpen}`
-      mainWindow.webContents.on('did-finish-load', () => {
-        mainWindow.webContents.send('open-file', locationToOpen)
-      })
-    } else {
-      // open dirctory
-      // mainWindow.send('open-dirctory', resourcePath)
+  if (!isDev) {
+    const {pathsToOpen, resourcePath} = argv
+    if (pathsToOpen.length > 0) {
+      if (pathsToOpen) {
+        const pathToOpen = pathsToOpen[0]
+        const locationToOpen = `${resourcePath}/${pathToOpen}`
+        mainWindow.webContents.on('did-finish-load', () => {
+          mainWindow.webContents.send('open-file', locationToOpen)
+        })
+      } else {
+        // open dirctory
+        // mainWindow.send('open-dirctory', resourcePath)
+      }
     }
   }
 
