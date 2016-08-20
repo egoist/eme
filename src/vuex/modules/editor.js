@@ -43,7 +43,7 @@ const mutations = {
   UPDATE_CONTENT(state, {index, content}) {
     const tab = state.tabs[index]
     tab.content = content
-    // do not render html is editor-only modes
+    // render html in non-writing mode
     if (tab.writingMode !== 'writing') {
       tab.html = renderHTML(tab)
     }
