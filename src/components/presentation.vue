@@ -12,9 +12,20 @@
       display: block;
       margin: 0 auto;
     }
+    .full-screen & {
+      .indicator {
+        background-color: orange;
+        height: 3px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        transition: width .3s ease;
+      }
+    }
   }
   .slide {
     display: flex;
+    padding: 10px;
     position: absolute;
     top: 0;
     left: 0;
@@ -61,6 +72,7 @@
       v-for="slide in slides"
       v-html="slide">
     </div>
+    <div class="indicator" :style="{width: ((current + 1) / total) * 100 + '%'}"></div>
   </div>
 </template>
 
@@ -74,6 +86,10 @@
     vuex: {
       getters: {
         current: state => state.editor.currentSlideIndex,
+        total: state => {
+          const tab = state.editor.tabs[state.editor.currentTabIndex]
+          return Array.isArray(tab.html) ? tab.html.length : 1
+        },
         attrs: state => state.editor.tabs[state.editor.currentTabIndex].attrs || {}
       }
     },

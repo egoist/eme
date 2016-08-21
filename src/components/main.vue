@@ -61,6 +61,9 @@
   }
   .preview {
     padding: 10px;
+    &.preview-presentation {
+      padding: 0;
+    }
     &::-webkit-scrollbar {
       width: 0;
     }
@@ -111,7 +114,13 @@
         <div class="resize-bar" @mousedown="resizeStart($event, $index)"></div>
       </div>
       <div
-        :class="'preview preview-' + $index"
+        :class="[
+          'preview',
+          'preview-' + $index,
+          {
+            'preview-presentation': tab.isPresentationMode
+          }
+        ]"
         :style="{ width: (100 - tab.split) + '%' }"
         v-show="currentTab && currentTab.writingMode !== 'writing'">
         <presentation :slides="tab.html" v-if="tab.isPresentationMode"></presentation>
