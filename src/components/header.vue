@@ -136,43 +136,43 @@
     @dblclick="createNewTab"
     @mousewheel="tabbarScroll">
     <div class="tab-container">
-    <div class="tab"
-      @click="setCurrentTab($index)"
-      id="tab{{ $index }}"
-      data-index="{{ $index }}"
-      v-for="tab in tabs"
-      track-by="uid"
-      :class="{'current-tab': $index === currentTabIndex}"
-      drop="handleDragAndDrop"
-      drag-start="handleDragStart"
-      drag-enter="handleDragEnter"
-      drag-leave="handleDragLeave"
-      drag-end="handleDragEnd"
-      @mouseover="hoverTab($index)"
-      @mouseleave="unhoverTab($index)"
-      v-drag-and-drop>
-      <div :class="{'dragzone': dragging}"></div>
-      <span class="tab-title" v-if="tab && !tab.rename">
-        {{ tab.title || 'untitled' }}
-      </span>
-      <span class="tab-title" v-if="tab && tab.rename">
-        <input type="text"
-          class="rename-input"
-          @dblclick.stop
-          @click.stop
-          @keyup.enter="renameCurrentFile($event, $index)"
-          @keyup.esc="cancelRename($event, $index)"
-          :value="tab.title" />
-      </span>
-      <span
-        class="tab-indicator"
-        @click.stop="closeTab($event, $index)"
-        v-if="!dragging">
-        <span class="dot" v-show="!tab.saved"></span>
-        <span class="cross">×</span>
-      </span>
-      <span class="tab-indicator" v-if="dragging"></span>
-    </div>
+      <div class="tab"
+        @click="setCurrentTab($index)"
+        id="tab{{ $index }}"
+        data-index="{{ $index }}"
+        v-for="tab in tabs"
+        track-by="uid"
+        :class="{'current-tab': $index === currentTabIndex}"
+        drop="handleDragAndDrop"
+        drag-start="handleDragStart"
+        drag-enter="handleDragEnter"
+        drag-leave="handleDragLeave"
+        drag-end="handleDragEnd"
+        @mouseover="hoverTab($index)"
+        @mouseleave="unhoverTab($index)"
+        v-drag-and-drop>
+        <div :class="{'dragzone': dragging}"></div>
+        <span class="tab-title" v-if="tab && !tab.rename">
+          {{ tab.title || 'untitled' }}
+        </span>
+        <span class="tab-title" v-if="tab && tab.rename">
+          <input type="text"
+            class="rename-input"
+            @dblclick.stop
+            @click.stop
+            @keyup.enter="renameCurrentFile($event, $index)"
+            @keyup.esc="cancelRename($event, $index)"
+            :value="tab.title" />
+        </span>
+        <span
+          class="tab-indicator"
+          @click.stop="closeTab($event, $index)"
+          v-if="!dragging">
+          <span class="dot" v-show="!tab.saved"></span>
+          <span class="cross">×</span>
+        </span>
+        <span class="tab-indicator" v-if="dragging"></span>
+      </div>
     </div>
   </header>
 </template>
@@ -292,18 +292,18 @@
         const header = $('.header')
         const tabContainer = $('.tab-container')
         const tabsWidth = tabContainer.scrollWidth
-        const headerWidth =  (isMac ? header.offsetWidth - 80 : header.offsetWidth) - 20
-        let deltaWidth = tabsWidth - headerWidth;
+        const headerWidth = (isMac ? header.offsetWidth - 80 : header.offsetWidth) - 20
+        let deltaWidth = tabsWidth - headerWidth
         if (deltaWidth > 0) {
           const tabs = tabContainer.children
           let i = 1
           while (tabs[i] && deltaWidth > 0) {
             const tab = tabs[i]
-            const prevTabWidth = tabs[i-1].offsetWidth
-            const currentMargin = Math.abs(parseInt(tab.style.marginLeft)) || 0;
+            const prevTabWidth = tabs[i - 1].offsetWidth
+            const currentMargin = Math.abs(parseInt(tab.style.marginLeft, 10)) || 0
             if (currentMargin < prevTabWidth - 10) {
               const marginLeft = Math.min(deltaWidth + Math.abs(currentMargin), prevTabWidth - 10)
-              tab.style.marginLeft = `-${marginLeft}px`;
+              tab.style.marginLeft = `-${marginLeft}px`
               deltaWidth -= marginLeft - currentMargin
             }
             ++i
@@ -312,7 +312,7 @@
       },
       listenEvents() {
         event.on('update-tabs', () => {
-          this.updateTabsStack();
+          this.updateTabsStack()
         })
       }
     }
