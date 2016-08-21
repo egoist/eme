@@ -10,6 +10,9 @@
     &.is-mac {
       padding-left: 80px;
     }
+    .tab-container {
+      display: flex;
+    }
     .tab {
       height: $header-height;
       line-height: $header-height;
@@ -18,7 +21,10 @@
       position: relative;
       text-align: center;
       border-left: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
       display: flex;
+      background-color: white;
+      transition: margin .2s linear;
       -webkit-app-region: no-drag;
       .tab-title {
         color: #999;
@@ -42,6 +48,7 @@
         border-left-color: #1976D2;
         background-color: white;
         border-left-width: 2px;
+        border-bottom: none;
         .tab-title {
           color: #333;
         }
@@ -126,12 +133,15 @@
 <template>
   <header class="header"
     :class="{'single-tab': tabs.length === 1, 'is-mac': isMac}"
-    @dblclick="createNewTab">
+    @dblclick="createNewTab"
+    @mousewheel="tabbarScroll">
+    <div class="tab-container">
     <div class="tab"
       @click="setCurrentTab($index)"
       id="tab{{ $index }}"
       data-index="{{ $index }}"
       v-for="tab in tabs"
+      track-by="uid"
       :class="{'current-tab': $index === currentTabIndex}"
       drop="handleDragAndDrop"
       drag-start="handleDragStart"
@@ -163,6 +173,7 @@
       </span>
       <span class="tab-indicator" v-if="dragging"></span>
     </div>
+    </div>
   </header>
 </template>
 
@@ -179,7 +190,8 @@
           return {
             title: path.basename(tab.filePath),
             saved: tab.saved,
-            rename: tab.rename
+            rename: tab.rename,
+            uid: tab.uid
           }
         }),
         currentTabIndex: state => state.editor.currentTabIndex,
@@ -218,12 +230,15 @@
     data() {
       return {isMac}
     },
+    ready() {
+      this.listenEvents()
+    },
     methods: {
       closeTab(e, index) {
         event.emit('close-tab', index)
       },
       createNewTab() {
-        event.emit('new-tab')
+        event.emit('new-tab', this.updateTabsStack)
       },
       renameCurrentFile(e, index) {
         const name = e.target.value
@@ -269,6 +284,36 @@
       },
       unhoverTab(index) {
         $(`#tab${index}`).classList.remove('hover')
+      },
+      tabbarScroll(event) {
+        console.log(event)
+      },
+      updateTabsStack() {
+        const header = $('.header')
+        const tabContainer = $('.tab-container')
+        const tabsWidth = tabContainer.scrollWidth
+        const headerWidth =  (isMac ? header.offsetWidth - 80 : header.offsetWidth) - 20
+        let deltaWidth = tabsWidth - headerWidth;
+        if (deltaWidth > 0) {
+          const tabs = tabContainer.children
+          let i = 1
+          while (tabs[i] && deltaWidth > 0) {
+            const tab = tabs[i]
+            const prevTabWidth = tabs[i-1].offsetWidth
+            const currentMargin = Math.abs(parseInt(tab.style.marginLeft)) || 0;
+            if (currentMargin < prevTabWidth - 10) {
+              const marginLeft = Math.min(deltaWidth + Math.abs(currentMargin), prevTabWidth - 10)
+              tab.style.marginLeft = `-${marginLeft}px`;
+              deltaWidth -= marginLeft - currentMargin
+            }
+            ++i
+          }
+        }
+      },
+      listenEvents() {
+        event.on('update-tabs', () => {
+          this.updateTabsStack();
+        })
       }
     }
   }

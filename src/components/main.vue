@@ -127,6 +127,7 @@
   import {$} from 'utils/dom'
   import {isMac} from 'utils/os'
   import event from 'utils/event'
+  import uid from 'utils/uid'
   import makeHTML from 'utils/make-html'
   import fs from 'utils/fs-promise'
   import {appPath} from 'utils/resolve-path'
@@ -327,7 +328,8 @@
           isVimMode: false,
           pdf: '',
           rename: false,
-          split: 50
+          split: 50,
+          uid: uid()
         }
         this.$store.dispatch('INIT_NEW_TAB', {
           ...tabDefaults,
@@ -448,7 +450,9 @@
         })
 
         ipcRenderer.on('new-tab', (e, filePath) => {
-          this.createNewTab({filePath}).catch(handleError)
+          this.createNewTab({filePath}, () => {
+            event.emit('update-tabs')
+          }).catch(handleError)
         })
 
         ipcRenderer.on('close-window', () => {
@@ -539,8 +543,8 @@
           }
         })
 
-        event.on('new-tab', () => {
-          this.createNewTab()
+        event.on('new-tab', callback => {
+          this.createNewTab({}, callback)
         })
 
         event.on('close-tab', index => {
