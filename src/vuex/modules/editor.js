@@ -37,7 +37,7 @@ const renderHTML = tab => {
     }
   }
   return {
-    attributes: data.attributes,
+    attrs: data.attributes,
     html: render({content: data.body, filePath: tab.filePath})
   }
 }
@@ -70,7 +70,7 @@ const mutations = {
         isPresentationMode: tab.isPresentationMode
       })
       tab.html = parsed.html
-      tab.attributes = parsed.attributes
+      tab.attrs = parsed.attrs
     }
     tab.wordCount = wordCount(tab.content)
   },
@@ -88,7 +88,7 @@ const mutations = {
     })
     tab.content = content
     tab.html = parsed.html
-    tab.attributes = parsed.attributes
+    tab.attrs = parsed.attrs
     tab.filePath = filePath
     document.title = `${path.basename(filePath)} - EME`
   },
@@ -143,7 +143,7 @@ const mutations = {
     if (tab.writingMode === 'writing') {
       const parsed = renderHTML(tab)
       tab.html = parsed.html
-      tab.attributes = parsed.attributes
+      tab.attrs = parsed.attrs
     }
     tab.writingMode = mode
 
@@ -183,7 +183,7 @@ const mutations = {
     tab.isPresentationMode = !tab.isPresentationMode
     const parsed = renderHTML(tab)
     tab.html = parsed.html
-    tab.attributes = parsed.attributes
+    tab.attrs = parsed.attrs
     state.currentSlideIndex = 0
   },
   MOVE_SLIDE(state, direction) {
