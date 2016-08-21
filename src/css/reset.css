@@ -31,6 +31,8 @@ body,
 }
 
 .markdown-body {
+  word-break: break-word;
+
   *::-webkit-scrollbar {
     background-color: transparent;
     height: 8px;

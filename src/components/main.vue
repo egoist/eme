@@ -108,7 +108,8 @@
         :class="'preview preview-' + $index"
         :style="{ width: (100 - tab.split) + '%' }"
         v-show="currentTab && currentTab.writingMode !== 'writing'">
-        <div :class="'markdown-body markdown-body-' + $index">
+        <presentation :slides="tab.html" v-if="tab.isPresentationMode"></presentation>
+        <div :class="'markdown-body markdown-body-' + $index" v-else>
           {{{ tab.html }}}
         </div>
       </div>
@@ -123,6 +124,9 @@
   import 'codemirror/lib/codemirror.css'
   import 'codemirror/mode/markdown/markdown'
   import 'codemirror/mode/gfm/gfm'
+  import 'codemirror/mode/javascript/javascript'
+  import 'codemirror/mode/clike/clike'
+  import 'codemirror/mode/htmlmixed/htmlmixed'
   import 'codemirror/addon/edit/continuelist'
   import 'codemirror/addon/scroll/simplescrollbars'
   import 'codemirror/addon/selection/active-line'
@@ -138,6 +142,7 @@
   import {appPath} from 'utils/resolve-path'
   import handleError from 'utils/handle-error'
   import tip from 'components/tip'
+  import presentation from 'components/presentation'
 
   const currentWindow = remote.getCurrentWindow()
   const config = currentWindow.$config
@@ -190,6 +195,7 @@
         }
       },
       handleScroll(e) {
+        if (this.currentTab.isPresentationMode) return
         const index = this.currentTabIndex
         const codePort = e ?
           e.target :
@@ -332,6 +338,7 @@
           isFocusMode: false,
           writingMode: 'default',
           isVimMode: false,
+          isPresentationMode: false,
           pdf: '',
           rename: false,
           split: 50
@@ -429,8 +436,12 @@
         })
 
         ipcRenderer.on('toggle-focus-mode', () => {
-          this.currentTab.isFocusMode = !this.currentTab.isFocusMode
-          this.editor.setOption('styleActiveLine', this.currentTab.isFocusMode)
+          this.editor.setOption('styleActiveLine', !this.currentTab.isFocusMode)
+          this.$store.dispatch('TOGGLE_FOCUS_MODE')
+        })
+
+        ipcRenderer.on('toggle-presentation-mode', () => {
+          this.$store.dispatch('TOGGLE_PRESENTATION_MODE')
         })
 
         ipcRenderer.on('toggle-vim-mode', () => {
@@ -439,7 +450,7 @@
           } else {
             this.editor.setOption('keyMap', 'vim')
           }
-          this.currentTab.isVimMode = !this.currentTab.isVimMode
+          this.$store.dispatch('TOGGLE_VIM_MODE')
         })
 
         ipcRenderer.on('win-focus', () => {
@@ -465,7 +476,7 @@
             const tab = this.tabs[0]
             this.closeTab(0).then(closed => {
               if (closed) {
-                if (closed.saved) {
+                if (closed.saved && tab) {
                   tabs.push(tab)
                 }
                 if (this.tabs.length > 0) {
@@ -495,7 +506,7 @@
             const tab = this.tabs[0]
             this.closeTab(0).then(closed => {
               if (closed) {
-                if (closed.saved) {
+                if (closed.saved && tab) {
                   tabs.push(tab)
                 }
                 if (this.tabs.length > 0) {
@@ -587,11 +598,10 @@
           }
           return false
         }
-        this.$store.dispatch('CLOSE_TAB', index)
-        if (tab.filePath) {
-          return {saved: true}
+        if (tab) {
+          this.$store.dispatch('CLOSE_TAB', index)
         }
-        return {saved: false}
+        return {saved: true}
       },
       handleDrag() {
         const holder = $('#app')
@@ -633,7 +643,8 @@
       }
     },
     components: {
-      tip
+      tip,
+      presentation
     }
   }
 </script>

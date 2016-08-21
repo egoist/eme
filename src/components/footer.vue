@@ -1,4 +1,4 @@
-<style scoped>
+<style>
   .footer {
     height: 25px;
     line-height: 24px;
@@ -23,9 +23,13 @@
 
     .footer-right {
       float: right;
-      .writing-modes {
+      .footer-icon-group {
+        -webkit-user-select: none;
         margin: 3.5px 0;
-        .writing-mode {
+        &:not(:first-child) {
+          margin-left: 10px;
+        }
+        .footer-icon-item {
           height: 16px;
           line-height: 16px;
           background-color: #fcfcfc;
@@ -47,6 +51,11 @@
             color: white;
             border-color: transparent;
             z-index: 2;
+            .footer-icon {
+              path {
+                fill: white;
+              }
+            }
           }
           &:first-child {
             border-radius: 4px 0 0 4px;
@@ -65,8 +74,6 @@
       color: #333;
     }
   }
-</style>
-<style>
   .footer-icon {
     svg {
       width: 12px;
@@ -75,11 +82,13 @@
       fill: #666;
     }
   }
-  .writing-mode.active {
-    .footer-icon {
-      path {
-        fill: white;
-      }
+  .presentation-footer-control,
+  .writing-modes {
+    display: inline-block;
+  }
+  .presentation-footer-control {
+    svg {
+      width: 14px;
     }
   }
 </style>
@@ -90,24 +99,41 @@
     <span class="word-count">{{ status.wordCount }} words</span>
     <span class="pdf-link clickable-link" v-if="status.pdf" @click="openPDF(status.pdf)">PDF</span>
     <div class="footer-right">
-      <div class="writing-modes" v-if="status.writingMode">
+      <div class="footer-icon-group presentation-footer-control" v-if="status.isPresentationMode">
+        <span
+          aria-label="Previous Slide"
+          class="footer-icon-item hint--top-left hint--rounded"
+          @click="moveSlide('left')">
+          <svg-icon name="arrowLeft" class="footer-icon"></svg-icon>
+        </span>
+        <span class="footer-icon-item">
+          {{ status.slides.current + 1 }}/{{ status.slides.total }}
+        </span>
+        <span
+          aria-label="Next Slide"
+          class="footer-icon-item hint--top-right hint--rounded"
+          @click="moveSlide('right')">
+          <svg-icon name="arrowRight" class="footer-icon"></svg-icon>
+        </span>
+      </div>
+      <div class="footer-icon-group writing-modes" v-if="status.writingMode">
         <span
           aria-label="Editor only"
-          class="writing-mode hint--top-left hint--rounded"
+          class="footer-icon-item writing-mode hint--top-left hint--rounded"
           :class="{active: status.writingMode === 'writing'}"
           @click="setWritingMode('writing')">
           <svg-icon name="pencil" class="footer-icon"></svg-icon>
         </span>
         <span
           aria-label="Editor and Preview"
-          class="writing-mode hint--top-left hint--rounded"
+          class="footer-icon-item writing-mode hint--top-left hint--rounded"
           :class="{active: status.writingMode === 'default'}"
           @click="setWritingMode('default')">
           <svg-icon name="alignHorizontalMiddle" class="footer-icon"></svg-icon>
         </span>
         <span
           aria-label="Preview only"
-          class="writing-mode hint--top-left hint--rounded"
+          class="footer-icon-item writing-mode hint--top-left hint--rounded"
           :class="{active: status.writingMode === 'preview'}"
           @click="setWritingMode('preview')">
           <svg-icon name="eye" class="footer-icon"></svg-icon>
@@ -136,7 +162,12 @@
               tildify(editor.filePath) :
               'untitled',
             writingMode: editor.writingMode,
-            pdf: editor.pdf
+            pdf: editor.pdf,
+            isPresentationMode: editor.isPresentationMode,
+            slides: {
+              total: Array.isArray(editor.html) ? editor.html.length : 0,
+              current: state.editor.currentSlideIndex
+            }
           }
         }
       },
@@ -146,6 +177,9 @@
             index: this.currentTabIndex,
             mode
           })
+        },
+        moveSlide({dispatch}, direction) {
+          dispatch('MOVE_SLIDE', direction)
         }
       }
     },
