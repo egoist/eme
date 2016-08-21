@@ -94,7 +94,7 @@
 </style>
 
 <template>
-  <footer class="footer" v-if="showFooter" :class="{'mac-footer': isMac}">
+  <footer class="footer" :class="{'mac-footer': isMac}">
     <span class="file-path" v-if="status.filePath">{{ status.filePath }}</span>
     <span class="word-count">{{ status.wordCount }} words</span>
     <span class="pdf-link clickable-link" v-if="status.pdf" @click="openPDF(status.pdf)">PDF</span>
@@ -152,7 +152,6 @@
   export default {
     vuex: {
       getters: {
-        showFooter: state => state.editor.tabs.length > 0,
         currentTabIndex: state => state.editor.currentTabIndex,
         status: state => {
           const editor = state.editor.tabs[state.editor.currentTabIndex] || {}

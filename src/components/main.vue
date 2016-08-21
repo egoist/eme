@@ -5,10 +5,16 @@
 
 <style>
   .main {
+    /* total - header - footer */
     height: calc(100% - 36px - 25px);
+    .distraction-free & {
+      height: calc(100% - 36px);
+    }
+    .distraction-free.full-screen & {
+      height: 100%;
+    }
   }
   .tab-body {
-    /* total - header - footer */
     height: 100%;
     display: flex;
     &.resizing {

@@ -3,23 +3,54 @@
 <style src="./css/editor-reset"></style>
 
 <template>
-  <div id="app">
-    <app-header></app-header>
+  <div id="app"
+    :class="{
+      'distraction-free': isDistractionFreeMode,
+      'full-screen': isFullScreen
+    }">
+    <app-header v-if="!isDistractionFreeMode || (isDistractionFreeMode && !isFullScreen)"></app-header>
     <app-main></app-main>
-    <app-footer></app-footer>
+    <app-footer v-if="!isDistractionFreeMode && showFooter"></app-footer>
   </div>
 </template>
 
 <script>
+  import {ipcRenderer, remote} from 'electron'
+
   import appHeader from './components/header'
   import appMain from './components/main'
   import appFooter from './components/footer'
+  import {$} from 'utils/dom'
+
+  const currentWindow = remote.getCurrentWindow()
 
   export default {
+    data() {
+      return {
+        isDistractionFreeMode: false,
+        isFullScreen: currentWindow.isFullScreen()
+      }
+    },
+    vuex: {
+      getters: {
+        showFooter: state => state.editor.tabs.length > 0,
+      }
+    },
     components: {
       appHeader,
       appMain,
       appFooter
+    },
+    ready() {
+      ipcRenderer.on('toggle-distraction-free-mode', () => {
+        this.isDistractionFreeMode = !this.isDistractionFreeMode
+      })
+      ipcRenderer.on('enter-full-screen', () => {
+        this.isFullScreen = true
+      })
+      ipcRenderer.on('leave-full-screen', () => {
+        this.isFullScreen = false
+      })
     }
   }
 </script>

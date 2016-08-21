@@ -206,6 +206,13 @@ module.exports = cb => {
           type: 'separator'
         },
         {
+          label: 'Toggle Distraction Free mode',
+          accelerator: 'CmdOrCtrl+J',
+          click(item, focusedWindow) {
+            if (focusedWindow) focusedWindow.webContents.send('toggle-distraction-free-mode')
+          }
+        },
+        {
           label: 'Toggle Focus Mode',
           accelerator: 'CmdOrCtrl+\\',
           click(item, focusedWindow) {
