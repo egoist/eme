@@ -53,6 +53,10 @@
           color: #333;
         }
       }
+      &.right-stacked {
+        z-index: 1;
+        border-right: 1px solid #ddd;
+      }
       &.dragging {
         border-left: 1px solid #ddd;
       }
@@ -110,6 +114,7 @@
       width: 30px;
       text-align: center;
       height: calc(100% - 1px);
+      position: relative;
       >span {
         position: relative;
         top: -1px;
@@ -125,6 +130,13 @@
         display: none;
         font-size: 1rem;
         transition: all .3s;
+        position: absolute;
+        width: 12px;
+        line-height: 10px;
+        padding: 1px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
       }
     }
   }
@@ -166,10 +178,9 @@
         </span>
         <span
           class="tab-indicator"
-          @click.stop="closeTab($event, $index)"
           v-if="!dragging">
           <span class="dot" v-show="!tab.saved"></span>
-          <span class="cross">×</span>
+          <span class="cross" @click.stop="closeTab($event, $index)">×</span>
         </span>
         <span class="tab-indicator" v-if="dragging"></span>
       </div>
@@ -200,6 +211,7 @@
       actions: {
         setCurrentTab({dispatch}, index) {
           dispatch('SET_CURRENT_TAB', index)
+          this.updateTabsStack()
           setTimeout(() => {
             event.emit('focus-current-tab')
           }, 200)
@@ -294,20 +306,50 @@
         const tabsWidth = tabContainer.scrollWidth
         const headerWidth = (isMac ? header.offsetWidth - 80 : header.offsetWidth) - 20
         let deltaWidth = tabsWidth - headerWidth
-        if (deltaWidth > 0) {
-          const tabs = tabContainer.children
-          let i = 1
-          while (tabs[i] && deltaWidth > 0) {
-            const tab = tabs[i]
-            const prevTabWidth = tabs[i - 1].offsetWidth
-            const currentMargin = Math.abs(parseInt(tab.style.marginLeft, 10)) || 0
-            if (currentMargin < prevTabWidth - 10) {
-              const marginLeft = Math.min(deltaWidth + Math.abs(currentMargin), prevTabWidth - 10)
-              tab.style.marginLeft = `-${marginLeft}px`
-              deltaWidth -= marginLeft - currentMargin
-            }
-            ++i
+        const tabs = tabContainer.children
+        let i = 1
+        while (tabs[i]) {
+          const tab = tabs[i]
+          tab.classList.remove('right-stacked')
+          tab.style.zIndex = 1
+          deltaWidth += Math.abs(parseInt(tab.style.marginLeft, 10)) || 0
+          tab.style.marginLeft = '0px'
+          ++i
+        }
+
+        i = 1
+        while (tabs[i] && i - 1 !== this.currentTabIndex && deltaWidth > 0) {
+          const tab = tabs[i]
+          const prevTabWidth = tabs[i - 1].offsetWidth
+          const currentMargin = Math.abs(parseInt(tab.style.marginLeft, 10)) || 0
+          if (currentMargin < prevTabWidth - 10) {
+            const marginLeft = Math.min(deltaWidth + Math.abs(currentMargin), prevTabWidth - 10)
+            tab.style.marginLeft = `-${marginLeft}px`
+            deltaWidth -= marginLeft - currentMargin
           }
+          ++i
+        }
+
+        i = this.tabs.length - 1
+        let zIndex = 1
+        while (tabs[i] && i !== this.currentTabIndex && deltaWidth > 0) {
+          const tab = tabs[i]
+          const prevTabWidth = tabs[i - 1].offsetWidth
+          const currentMargin = Math.abs(parseInt(tab.style.marginLeft, 10)) || 0
+          if (currentMargin < prevTabWidth - 10) {
+            const marginLeft = Math.min(deltaWidth + Math.abs(currentMargin), prevTabWidth - 10)
+            tab.style.marginLeft = `-${marginLeft}px`
+            tab.style.zIndex = zIndex
+            tab.classList.add('right-stacked')
+            deltaWidth -= marginLeft - currentMargin
+          }
+          --i
+          ++zIndex
+        }
+        ++i
+        if (tabs[i] && tabs[i - 1] && Math.abs(parseInt(tabs[i].style.marginLeft, 10)) > 0) {
+          tabs[i - 1].style.zIndex = zIndex + 1
+          tabs[i - 1].classList.add('right-stacked')
         }
       },
       listenEvents() {
