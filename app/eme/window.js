@@ -47,6 +47,14 @@ class Window {
       web.send('win-focus')
     })
 
+    win.on('enter-full-screen', () => {
+      web.send('enter-full-screen')
+    })
+
+    win.on('leave-full-screen', () => {
+      web.send('leave-full-screen')
+    })
+
     if (isDev) {
       const installExtension = require('electron-devtools-installer')
       installExtension.default(installExtension.VUEJS_DEVTOOLS)

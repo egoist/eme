@@ -5,10 +5,13 @@
 
 <style>
   .main {
+    /* total - header - footer */
     height: calc(100% - 36px - 25px);
+    .distraction-free.full-screen & {
+      height: 100%;
+    }
   }
   .tab-body {
-    /* total - header - footer */
     height: 100%;
     display: flex;
     &.resizing {
@@ -55,6 +58,10 @@
   }
   .preview {
     padding: 10px;
+    overflow-x: hidden;
+    &.preview-presentation {
+      padding: 0;
+    }
     &::-webkit-scrollbar {
       width: 0;
     }
@@ -105,7 +112,13 @@
         <div class="resize-bar" @mousedown="resizeStart($event, $index)"></div>
       </div>
       <div
-        :class="'preview preview-' + $index"
+        :class="[
+          'preview',
+          'preview-' + $index,
+          {
+            'preview-presentation': tab.isPresentationMode
+          }
+        ]"
         :style="{ width: (100 - tab.split) + '%' }"
         v-show="currentTab && currentTab.writingMode !== 'writing'">
         <presentation :slides="tab.html" v-if="tab.isPresentationMode"></presentation>
@@ -531,10 +544,13 @@
           })
           if (filePath) {
             const html = makeHTML({
-              html: `<div class="markdown-body">${this.currentTab.html}</div>`,
+              html: Array.isArray(this.currentTab.html) ?
+                this.currentTab.html.map(html => `<div class="slide markdown-body">${html}</div>`).join('') :
+                `<div class="markdown-body">${this.currentTab.html}</div>`,
               css: [
                 appPath('vendor/github-markdown-css/github-markdown.css'),
-                appPath('vendor/katex/katex.min.css')
+                appPath('vendor/katex/katex.min.css'),
+                appPath('vendor/css/print.css')
               ]
             })
             ipcRenderer.send('print-to-pdf', html, filePath)

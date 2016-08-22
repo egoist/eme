@@ -29,7 +29,7 @@ const renderHTML = tab => {
   if (tab.isPresentationMode) {
     return {
       attrs: data.attributes,
-      html: data.body.split('---')
+      html: data.body.split('\n\n---\n\n')
         .map(content => render({
           content,
           filePath: tab.filePath
@@ -37,7 +37,7 @@ const renderHTML = tab => {
     }
   }
   return {
-    attributes: data.attributes,
+    attrs: data.attributes,
     html: render({content: data.body, filePath: tab.filePath})
   }
 }
@@ -46,7 +46,9 @@ const state = {
   tabs: [],
   draggingTab: false,
   currentTabIndex: 0,
-  currentSlideIndex: 0
+  currentSlideIndex: 0,
+  slideDirection: 'left',
+  isSlideSwitching: false
 }
 
 const mutations = {
@@ -70,7 +72,7 @@ const mutations = {
         isPresentationMode: tab.isPresentationMode
       })
       tab.html = parsed.html
-      tab.attributes = parsed.attributes
+      tab.attrs = parsed.attrs
     }
     tab.wordCount = wordCount(tab.content)
   },
@@ -88,7 +90,7 @@ const mutations = {
     })
     tab.content = content
     tab.html = parsed.html
-    tab.attributes = parsed.attributes
+    tab.attrs = parsed.attrs
     tab.filePath = filePath
     document.title = `${path.basename(filePath)} - EME`
   },
@@ -143,7 +145,7 @@ const mutations = {
     if (tab.writingMode === 'writing') {
       const parsed = renderHTML(tab)
       tab.html = parsed.html
-      tab.attributes = parsed.attributes
+      tab.attrs = parsed.attrs
     }
     tab.writingMode = mode
 
@@ -183,24 +185,32 @@ const mutations = {
     tab.isPresentationMode = !tab.isPresentationMode
     const parsed = renderHTML(tab)
     tab.html = parsed.html
-    tab.attributes = parsed.attributes
+    tab.attrs = parsed.attrs
     state.currentSlideIndex = 0
   },
   MOVE_SLIDE(state, direction) {
     const tab = state.tabs[state.currentTabIndex]
+    if (state.isSlideSwitching && direction === state.slideDirection) {
+      return
+    }
     if (direction === 'right') {
+      state.slideDirection = 'left'
       if (state.currentSlideIndex === tab.html.length - 1) {
         state.currentSlideIndex = 0
       } else {
         state.currentSlideIndex++
       }
     } else if (direction === 'left') {
+      state.slideDirection = 'right'
       if (state.currentSlideIndex === 0) {
         state.currentSlideIndex = tab.html.length - 1
       } else {
         state.currentSlideIndex--
       }
     }
+  },
+  SLIDE_SWITCHING(state, payload) {
+    state.isSlideSwitching = payload
   }
 }
 

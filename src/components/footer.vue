@@ -81,6 +81,9 @@
     path {
       fill: #666;
     }
+    .disabled & path {
+      fill: #ccc;
+    }
   }
   .presentation-footer-control,
   .writing-modes {
@@ -94,51 +97,21 @@
 </style>
 
 <template>
-  <footer class="footer" v-if="showFooter" :class="{'mac-footer': isMac}">
+  <footer class="footer" :class="{'mac-footer': isMac}">
     <span class="file-path" v-if="status.filePath">{{ status.filePath }}</span>
     <span class="word-count">{{ status.wordCount }} words</span>
     <span class="pdf-link clickable-link" v-if="status.pdf" @click="openPDF(status.pdf)">PDF</span>
     <div class="footer-right">
-      <div class="footer-icon-group presentation-footer-control" v-if="status.isPresentationMode">
-        <span
-          aria-label="Previous Slide"
-          class="footer-icon-item hint--top-left hint--rounded"
-          @click="moveSlide('left')">
-          <svg-icon name="arrowLeft" class="footer-icon"></svg-icon>
-        </span>
-        <span class="footer-icon-item">
-          {{ status.slides.current + 1 }}/{{ status.slides.total }}
-        </span>
-        <span
-          aria-label="Next Slide"
-          class="footer-icon-item hint--top-right hint--rounded"
-          @click="moveSlide('right')">
-          <svg-icon name="arrowRight" class="footer-icon"></svg-icon>
-        </span>
-      </div>
-      <div class="footer-icon-group writing-modes" v-if="status.writingMode">
-        <span
-          aria-label="Editor only"
-          class="footer-icon-item writing-mode hint--top-left hint--rounded"
-          :class="{active: status.writingMode === 'writing'}"
-          @click="setWritingMode('writing')">
-          <svg-icon name="pencil" class="footer-icon"></svg-icon>
-        </span>
-        <span
-          aria-label="Editor and Preview"
-          class="footer-icon-item writing-mode hint--top-left hint--rounded"
-          :class="{active: status.writingMode === 'default'}"
-          @click="setWritingMode('default')">
-          <svg-icon name="alignHorizontalMiddle" class="footer-icon"></svg-icon>
-        </span>
-        <span
-          aria-label="Preview only"
-          class="footer-icon-item writing-mode hint--top-left hint--rounded"
-          :class="{active: status.writingMode === 'preview'}"
-          @click="setWritingMode('preview')">
-          <svg-icon name="eye" class="footer-icon"></svg-icon>
-        </span>
-      </div>
+      <presentation-control
+        :slides="status.slides"
+        :writing-mode="status.writingMode"
+        v-if="status.isPresentationMode">
+      </presentation-control>
+      <writing-modes
+        :writing-mode="status.writingMode"
+        :current-tab-index="currentTabIndex"
+        v-if="status.writingMode">
+      </writing-modes>
     </div>
   </footer>
 </template>
@@ -147,12 +120,13 @@
   import tildify from 'tildify'
   import {isMac} from 'utils/os'
   import {shell} from 'electron'
-  import SvgIcon from 'components/svg-icon'
+
+  import PresentationControl from 'components/presentation-control'
+  import WritingModes from 'components/writing-modes'
 
   export default {
     vuex: {
       getters: {
-        showFooter: state => state.editor.tabs.length > 0,
         currentTabIndex: state => state.editor.currentTabIndex,
         status: state => {
           const editor = state.editor.tabs[state.editor.currentTabIndex] || {}
@@ -170,17 +144,6 @@
             }
           }
         }
-      },
-      actions: {
-        setWritingMode({dispatch}, mode) {
-          dispatch('SET_WRITING_MODE', {
-            index: this.currentTabIndex,
-            mode
-          })
-        },
-        moveSlide({dispatch}, direction) {
-          dispatch('MOVE_SLIDE', direction)
-        }
       }
     },
     data() {
@@ -194,7 +157,8 @@
       }
     },
     components: {
-      SvgIcon
+      PresentationControl,
+      WritingModes
     }
   }
 </script>
