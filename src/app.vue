@@ -54,7 +54,6 @@
     },
     methods: {
       showFooter() {
-        console.log(this.tabsAmount)
         return this.tabsAmount > 0 &&
           (
             !this.isDistractionFreeMode ||

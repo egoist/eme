@@ -99,23 +99,7 @@
     <span class="word-count">{{ status.wordCount }} words</span>
     <span class="pdf-link clickable-link" v-if="status.pdf" @click="openPDF(status.pdf)">PDF</span>
     <div class="footer-right">
-      <div class="footer-icon-group presentation-footer-control" v-if="status.isPresentationMode">
-        <span
-          aria-label="Previous Slide"
-          class="footer-icon-item hint--top-left hint--rounded"
-          @click="moveSlide('left')">
-          <svg-icon name="arrowLeft" class="footer-icon"></svg-icon>
-        </span>
-        <span class="footer-icon-item">
-          {{ status.slides.current + 1 }}/{{ status.slides.total }}
-        </span>
-        <span
-          aria-label="Next Slide"
-          class="footer-icon-item hint--top-right hint--rounded"
-          @click="moveSlide('right')">
-          <svg-icon name="arrowRight" class="footer-icon"></svg-icon>
-        </span>
-      </div>
+      <presentation-control :slides="status.slides" v-if="status.isPresentationMode"></presentation-control>
       <div class="footer-icon-group writing-modes" v-if="status.writingMode">
         <span
           aria-label="Editor only"
@@ -148,6 +132,7 @@
   import {isMac} from 'utils/os'
   import {shell} from 'electron'
   import SvgIcon from 'components/svg-icon'
+  import PresentationControl from 'components/presentation-control'
 
   export default {
     vuex: {
@@ -176,9 +161,6 @@
             index: this.currentTabIndex,
             mode
           })
-        },
-        moveSlide({dispatch}, direction) {
-          dispatch('MOVE_SLIDE', direction)
         }
       }
     },
@@ -193,7 +175,8 @@
       }
     },
     components: {
-      SvgIcon
+      SvgIcon,
+      PresentationControl
     }
   }
 </script>
