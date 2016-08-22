@@ -93,7 +93,7 @@
     },
     vuex: {
       getters: {
-        direction: state =>state.editor.slideDirection,
+        direction: state => state.editor.slideDirection,
         current: state => state.editor.currentSlideIndex,
         total: state => {
           const tab = state.editor.tabs[state.editor.currentTabIndex]

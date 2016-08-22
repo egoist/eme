@@ -28,7 +28,7 @@
     vuex: {
       getters: {
         direction: state => state.editor.slideDirection,
-        switching: state => state.editor.isSlideSwitching,
+        switching: state => state.editor.isSlideSwitching
       },
       actions: {
         moveSlide({dispatch}, direction) {

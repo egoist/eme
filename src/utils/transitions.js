@@ -18,7 +18,6 @@ const types = [
 ]
 
 export default Vue => {
-
   const makeTransition = (type, direction) => {
     const directions = direction === 'left' ?
       ['Right', 'Left'] :
@@ -30,7 +29,6 @@ export default Vue => {
       leaveClass: `${type}Out${directions[1]}`
     })
   }
-
 
   for (const type of types) {
     makeTransition(type, 'left')
