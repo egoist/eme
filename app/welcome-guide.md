@@ -36,5 +36,6 @@ You can event write markdown and render then in slides! Here's a example:
 
 Use <kbd>Ctrl/CMD + K</kbd> to toggle it!
 
+## Shortcuts
 
-asd
+Please view: https://github.com/egoist/eme/wiki/Key-bindings

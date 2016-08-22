@@ -57,7 +57,6 @@
     methods: {
       addListeners() {
         this.handleSwitchingMode = e => {
-          console.log('lol')
           if (e[cmdOrCtrl] && e.shiftKey && e.which === 220) {
             const current = modes.indexOf(this.writingMode)
             if (current === modes.length - 1) {
