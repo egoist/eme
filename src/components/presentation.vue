@@ -101,7 +101,7 @@
     methods: {
       style(index) {
         return {
-          transform: `translateX(${100 * index - this.current * 100}%) translateY(0)`
+          transform: `translateX(${(index - this.current) * 100}%) translateY(0)`
         }
       }
     }
