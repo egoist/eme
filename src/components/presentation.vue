@@ -1,7 +1,6 @@
 <style>
   .presentation {
     height: 100%;
-    position: relative;
     overflow: hidden;
     h1, h2, h3 {
       margin: 0;
@@ -23,19 +22,23 @@
       }
     }
   }
+  .slides {
+    height: 100%;
+    position: relative;
+  }
   .slide {
     display: flex;
     padding: 10px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
+    height: 100%;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     flex-wrap: nowrap;
     transition: transform .3s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     &.left, &.right {
       img {
         margin: 0;
@@ -61,16 +64,18 @@
 
 <template>
   <div class="presentation">
-    <div
-      :class="[
-        'slide',
-        'markdown-body',
-        attrs.align
-      ]"
-      :style="style($index)"
-      track-by="$index"
-      v-for="slide in slides"
-      v-html="slide">
+    <div class="slides">
+      <div
+        :class="[
+          'slide',
+          'markdown-body',
+          attrs.align
+        ]"
+        :style="style($index)"
+        track-by="$index"
+        v-for="slide in slides"
+        v-html="slide">
+      </div>
     </div>
     <div class="indicator" :style="{width: ((current + 1) / total) * 100 + '%'}"></div>
   </div>

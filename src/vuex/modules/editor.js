@@ -29,7 +29,7 @@ const renderHTML = tab => {
   if (tab.isPresentationMode) {
     return {
       attrs: data.attributes,
-      html: data.body.split('---')
+      html: data.body.split('\n\n---\n\n')
         .map(content => render({
           content,
           filePath: tab.filePath

@@ -10,7 +10,7 @@
     }">
     <app-header v-if="!isDistractionFreeMode || (isDistractionFreeMode && !isFullScreen)"></app-header>
     <app-main></app-main>
-    <app-footer v-if="!isDistractionFreeMode && showFooter"></app-footer>
+    <app-footer v-if="showFooter()"></app-footer>
   </div>
 </template>
 
@@ -33,7 +33,7 @@
     },
     vuex: {
       getters: {
-        showFooter: state => state.editor.tabs.length > 0,
+        tabsAmount: state => state.editor.tabs.length,
       }
     },
     components: {
@@ -51,6 +51,16 @@
       ipcRenderer.on('leave-full-screen', () => {
         this.isFullScreen = false
       })
+    },
+    methods: {
+      showFooter() {
+        console.log(this.tabsAmount)
+        return this.tabsAmount > 0 &&
+          (
+            !this.isDistractionFreeMode ||
+            (this.isDistractionFreeMode && !this.isFullScreen)
+          )
+      }
     }
   }
 </script>
