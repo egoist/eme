@@ -1,4 +1,4 @@
-# EME ![version](https://img.shields.io/github/release/egoist/eme.svg?style=flat-square) ![downloads](https://img.shields.io/github/downloads/egoist/eme/total.svg?style=flat-square) ![downloads latest](https://img.shields.io/github/downloads/egoist/eme/latest/total.svg?style=flat-square)  ![build](https://img.shields.io/circleci/project/egoist/eme/dev.svg?style=flat-square)
+# EME [![version](https://img.shields.io/github/release/egoist/eme.svg?style=flat-square)](https://github.com/egoist/eme/releases) [![downloads](https://img.shields.io/github/downloads/egoist/eme/total.svg?style=flat-square)](https://github.com/egoist/eme/releases) [![downloads latest](https://img.shields.io/github/downloads/egoist/eme/latest/total.svg?style=flat-square)](https://github.com/egoist/eme/releases/latest) [![build](https://img.shields.io/circleci/project/egoist/eme/dev.svg?style=flat-square)](https://circleci.com/gh/egoist/eme) [![donate](https://img.shields.io/badge/$-donate-ff69b4.svg?maxAge=2592000&style=flat-square)](#donate)
 
 ![preview](/media/preview.png)
 
@@ -37,6 +37,16 @@ $ npm run linux # .deb
 
 After that, you'll see the binaries in the `./dist` folder!
 
+## Donate
+
+If you are enjoying this app, please consider making a donation to keep it alive, I will try my best to dedicate more time or even full time to work on it. 😉
+
+- [Donate via Paypal](https://www.paypal.me/egoistian/10)
+- [Donate via Wechat](http://ww4.sinaimg.cn/large/a15b4afegw1f72ib6rj67j20u00tvgnj.jpg)
+- [Donate via Alipay](http://ww4.sinaimg.cn/large/a15b4afegw1f72ib54hybj20qo0nndh5.jpg)
+- [Donate via Bitcoin](http://ww4.sinaimg.cn/large/a15b4afegw1f72icbcu0gj202s02sdfl.jpg) `1NUSDCWti9FBJLiUxaLY1zJnwcSDc5Tfci`
+
+If you are not available for this, simply spreading the word for us would help too!
 
 ## License
 
