@@ -104,29 +104,11 @@
         :writing-mode="status.writingMode"
         v-if="status.isPresentationMode">
       </presentation-control>
-      <div class="footer-icon-group writing-modes" v-if="status.writingMode">
-        <span
-          aria-label="Editor only"
-          class="footer-icon-item writing-mode hint--top-left hint--rounded"
-          :class="{active: status.writingMode === 'writing'}"
-          @click="setWritingMode('writing')">
-          <svg-icon name="pencil" class="footer-icon"></svg-icon>
-        </span>
-        <span
-          aria-label="Editor and Preview"
-          class="footer-icon-item writing-mode hint--top-left hint--rounded"
-          :class="{active: status.writingMode === 'default'}"
-          @click="setWritingMode('default')">
-          <svg-icon name="alignHorizontalMiddle" class="footer-icon"></svg-icon>
-        </span>
-        <span
-          aria-label="Preview only"
-          class="footer-icon-item writing-mode hint--top-left hint--rounded"
-          :class="{active: status.writingMode === 'preview'}"
-          @click="setWritingMode('preview')">
-          <svg-icon name="eye" class="footer-icon"></svg-icon>
-        </span>
-      </div>
+      <writing-modes
+        :writing-mode="status.writingMode"
+        :current-tab-index="currentTabIndex"
+        v-if="status.writingMode">
+      </writing-modes>
     </div>
   </footer>
 </template>
@@ -135,8 +117,9 @@
   import tildify from 'tildify'
   import {isMac} from 'utils/os'
   import {shell} from 'electron'
-  import SvgIcon from 'components/svg-icon'
+
   import PresentationControl from 'components/presentation-control'
+  import WritingModes from 'components/writing-modes'
 
   export default {
     vuex: {
@@ -158,14 +141,6 @@
             }
           }
         }
-      },
-      actions: {
-        setWritingMode({dispatch}, mode) {
-          dispatch('SET_WRITING_MODE', {
-            index: this.currentTabIndex,
-            mode
-          })
-        }
       }
     },
     data() {
@@ -179,8 +154,8 @@
       }
     },
     components: {
-      SvgIcon,
-      PresentationControl
+      PresentationControl,
+      WritingModes
     }
   }
 </script>

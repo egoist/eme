@@ -45,11 +45,11 @@
           }
         }
 
-        window.addEventListener('keydown', , false)
+        window.addEventListener('keydown', this.handleArrowKeys, false)
       }
     },
     beforeDestroy() {
-      window.removeEventListener('keydown', this.handleArrorKeys)
+      window.removeEventListener('keydown', this.handleArrowKeys)
     },
     components: {
       SvgIcon
