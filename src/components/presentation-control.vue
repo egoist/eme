@@ -3,6 +3,7 @@
     <span
       aria-label="Previous Slide"
       class="footer-icon-item hint--top-left hint--rounded"
+      :class="{disabled: switching && direction === 'left'}"
       @click="moveSlide('left')">
       <svg-icon name="arrowLeft" class="footer-icon"></svg-icon>
     </span>
@@ -12,6 +13,7 @@
     <span
       aria-label="Next Slide"
       class="footer-icon-item hint--top-right hint--rounded"
+      :class="{disabled: switching && direction === 'right'}"
       @click="moveSlide('right')">
       <svg-icon name="arrowRight" class="footer-icon"></svg-icon>
     </span>
@@ -24,6 +26,10 @@
   export default {
     props: ['slides', 'writingMode'],
     vuex: {
+      getters: {
+        direction: state => state.editor.slideDirection,
+        switching: state => state.editor.isSlideSwitching,
+      },
       actions: {
         moveSlide({dispatch}, direction) {
           dispatch('MOVE_SLIDE', direction)

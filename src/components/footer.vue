@@ -81,6 +81,9 @@
     path {
       fill: #666;
     }
+    .disabled & path {
+      fill: #ccc;
+    }
   }
   .presentation-footer-control,
   .writing-modes {

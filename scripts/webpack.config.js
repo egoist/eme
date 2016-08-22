@@ -55,7 +55,10 @@ module.exports = {
       require('postcss-nested'),
       require('postcss-simple-vars'),
       require('postcss-import')(),
-      require('postcss-mixins')
+      require('postcss-mixins'),
+      require('autoprefixer')({
+        browsers: ['last 2 Chrome versions']
+      })
     ],
     loaders: {
       css: ExtractTextPlugin.extract(

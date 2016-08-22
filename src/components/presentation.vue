@@ -39,6 +39,7 @@
     top: 0;
     left: 0;
     right: 0;
+    background-color: white;
     &.left, &.right {
       img {
         margin: 0;
@@ -69,11 +70,13 @@
         :class="[
           'slide',
           'markdown-body',
+          'animated',
           attrs.align
         ]"
-        :style="style($index)"
+        :transition="transitionName"
         track-by="$index"
         v-for="slide in slides"
+        v-show="$index === current"
         v-html="slide">
       </div>
     </div>
@@ -90,12 +93,21 @@
     },
     vuex: {
       getters: {
+        direction: state =>state.editor.slideDirection,
         current: state => state.editor.currentSlideIndex,
         total: state => {
           const tab = state.editor.tabs[state.editor.currentTabIndex]
           return Array.isArray(tab.html) ? tab.html.length : 1
         },
         attrs: state => state.editor.tabs[state.editor.currentTabIndex].attrs || {}
+      }
+    },
+    computed: {
+      animation() {
+        return this.attrs.animation || 'slide'
+      },
+      transitionName() {
+        return `${this.animation}-${this.direction}`
       }
     },
     methods: {

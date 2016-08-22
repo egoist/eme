@@ -26,6 +26,7 @@
     "editor"
   ],
   "devDependencies": {
+    "autoprefixer": "^6.4.0",
     "babel-eslint": "^6.1.2",
     "babel-loader": "^6.2.4",
     "babel-plugin-transform-runtime": "^6.9.0",
@@ -64,6 +65,7 @@
     "webpack-visualizer-plugin": "^0.1.5"
   },
   "dependencies": {
+    "animate.css": "^3.5.1",
     "babel-runtime": "^6.9.2",
     "codemirror": "^5.17.0",
     "highlight.js": "^9.5.0",
