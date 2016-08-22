@@ -99,7 +99,11 @@
     <span class="word-count">{{ status.wordCount }} words</span>
     <span class="pdf-link clickable-link" v-if="status.pdf" @click="openPDF(status.pdf)">PDF</span>
     <div class="footer-right">
-      <presentation-control :slides="status.slides" v-if="status.isPresentationMode"></presentation-control>
+      <presentation-control
+        :slides="status.slides"
+        :writing-mode="status.writingMode"
+        v-if="status.isPresentationMode">
+      </presentation-control>
       <div class="footer-icon-group writing-modes" v-if="status.writingMode">
         <span
           aria-label="Editor only"

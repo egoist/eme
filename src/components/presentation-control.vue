@@ -22,13 +22,34 @@
   import SvgIcon from 'components/svg-icon'
 
   export default {
-    props: ['slides'],
+    props: ['slides', 'writingMode'],
     vuex: {
       actions: {
         moveSlide({dispatch}, direction) {
           dispatch('MOVE_SLIDE', direction)
         }
       }
+    },
+    ready() {
+      this.addListerners()
+    },
+    methods: {
+      addListerners() {
+        this.handleArrowKeys = e => {
+          if (this.writingMode === 'preview') {
+            if (e.key === 'ArrowRight') {
+              this.moveSlide('right')
+            } else if (e.key === 'ArrowLeft') {
+              this.moveSlide('left')
+            }
+          }
+        }
+
+        window.addEventListener('keydown', , false)
+      }
+    },
+    beforeDestroy() {
+      window.removeEventListener('keydown', this.handleArrorKeys)
     },
     components: {
       SvgIcon
