@@ -45,10 +45,7 @@ const renderHTML = tab => {
 const state = {
   tabs: [],
   draggingTab: false,
-  currentTabIndex: 0,
-  currentSlideIndex: 0,
-  slideDirection: 'left',
-  isSlideSwitching: false
+  currentTabIndex: 0
 }
 
 const mutations = {
@@ -186,31 +183,32 @@ const mutations = {
     const parsed = renderHTML(tab)
     tab.html = parsed.html
     tab.attrs = parsed.attrs
-    state.currentSlideIndex = 0
+    tab.slideIndex = 0
   },
   MOVE_SLIDE(state, direction) {
     const tab = state.tabs[state.currentTabIndex]
-    if (state.isSlideSwitching && direction === state.slideDirection) {
+    if (tab.isSlideSwitching && direction === tab.slideDirection) {
       return
     }
     if (direction === 'right') {
-      state.slideDirection = 'left'
-      if (state.currentSlideIndex === tab.html.length - 1) {
-        state.currentSlideIndex = 0
+      tab.slideDirection = 'left'
+      if (tab.slideIndex === tab.html.length - 1) {
+        tab.slideIndex = 0
       } else {
-        state.currentSlideIndex++
+        tab.slideIndex++
       }
     } else if (direction === 'left') {
-      state.slideDirection = 'right'
-      if (state.currentSlideIndex === 0) {
-        state.currentSlideIndex = tab.html.length - 1
+      tab.slideDirection = 'right'
+      if (tab.slideIndex === 0) {
+        tab.slideIndex = tab.html.length - 1
       } else {
-        state.currentSlideIndex--
+        tab.slideIndex--
       }
     }
   },
   SLIDE_SWITCHING(state, payload) {
-    state.isSlideSwitching = payload
+    const tab = state.tabs[state.currentTabIndex]
+    tab.isSlideSwitching = payload
   }
 }
 

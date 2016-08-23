@@ -28,16 +28,16 @@
           'slide',
           'markdown-body',
           'animated',
-          attrs.align
+          status.attrs.align
         ]"
         :transition="transitionName"
         track-by="$index"
         v-for="slide in slides"
-        v-show="$index === current"
+        v-show="$index === status.current"
         v-html="slide">
       </div>
     </div>
-    <div class="indicator" :style="{width: ((current + 1) / total) * 100 + '%'}"></div>
+    <div class="indicator" :style="{width: ((status.current + 1) / status.total) * 100 + '%'}"></div>
   </div>
 </template>
 
@@ -50,27 +50,29 @@
     },
     vuex: {
       getters: {
-        direction: state => state.editor.slideDirection,
-        current: state => state.editor.currentSlideIndex,
-        total: state => {
+        status: state => {
           const tab = state.editor.tabs[state.editor.currentTabIndex]
-          return Array.isArray(tab.html) ? tab.html.length : 1
-        },
-        attrs: state => state.editor.tabs[state.editor.currentTabIndex].attrs || {}
+          return {
+            total: Array.isArray(tab.html) ? tab.html.length : 1,
+            attrs: tab.attrs,
+            direction: tab.slideDirection,
+            current: tab.slideIndex
+          }
+        }
       }
     },
     computed: {
       animation() {
-        return this.attrs.animation || 'slide'
+        return this.status.attrs.animation || 'slide'
       },
       transitionName() {
-        return `${this.animation}-${this.direction}`
+        return `${this.animation}-${this.status.direction}`
       }
     },
     methods: {
       style(index) {
         return {
-          transform: `translateX(${(index - this.current) * 100}%) translateY(0)`
+          transform: `translateX(${(index - this.status.current) * 100}%) translateY(0)`
         }
       }
     }

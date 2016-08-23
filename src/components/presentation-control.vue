@@ -3,17 +3,17 @@
     <span
       aria-label="Previous Slide"
       class="footer-icon-item hint--top-left hint--rounded"
-      :class="{disabled: switching && direction === 'left'}"
+      :class="{disabled: status.switching && status.direction === 'left'}"
       @click="moveSlide('left')">
       <svg-icon name="arrowLeft" class="footer-icon"></svg-icon>
     </span>
     <span class="footer-icon-item">
-      {{ slides.current + 1 }}/{{ slides.total }}
+      {{ status.current + 1 }}/{{ status.total }}
     </span>
     <span
       aria-label="Next Slide"
       class="footer-icon-item hint--top-right hint--rounded"
-      :class="{disabled: switching && direction === 'right'}"
+      :class="{disabled: status.switching && status.direction === 'right'}"
       @click="moveSlide('right')">
       <svg-icon name="arrowRight" class="footer-icon"></svg-icon>
     </span>
@@ -24,11 +24,18 @@
   import SvgIcon from 'components/svg-icon'
 
   export default {
-    props: ['slides', 'writingMode'],
+    props: ['writingMode'],
     vuex: {
       getters: {
-        direction: state => state.editor.slideDirection,
-        switching: state => state.editor.isSlideSwitching
+        status: state => {
+          const tab = state.editor.tabs[state.editor.currentTabIndex]
+          return {
+            direction: tab.slideDirection,
+            switching: tab.isSlideSwitching,
+            current: tab.slideIndex,
+            total: tab.html.length
+          }
+        }
       },
       actions: {
         moveSlide({dispatch}, direction) {

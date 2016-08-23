@@ -103,7 +103,6 @@
     <span class="pdf-link clickable-link" v-if="status.pdf" @click="openPDF(status.pdf)">PDF</span>
     <div class="footer-right">
       <presentation-control
-        :slides="status.slides"
         :writing-mode="status.writingMode"
         v-if="status.isPresentationMode">
       </presentation-control>
@@ -137,11 +136,7 @@
               'untitled',
             writingMode: editor.writingMode,
             pdf: editor.pdf,
-            isPresentationMode: editor.isPresentationMode,
-            slides: {
-              total: Array.isArray(editor.html) ? editor.html.length : 0,
-              current: state.editor.currentSlideIndex
-            }
+            isPresentationMode: editor.isPresentationMode
           }
         }
       }

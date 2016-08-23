@@ -121,7 +121,10 @@
         ]"
         :style="{ width: (100 - tab.split) + '%' }"
         v-show="currentTab && currentTab.writingMode !== 'writing'">
-        <presentation :slides="tab.html" v-if="tab.isPresentationMode"></presentation>
+        <presentation
+          :slides="tab.html"
+          v-if="tab.isPresentationMode && currentTabIndex === $index">
+        </presentation>
         <div :class="'markdown-body markdown-body-' + $index" v-else>
           {{{ tab.html }}}
         </div>
@@ -354,7 +357,10 @@
           isPresentationMode: false,
           pdf: '',
           rename: false,
-          split: 50
+          split: 50,
+          slideIndex: 0,
+          isSlideSwitching: false,
+          slideDirection: 'left'
         }
         this.$store.dispatch('INIT_NEW_TAB', {
           ...tabDefaults,
