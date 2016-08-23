@@ -2,7 +2,7 @@ import store from 'src/vuex/store'
 
 const transition = {
   type: 'animation',
-  beforeEnter(el) {
+  beforeEnter() {
     store.dispatch('SLIDE_SWITCHING', true)
   },
   afterLeave() {
