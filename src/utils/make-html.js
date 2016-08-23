@@ -10,14 +10,17 @@ export default ({html, css, data}) => {
       <body class="pdf">
         ${Array.isArray(html) ?
           html
-            .map(html => `<div class="slide markdown-body">
-              ${html}
-              </div>`)
+            .map(html => {
+              const className = data.attrs.align || ''
+              return `<div class="slide markdown-body ${className}">
+                ${html}
+              </div>`
+            })
             .join('<div class="page-break"></div>') :
           `<div class="markdown-body">${html}</div>`}
       </body>
       <script>
-        ${Object.keys(data).map(name => `window.${name} = '${data[name]}';`)}
+        window.saveTo = '${data.saveTo}'
       </script>
       <script>
         const {ipcRenderer} = require('electron')

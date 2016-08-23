@@ -2,15 +2,7 @@
   .presentation {
     height: 100%;
     overflow: hidden;
-    h1, h2, h3 {
-      margin: 0;
-      border-bottom: none;
-    }
-    img {
-      max-width: 80%;
-      display: block;
-      margin: 0 auto;
-    }
+
     .full-screen & {
       .indicator {
         background-color: orange;
@@ -25,41 +17,6 @@
   .slides {
     height: 100%;
     position: relative;
-  }
-  .slide {
-    display: flex;
-    padding: 10px;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    transition: transform .3s ease;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    background-color: white;
-    &.left, &.right {
-      img {
-        margin: 0;
-      }
-    }
-    &.left {
-      align-items: stretch;
-    }
-    &.right {
-      align-items: flex-end;
-      img {
-        float: right;
-      }
-    }
-    &.top {
-      justify-content: flex-start;
-    }
-    &.bottom {
-      justify-content: flex-end;
-    }
   }
 </style>
 

@@ -552,7 +552,8 @@
                 appPath('dist/presentation.css')
               ],
               data: {
-                saveTo: filePath
+                saveTo: filePath,
+                attrs: this.currentTab.attrs || {}
               }
             })
             ipcRenderer.send('print-to-pdf', html, filePath)
