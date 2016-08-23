@@ -544,14 +544,16 @@
           })
           if (filePath) {
             const html = makeHTML({
-              html: Array.isArray(this.currentTab.html) ?
-                this.currentTab.html.map(html => `<div class="slide markdown-body">${html}</div>`).join('') :
-                `<div class="markdown-body">${this.currentTab.html}</div>`,
+              html: this.currentTab.html,
               css: [
                 appPath('vendor/github-markdown-css/github-markdown.css'),
                 appPath('vendor/katex/katex.min.css'),
-                appPath('vendor/css/print.css')
-              ]
+                appPath('vendor/css/print.css'),
+                appPath('dist/presentation.css')
+              ],
+              data: {
+                saveTo: filePath
+              }
             })
             ipcRenderer.send('print-to-pdf', html, filePath)
           }

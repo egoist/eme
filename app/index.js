@@ -37,6 +37,7 @@ const createMainWindow = () => {
 }
 
 let mainWindow // eslint-disable-line
+let pdfWindow // eslint-disable-line
 app.on('ready', () => {
   const argv = parseShellCommand()
   Menu.setApplicationMenu(appMenu)
@@ -88,23 +89,28 @@ ipcMain.on('close-focus-window', () => {
 })
 
 // TODO: refactor
-ipcMain.on('print-to-pdf', (e, html, saveTo) => {
-  let tempWin = new BrowserWindow({show: false})
+ipcMain.on('print-to-pdf', (e, html) => {
+  pdfWindow = new BrowserWindow({show: false})
   const tempPath = path.join(os.tmpdir(), `eme-export-pdf.${Date.now()}.html`)
   fs.writeFileSync(tempPath, html, 'utf8')
-  tempWin.loadURL(`file://${tempPath}`)
-  const page = tempWin.webContents
+  console.log(tempPath)
+  pdfWindow.loadURL(`file://${tempPath}`)
+})
+
+ipcMain.on('pdf-window-ready', (e, options) => {
+  const page = pdfWindow.webContents
   page.on('did-finish-load', () => {
     page.printToPDF({
-      pageSize: 'A4'
+      pageSize: options.isPresentation ? 'Tabloid' : 'A4',
+      landscape: true
     }, (err, pdfData) => {
       if (err) {
         return console.log(err)
       }
-      fs.writeFile(saveTo, pdfData, err => {
-        tempWin.destroy()
-        tempWin = undefined
-        mainWindow.webContents.send('finish-exporting-pdf', err, saveTo)
+      fs.writeFile(options.saveTo, pdfData, err => {
+        pdfWindow.destroy()
+        pdfWindow = undefined
+        mainWindow.webContents.send('finish-exporting-pdf', err, options.saveTo)
       })
     })
   })

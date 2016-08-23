@@ -4,11 +4,24 @@ const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const appPkg = require('../app/package')
 
+const postcss = [
+  require('postcss-nested'),
+  require('postcss-simple-vars'),
+  require('postcss-import')(),
+  require('postcss-mixins'),
+  require('autoprefixer')({
+    browsers: ['last 2 Chrome versions']
+  })
+]
+
 module.exports = {
-  entry: ['./src/index.js'],
+  entry: {
+    app: ['./src/index.js'],
+    presentation: './src/css/presentation.css'
+  },
   output: {
     path: process.cwd() + '/app/dist',
-    filename: 'bundle.js'
+    filename: '[name].js'
   },
   resolve: {
     extensions: ['', '.js', '.vue', '.css', '.json'],
@@ -33,7 +46,10 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader!postcss-loader'
+        loader: ExtractTextPlugin.extract(
+          'style-loader',
+          'css-loader!postcss-loader'
+        )
       },
       {
         test: /\.json$/,
@@ -51,15 +67,7 @@ module.exports = {
   },
   vue: {
     autoprefixer: false,
-    postcss: [
-      require('postcss-nested'),
-      require('postcss-simple-vars'),
-      require('postcss-import')(),
-      require('postcss-mixins'),
-      require('autoprefixer')({
-        browsers: ['last 2 Chrome versions']
-      })
-    ],
+    postcss,
     loaders: {
       css: ExtractTextPlugin.extract(
         'vue-style-loader',
@@ -67,11 +75,12 @@ module.exports = {
       )
     }
   },
+  postcss,
   target: 'electron',
   plugins: [
     new webpack.ExternalsPlugin('commonjs2', [
       './vendor/markdown-it-katex'
     ].concat(Object.keys(appPkg.dependencies))),
-    new ExtractTextPlugin('style.css')
+    new ExtractTextPlugin('[name].css')
   ]
 }
