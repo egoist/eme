@@ -1,4 +1,4 @@
-# EME ![version](https://img.shields.io/github/release/egoist/eme.svg?style=flat-square) ![downloads](https://img.shields.io/github/downloads/egoist/eme/total.svg?style=flat-square) ![downloads latest](https://img.shields.io/github/downloads/egoist/eme/latest/total.svg?style=flat-square)  ![build](https://img.shields.io/circleci/project/egoist/eme/dev.svg?style=flat-square)
+# EME [![version](https://img.shields.io/github/release/egoist/eme.svg?style=flat-square)](https://github.com/egoist/eme/releases) [![downloads](https://img.shields.io/github/downloads/egoist/eme/total.svg?style=flat-square)](https://github.com/egoist/eme/releases) [![downloads latest](https://img.shields.io/github/downloads/egoist/eme/latest/total.svg?style=flat-square)](https://github.com/egoist/eme/releases/latest) [![build](https://img.shields.io/circleci/project/egoist/eme/dev.svg?style=flat-square)](https://circleci.com/gh/egoist/eme) [![donate](https://img.shields.io/badge/$-donate-ff69b4.svg?maxAge=2592000&style=flat-square)](#donate)
 
 ![preview](/media/preview.png)
 
@@ -13,27 +13,40 @@ You can manually download the latest release [here](https://github.com/egoist/em
 - Exportable, from Markdown to HTML/PDF... You name it.
 - Supporting math typesetting, good for students and professionals.
 
-## Wiki
+## WIKI
 
 - [Key bindings](https://github.com/egoist/eme/wiki/Key-bindings)
 
-## Contributing
+## Contribute
 
 Pull requests are always welcome! Check out the [these issues](https://github.com/egoist/eme/issues?q=is%3Aissue+is%3Aopen+label%3A%22contribution+welcome%22) to get started fast.
 
-## Development
+
+1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
+2. Install the dependencies: `npm run install:all`
+3. Build the code and watch for changes: `npm run watch`
+4. In a new tab, start the application: `npm start`
+
+If you want to build the binary for a specified platform, run the command:
 
 ```bash
-# Install all dependencies
-$ npm run install:all
-
-# Run in dev mode
-$ npm run dev
-
-# The first launch requires the access to google web store to download vue-devtools
-# So you'd better launch it with an https_proxy, like Lantern
-$ https_proxy=http://127.0.0.1:8787 npm run dev
+$ npm run macos # .app
+$ npm run windows # portable .exe
+$ npm run linux # .deb
 ```
+
+After that, you'll see the binaries in the `./dist` folder!
+
+## Donate
+
+If you are enjoying this app, please consider making a donation to keep it alive, I will try my best to dedicate more time or even full time to work on it. 😉
+
+- [Donate via Paypal](https://www.paypal.me/egoistian/10)
+- [Donate via Wechat](http://ww4.sinaimg.cn/large/a15b4afegw1f72ib6rj67j20u00tvgnj.jpg)
+- [Donate via Alipay](http://ww4.sinaimg.cn/large/a15b4afegw1f72ib54hybj20qo0nndh5.jpg)
+- [Donate via Bitcoin](http://ww4.sinaimg.cn/large/a15b4afegw1f72icbcu0gj202s02sdfl.jpg) `1NUSDCWti9FBJLiUxaLY1zJnwcSDc5Tfci`
+
+If you are not available for this, simply spreading the word for us would help too!
 
 ## License
 

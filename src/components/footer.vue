@@ -1,4 +1,4 @@
-<style scoped>
+<style>
   .footer {
     height: 25px;
     line-height: 24px;
@@ -23,9 +23,13 @@
 
     .footer-right {
       float: right;
-      .writing-modes {
+      .footer-icon-group {
+        -webkit-user-select: none;
         margin: 3.5px 0;
-        .writing-mode {
+        &:not(:first-child) {
+          margin-left: 10px;
+        }
+        .footer-icon-item {
           height: 16px;
           line-height: 16px;
           background-color: #fcfcfc;
@@ -47,6 +51,11 @@
             color: white;
             border-color: transparent;
             z-index: 2;
+            .footer-icon {
+              path {
+                fill: white;
+              }
+            }
           }
           &:first-child {
             border-radius: 4px 0 0 4px;
@@ -65,8 +74,6 @@
       color: #333;
     }
   }
-</style>
-<style>
   .footer-icon {
     svg {
       width: 12px;
@@ -74,45 +81,36 @@
     path {
       fill: #666;
     }
+    .disabled & path {
+      fill: #ccc;
+    }
   }
-  .writing-mode.active {
-    .footer-icon {
-      path {
-        fill: white;
-      }
+  .presentation-footer-control,
+  .writing-modes {
+    display: inline-block;
+  }
+  .presentation-footer-control {
+    svg {
+      width: 14px;
     }
   }
 </style>
 
 <template>
-  <footer class="footer" v-if="showFooter" :class="{'mac-footer': isMac}">
+  <footer class="footer" :class="{'mac-footer': isMac}">
     <span class="file-path" v-if="status.filePath">{{ status.filePath }}</span>
     <span class="word-count">{{ status.wordCount }} words</span>
     <span class="pdf-link clickable-link" v-if="status.pdf" @click="openPDF(status.pdf)">PDF</span>
     <div class="footer-right">
-      <div class="writing-modes" v-if="status.writingMode">
-        <span
-          aria-label="Editor only"
-          class="writing-mode hint--top-left hint--rounded"
-          :class="{active: status.writingMode === 'writing'}"
-          @click="setWritingMode('writing')">
-          <svg-icon name="pencil" class="footer-icon"></svg-icon>
-        </span>
-        <span
-          aria-label="Editor and Preview"
-          class="writing-mode hint--top-left hint--rounded"
-          :class="{active: status.writingMode === 'default'}"
-          @click="setWritingMode('default')">
-          <svg-icon name="alignHorizontalMiddle" class="footer-icon"></svg-icon>
-        </span>
-        <span
-          aria-label="Preview only"
-          class="writing-mode hint--top-left hint--rounded"
-          :class="{active: status.writingMode === 'preview'}"
-          @click="setWritingMode('preview')">
-          <svg-icon name="eye" class="footer-icon"></svg-icon>
-        </span>
-      </div>
+      <presentation-control
+        :writing-mode="status.writingMode"
+        v-if="status.isPresentationMode">
+      </presentation-control>
+      <writing-modes
+        :writing-mode="status.writingMode"
+        :current-tab-index="currentTabIndex"
+        v-if="status.writingMode">
+      </writing-modes>
     </div>
   </footer>
 </template>
@@ -121,12 +119,13 @@
   import tildify from 'tildify'
   import {isMac} from 'utils/os'
   import {shell} from 'electron'
-  import SvgIcon from 'components/svg-icon'
+
+  import PresentationControl from 'components/presentation-control'
+  import WritingModes from 'components/writing-modes'
 
   export default {
     vuex: {
       getters: {
-        showFooter: state => state.editor.tabs.length > 0,
         currentTabIndex: state => state.editor.currentTabIndex,
         status: state => {
           const editor = state.editor.tabs[state.editor.currentTabIndex] || {}
@@ -136,16 +135,9 @@
               tildify(editor.filePath) :
               'untitled',
             writingMode: editor.writingMode,
-            pdf: editor.pdf
+            pdf: editor.pdf,
+            isPresentationMode: editor.isPresentationMode
           }
-        }
-      },
-      actions: {
-        setWritingMode({dispatch}, mode) {
-          dispatch('SET_WRITING_MODE', {
-            index: this.currentTabIndex,
-            mode
-          })
         }
       }
     },
@@ -160,7 +152,8 @@
       }
     },
     components: {
-      SvgIcon
+      PresentationControl,
+      WritingModes
     }
   }
 </script>

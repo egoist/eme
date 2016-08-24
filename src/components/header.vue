@@ -9,6 +9,9 @@
     -webkit-app-region: drag;
     &.is-mac {
       padding-left: 80px;
+      .full-screen & {
+        padding-left: 0;
+      }
     }
     .tab-container {
       display: flex;

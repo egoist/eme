@@ -7,6 +7,12 @@
   .main {
     /* total - header - footer */
     height: calc(100% - 36px - 25px);
+    .distraction-free.full-screen & {
+      height: 100%;
+    }
+  }
+  .tab-body {
+    height: 100%;
     display: flex;
     &.resizing {
       cursor: ew-resize;
@@ -52,6 +58,10 @@
   }
   .preview {
     padding: 10px;
+    overflow-x: hidden;
+    &.preview-presentation {
+      padding: 0;
+    }
     &::-webkit-scrollbar {
       width: 0;
     }
@@ -76,35 +86,48 @@
 </style>
 
 <template>
-  <div
-    class="main tab-body"
-    :class="[
-      'tab-body-' + $index,
-      writingModeClassName,
-      {
-        'vim-mode': currentTab && currentTab.isVimMode,
-        resizing: resizing
-      }
-    ]"
-    v-for="tab in tabs"
-    @mousemove="resizeMove($event, $index)"
-    @mouseup="resizeEnd"
-    @mouseleave="resizeEnd"
-    v-show="$index === currentTabIndex">
+  <div class="main">
+    <tip v-if="tabs.length === 0"></tip>
     <div
-      class="editor"
-      :class="{'focus-mode': tab.isFocusMode}"
-      :style="{ width: tab.split + '%' }"
-      v-show="currentTab && currentTab.writingMode !== 'preview'">
-      <textarea class="editor-input" :id="'editor-' + $index">{{ tab.content }}</textarea>
-      <div class="resize-bar" @mousedown="resizeStart($event, $index)"></div>
-    </div>
-    <div
-      :class="'preview preview-' + $index"
-      :style="{ width: (100 - tab.split) + '%' }"
-      v-show="currentTab && currentTab.writingMode !== 'writing'">
-      <div :class="'markdown-body markdown-body-' + $index">
-        {{{ tab.html }}}
+      class="tab-body"
+      :class="[
+        'tab-body-' + $index,
+        writingModeClassName,
+        {
+          'vim-mode': currentTab && currentTab.isVimMode,
+          resizing: resizing
+        }
+      ]"
+      v-for="tab in tabs"
+      @mousemove="resizeMove($event, $index)"
+      @mouseup="resizeEnd"
+      @mouseleave="resizeEnd"
+      v-show="$index === currentTabIndex">
+      <div
+        class="editor"
+        :class="{'focus-mode': tab.isFocusMode}"
+        :style="{ width: tab.split + '%' }"
+        v-show="currentTab && currentTab.writingMode !== 'preview'">
+        <textarea class="editor-input" :id="'editor-' + $index">{{ tab.content }}</textarea>
+        <div class="resize-bar" @mousedown="resizeStart($event, $index)"></div>
+      </div>
+      <div
+        :class="[
+          'preview',
+          'preview-' + $index,
+          {
+            'preview-presentation': tab.isPresentationMode
+          }
+        ]"
+        :style="{ width: (100 - tab.split) + '%' }"
+        v-show="currentTab && currentTab.writingMode !== 'writing'">
+        <presentation
+          :slides="tab.html"
+          v-if="tab.isPresentationMode && currentTabIndex === $index">
+        </presentation>
+        <div :class="'markdown-body markdown-body-' + $index" v-else>
+          {{{ tab.html }}}
+        </div>
       </div>
     </div>
   </div>
@@ -117,6 +140,9 @@
   import 'codemirror/lib/codemirror.css'
   import 'codemirror/mode/markdown/markdown'
   import 'codemirror/mode/gfm/gfm'
+  import 'codemirror/mode/javascript/javascript'
+  import 'codemirror/mode/clike/clike'
+  import 'codemirror/mode/htmlmixed/htmlmixed'
   import 'codemirror/addon/edit/continuelist'
   import 'codemirror/addon/scroll/simplescrollbars'
   import 'codemirror/addon/selection/active-line'
@@ -132,6 +158,8 @@
   import fs from 'utils/fs-promise'
   import {appPath} from 'utils/resolve-path'
   import handleError from 'utils/handle-error'
+  import tip from 'components/tip'
+  import presentation from 'components/presentation'
 
   const currentWindow = remote.getCurrentWindow()
   const config = currentWindow.$config
@@ -184,6 +212,7 @@
         }
       },
       handleScroll(e) {
+        if (this.currentTab.isPresentationMode) return
         const index = this.currentTabIndex
         const codePort = e ?
           e.target :
@@ -326,10 +355,14 @@
           isFocusMode: false,
           writingMode: 'default',
           isVimMode: false,
+          isPresentationMode: false,
           pdf: '',
           rename: false,
           split: 50,
-          uid: uid()
+          uid: uid(),
+          slideIndex: 0,
+          isSlideSwitching: false,
+          slideDirection: 'left'
         }
         this.$store.dispatch('INIT_NEW_TAB', {
           ...tabDefaults,
@@ -348,8 +381,13 @@
             scrollbarStyle: 'simple',
             autofocus: true,
             dragDrop: false,
+            tabSize: 2,
             extraKeys: {
-              Enter: 'newlineAndIndentContinueMarkdownList'
+              Enter: 'newlineAndIndentContinueMarkdownList',
+              Tab(cm) {
+                const spaces = Array(cm.getOption('indentUnit') + 1).join(' ')
+                cm.replaceSelection(spaces)
+              }
             }
           })
 
@@ -424,8 +462,12 @@
         })
 
         ipcRenderer.on('toggle-focus-mode', () => {
-          this.currentTab.isFocusMode = !this.currentTab.isFocusMode
-          this.editor.setOption('styleActiveLine', this.currentTab.isFocusMode)
+          this.editor.setOption('styleActiveLine', !this.currentTab.isFocusMode)
+          this.$store.dispatch('TOGGLE_FOCUS_MODE')
+        })
+
+        ipcRenderer.on('toggle-presentation-mode', () => {
+          this.$store.dispatch('TOGGLE_PRESENTATION_MODE')
         })
 
         ipcRenderer.on('toggle-vim-mode', () => {
@@ -434,7 +476,7 @@
           } else {
             this.editor.setOption('keyMap', 'vim')
           }
-          this.currentTab.isVimMode = !this.currentTab.isVimMode
+          this.$store.dispatch('TOGGLE_VIM_MODE')
         })
 
         ipcRenderer.on('win-focus', () => {
@@ -462,7 +504,7 @@
             const tab = this.tabs[0]
             this.closeTab(0).then(closed => {
               if (closed) {
-                if (closed.saved) {
+                if (closed.saved && tab) {
                   tabs.push(tab)
                 }
                 if (this.tabs.length > 0) {
@@ -492,7 +534,7 @@
             const tab = this.tabs[0]
             this.closeTab(0).then(closed => {
               if (closed) {
-                if (closed.saved) {
+                if (closed.saved && tab) {
                   tabs.push(tab)
                 }
                 if (this.tabs.length > 0) {
@@ -517,11 +559,17 @@
           })
           if (filePath) {
             const html = makeHTML({
-              html: `<div class="markdown-body">${this.currentTab.html}</div>`,
+              html: this.currentTab.html,
               css: [
                 appPath('vendor/github-markdown-css/github-markdown.css'),
-                appPath('vendor/katex/katex.min.css')
-              ]
+                appPath('vendor/katex/katex.min.css'),
+                appPath('vendor/css/print.css'),
+                appPath('dist/presentation.css')
+              ],
+              data: {
+                saveTo: filePath,
+                attrs: this.currentTab.attrs || {}
+              }
             })
             ipcRenderer.send('print-to-pdf', html, filePath)
           }
@@ -584,11 +632,10 @@
           }
           return false
         }
-        this.$store.dispatch('CLOSE_TAB', index)
-        if (tab.filePath) {
-          return {saved: true}
+        if (tab) {
+          this.$store.dispatch('CLOSE_TAB', index)
         }
-        return {saved: false}
+        return {saved: true}
       },
       handleDrag() {
         const holder = $('#app')
@@ -628,6 +675,10 @@
         this.editor.refresh()
         this.editor.focus()
       }
+    },
+    components: {
+      tip,
+      presentation
     }
   }
 </script>

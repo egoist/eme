@@ -9,8 +9,7 @@
     "lint:src": "eslint src/**/*.vue src/**/*.js",
     "dev": "node tasks/dev.js",
     "install:all": "npm install && cd app && npm install",
-    "app": "cd app && cross-env NODE_ENV=development electron .",
-    "start": "electron app/",
+    "start": "cross-env NODE_ENV=development electron app/",
     "build": "rm -rf app/dist && webpack --progress --config scripts/webpack.config.prod.js",
     "watch": "webpack --config scripts/webpack.config.dev.js --watch",
     "dev-server": "node scripts/server.js",
@@ -27,6 +26,7 @@
     "editor"
   ],
   "devDependencies": {
+    "autoprefixer": "^6.4.0",
     "babel-eslint": "^6.1.2",
     "babel-loader": "^6.2.4",
     "babel-plugin-transform-runtime": "^6.9.0",
@@ -65,6 +65,7 @@
     "webpack-visualizer-plugin": "^0.1.5"
   },
   "dependencies": {
+    "animate.css": "^3.5.1",
     "babel-runtime": "^6.9.2",
     "codemirror": "^5.17.0",
     "highlight.js": "^9.5.0",
@@ -76,6 +77,7 @@
     "object-picker": "^0.2.0",
     "pify": "^2.3.0",
     "tildify": "^1.2.0",
+    "unique-random-array": "^1.0.0",
     "vue": "^1.0.26",
     "vuex": "^1.0.0-rc.2",
     "word-count": "^0.2.2"

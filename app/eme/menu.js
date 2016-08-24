@@ -111,7 +111,7 @@ module.exports = cb => {
           }
         },
         {
-          label: 'Open last session',
+          label: 'Open Last Session',
           accelerator: 'CmdOrCtrl+L',
           click(item, focusedWindow) {
             if (focusedWindow) focusedWindow.webContents.send('open-last-session')
@@ -206,6 +206,13 @@ module.exports = cb => {
           type: 'separator'
         },
         {
+          label: 'Toggle Distraction Free mode',
+          accelerator: 'CmdOrCtrl+J',
+          click(item, focusedWindow) {
+            if (focusedWindow) focusedWindow.webContents.send('toggle-distraction-free-mode')
+          }
+        },
+        {
           label: 'Toggle Focus Mode',
           accelerator: 'CmdOrCtrl+\\',
           click(item, focusedWindow) {
@@ -217,6 +224,13 @@ module.exports = cb => {
           accelerator: 'CmdOrCtrl+I',
           click(item, focusedWindow) {
             if (focusedWindow) focusedWindow.webContents.send('toggle-vim-mode')
+          }
+        },
+        {
+          label: 'Toggle Presentation Mode',
+          accelerator: 'CmdOrCtrl+K',
+          click(item, focusedWindow) {
+            if (focusedWindow) focusedWindow.webContents.send('toggle-presentation-mode')
           }
         },
         {

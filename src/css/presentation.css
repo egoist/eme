@@ -1,0 +1,62 @@
+.slide {
+  display: flex;
+  padding: 10px;
+  height: 100%;
+  font-size: 20px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  transition: transform .3s ease;
+  background-color: white;
+  .presentation & {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+  .pdf & {
+    height: 100vmin;
+  }
+  &.left, &.right {
+    img {
+      margin: 0;
+    }
+  }
+  &.left {
+    align-items: stretch;
+  }
+  &.right {
+    align-items: flex-end;
+    img {
+      float: right;
+    }
+  }
+  &.top {
+    justify-content: flex-start;
+  }
+  &.bottom {
+    justify-content: flex-end;
+  }
+
+  h1, h2, h3, h4, h5 {
+    border: none;
+    font-size: 1em;
+    margin: 0;
+    font-weight: normal;
+  }
+
+  h1 {
+    font-size: 3em;
+  }
+
+  h2 {
+    font-size: 2em;
+  }
+
+  img {
+    max-width: 80%;
+    display: block;
+    margin: 0 auto;
+  }
+}

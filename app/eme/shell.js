@@ -34,15 +34,13 @@ class InstallShell {
 }
 
 function writeFullVersion() {
-  return (
-    process.stdout.write(
-      `
-      Atom    : ${app.getVersion()}
-      Electron: ${process.versions.electron}
-      Chrome  : ${process.versions.chrome}
-      Node    : ${process.versions.node}
-      `
-    )
+  console.log(
+    `
+Atom    : ${app.getVersion()}
+Electron: ${process.versions.electron}
+Chrome  : ${process.versions.chrome}
+Node    : ${process.versions.node}
+    `
   )
 }
 
@@ -50,9 +48,9 @@ function parseShellCommand() {
   const options = yargs(process.argv.slice(1))
     .usage(
       `
-      EME - Elegant Markdown Editor
+EME - Elegant Markdown Editor
 
-      Usage: eme [options] [path ...]
+Usage: eme [options] [path ...]
       `
     )
     .alias('h', 'help')
@@ -69,7 +67,7 @@ function parseShellCommand() {
   }
 
   if (argv.help) {
-    process.stdout.write(options.help().argv())
+    options.showHelp('log')
     process.exit(0)
   }
 

@@ -2,6 +2,7 @@ import path from 'path'
 import {remote} from 'electron'
 import md from 'utils/markdown'
 import wordCount from 'word-count'
+import fm from 'front-matter'
 
 const win = remote.getCurrentWindow()
 win.$state.unsaved = 0
@@ -15,13 +16,30 @@ const focusEditor = (tabs, index) => {
 }
 
 const renderHTML = tab => {
-  return md.render(tab.content).replace(/src="([^"]+)"/g, (m, p1) => {
+  const render = tab => md.render(tab.content).replace(/src="([^"]+)"/g, (m, p1) => {
     if (p1[0] === '.') {
       p1 = path.join(path.dirname(tab.filePath), p1)
       return `src="${p1}"`
     }
     return m
   })
+
+  const data = fm(tab.content)
+
+  if (tab.isPresentationMode) {
+    return {
+      attrs: data.attributes,
+      html: data.body.split('\n\n---\n\n')
+        .map(content => render({
+          content,
+          filePath: tab.filePath
+        }))
+    }
+  }
+  return {
+    attrs: data.attributes,
+    html: render({content: data.body, filePath: tab.filePath})
+  }
 }
 
 const state = {
@@ -34,7 +52,7 @@ const mutations = {
   INIT_NEW_TAB(state, payload) {
     const tab = {
       ...payload,
-      html: renderHTML(payload),
+      ...renderHTML(payload),
       wordCount: wordCount(payload.content)
     }
     state.tabs.push(tab)
@@ -45,7 +63,13 @@ const mutations = {
     tab.content = content
     // render html in non-writing mode
     if (tab.writingMode !== 'writing') {
-      tab.html = renderHTML(tab)
+      const parsed = renderHTML({
+        filePath: tab.filePath,
+        content,
+        isPresentationMode: tab.isPresentationMode
+      })
+      tab.html = parsed.html
+      tab.attrs = parsed.attrs
     }
     tab.wordCount = wordCount(tab.content)
   },
@@ -56,12 +80,14 @@ const mutations = {
   },
   UPDATE_CONTENT_WITH_FILEPATH(state, {index, content, filePath}) {
     const tab = state.tabs[index]
-    tab.content = content
-    tab.html = renderHTML({
-      ...tab,
+    const parsed = renderHTML({
       content,
-      filePath
+      filePath,
+      isPresentationMode: tab.isPresentationMode
     })
+    tab.content = content
+    tab.html = parsed.html
+    tab.attrs = parsed.attrs
     tab.filePath = filePath
     document.title = `${path.basename(filePath)} - EME`
   },
@@ -114,7 +140,9 @@ const mutations = {
     // if previous mode is writing mode
     // render html before switching
     if (tab.writingMode === 'writing') {
-      tab.html = renderHTML(tab)
+      const parsed = renderHTML(tab)
+      tab.html = parsed.html
+      tab.attrs = parsed.attrs
     }
     tab.writingMode = mode
 
@@ -140,6 +168,47 @@ const mutations = {
     setTimeout(() => {
       focusEditor(state.tabs, state.currentTabIndex)
     }, 0)
+  },
+  TOGGLE_FOCUS_MODE(state) {
+    const tab = state.tabs[state.currentTabIndex]
+    tab.isFocusMode = !tab.isFocusMode
+  },
+  TOGGLE_VIM_MODE(state) {
+    const tab = state.tabs[state.currentTabIndex]
+    tab.isVimMode = !tab.isVimMode
+  },
+  TOGGLE_PRESENTATION_MODE(state) {
+    const tab = state.tabs[state.currentTabIndex]
+    tab.isPresentationMode = !tab.isPresentationMode
+    const parsed = renderHTML(tab)
+    tab.html = parsed.html
+    tab.attrs = parsed.attrs
+    tab.slideIndex = 0
+  },
+  MOVE_SLIDE(state, direction) {
+    const tab = state.tabs[state.currentTabIndex]
+    if (tab.isSlideSwitching && direction === tab.slideDirection) {
+      return
+    }
+    if (direction === 'right') {
+      tab.slideDirection = 'left'
+      if (tab.slideIndex === tab.html.length - 1) {
+        tab.slideIndex = 0
+      } else {
+        tab.slideIndex++
+      }
+    } else if (direction === 'left') {
+      tab.slideDirection = 'right'
+      if (tab.slideIndex === 0) {
+        tab.slideIndex = tab.html.length - 1
+      } else {
+        tab.slideIndex--
+      }
+    }
+  },
+  SLIDE_SWITCHING(state, payload) {
+    const tab = state.tabs[state.currentTabIndex]
+    tab.isSlideSwitching = payload
   }
 }
 
