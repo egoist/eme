@@ -22,11 +22,11 @@ For developers, you may miss the vim key binding, here it is. Use <kbd>Ctrl/CMD 
 
 ## Presentation Mode
 
-You can event write markdown and render then in slides! Here's a example:
+You can event write markdown and render then in slides! Here's an example:
 
 ```markdown
 # title 
-# subtitle
+## subtitle
 
 ---
 
