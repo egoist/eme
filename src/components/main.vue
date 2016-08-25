@@ -487,7 +487,9 @@
           if (this.tabs.length === 0) {
             currentWindow.destroy()
           } else {
-            this.closeTab(this.currentTabIndex)
+            this.closeTab(this.currentTabIndex).then(() => {
+              event.emit('update-tabs')
+            })
           }
         })
 
@@ -595,8 +597,10 @@
           this.createNewTab({}, callback)
         })
 
-        event.on('close-tab', (index, callback = () => {}) => {
-          this.closeTab(index).then(callback)
+        event.on('close-tab', (index) => {
+          this.closeTab(index).then(() => {
+            event.emit('update-tabs')
+          })
         })
 
         event.on('file-rename', (index, name) => {

@@ -251,7 +251,7 @@
     },
     methods: {
       closeTab(e, index) {
-        event.emit('close-tab', index, this.updateTabsStack)
+        event.emit('close-tab', index)
       },
       createNewTab() {
         event.emit('new-tab', this.updateTabsStack)
