@@ -13,6 +13,9 @@
         padding-left: 0;
       }
     }
+    .tab-container {
+      display: flex;
+    }
     .tab {
       height: $header-height;
       line-height: $header-height;
@@ -21,7 +24,10 @@
       position: relative;
       text-align: center;
       border-left: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
       display: flex;
+      background-color: white;
+      transition: margin .2s linear;
       -webkit-app-region: no-drag;
       .tab-title {
         color: #999;
@@ -45,9 +51,14 @@
         border-left-color: #1976D2;
         background-color: white;
         border-left-width: 2px;
+        border-bottom: none;
         .tab-title {
           color: #333;
         }
+      }
+      &.right-stacked {
+        z-index: 1;
+        border-right: 1px solid #ddd;
       }
       &.dragging {
         border-left: 1px solid #ddd;
@@ -106,6 +117,7 @@
       width: 30px;
       text-align: center;
       height: calc(100% - 1px);
+      position: relative;
       >span {
         position: relative;
         top: -1px;
@@ -121,6 +133,13 @@
         display: none;
         font-size: 1rem;
         transition: all .3s;
+        position: absolute;
+        width: 12px;
+        line-height: 10px;
+        padding: 1px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
       }
     }
   }
@@ -128,43 +147,47 @@
 
 <template>
   <header class="header"
+    v-el:header
     :class="{'single-tab': tabs.length === 1, 'is-mac': isMac}"
     @dblclick="createNewTab">
-    <div class="tab"
-      @click="setCurrentTab($index)"
-      id="tab{{ $index }}"
-      data-index="{{ $index }}"
-      v-for="tab in tabs"
-      :class="{'current-tab': $index === currentTabIndex}"
-      drop="handleDragAndDrop"
-      drag-start="handleDragStart"
-      drag-enter="handleDragEnter"
-      drag-leave="handleDragLeave"
-      drag-end="handleDragEnd"
-      @mouseover="hoverTab($index)"
-      @mouseleave="unhoverTab($index)"
-      v-drag-and-drop>
-      <div :class="{'dragzone': dragging}"></div>
-      <span class="tab-title" v-if="tab && !tab.rename">
-        {{ tab.title || 'untitled' }}
-      </span>
-      <span class="tab-title" v-if="tab && tab.rename">
-        <input type="text"
-          class="rename-input"
-          @dblclick.stop
-          @click.stop
-          @keyup.enter="renameCurrentFile($event, $index)"
-          @keyup.esc="cancelRename($event, $index)"
-          :value="tab.title" />
-      </span>
-      <span
-        class="tab-indicator"
-        @click.stop="closeTab($event, $index)"
-        v-if="!dragging">
-        <span class="dot" v-show="!tab.saved"></span>
-        <span class="cross">×</span>
-      </span>
-      <span class="tab-indicator" v-if="dragging"></span>
+    <div class="tab-container"
+      v-el:tab-container>
+      <div class="tab"
+        @click="setCurrentTab($index)"
+        id="tab{{ $index }}"
+        data-index="{{ $index }}"
+        v-for="tab in tabs"
+        track-by="uid"
+        :class="{'current-tab': $index === currentTabIndex}"
+        drop="handleDragAndDrop"
+        drag-start="handleDragStart"
+        drag-enter="handleDragEnter"
+        drag-leave="handleDragLeave"
+        drag-end="handleDragEnd"
+        @mouseover="hoverTab($index)"
+        @mouseleave="unhoverTab($index)"
+        v-drag-and-drop>
+        <div :class="{'dragzone': dragging}"></div>
+        <span class="tab-title" v-if="tab && !tab.rename">
+          {{ tab.title || 'untitled' }}
+        </span>
+        <span class="tab-title" v-if="tab && tab.rename">
+          <input type="text"
+            class="rename-input"
+            @dblclick.stop
+            @click.stop
+            @keyup.enter="renameCurrentFile($event, $index)"
+            @keyup.esc="cancelRename($event, $index)"
+            :value="tab.title" />
+        </span>
+        <span
+          class="tab-indicator"
+          v-if="!dragging">
+          <span class="dot" v-show="!tab.saved"></span>
+          <span class="cross" @click.stop="closeTab($event, $index)">×</span>
+        </span>
+        <span class="tab-indicator" v-if="dragging"></span>
+      </div>
     </div>
   </header>
 </template>
@@ -182,7 +205,8 @@
           return {
             title: path.basename(tab.filePath),
             saved: tab.saved,
-            rename: tab.rename
+            rename: tab.rename,
+            uid: tab.uid
           }
         }),
         currentTabIndex: state => state.editor.currentTabIndex,
@@ -191,6 +215,7 @@
       actions: {
         setCurrentTab({dispatch}, index) {
           dispatch('SET_CURRENT_TAB', index)
+          this.updateTabsStack()
           setTimeout(() => {
             event.emit('focus-current-tab')
           }, 200)
@@ -221,12 +246,15 @@
     data() {
       return {isMac}
     },
+    ready() {
+      this.listenEvents()
+    },
     methods: {
       closeTab(e, index) {
         event.emit('close-tab', index)
       },
       createNewTab() {
-        event.emit('new-tab')
+        event.emit('new-tab', this.updateTabsStack)
       },
       renameCurrentFile(e, index) {
         const name = e.target.value
@@ -272,6 +300,74 @@
       },
       unhoverTab(index) {
         $(`#tab${index}`).classList.remove('hover')
+      },
+      updateTabsStack() {
+        const header = this.$els.header
+        const tabContainer = this.$els.tabContainer
+        const tabs = tabContainer.children
+        const currentTabIndex = this.currentTabIndex
+
+        const tabsWidth = tabContainer.scrollWidth
+        const headerWidth = (isMac ? header.offsetWidth - 80 : header.offsetWidth) - 20 // 20px for dropdown
+
+        let deltaWidth = tabsWidth - headerWidth
+
+        // Reset styles
+        let i = 1
+        while (tabs[i]) {
+          const tab = tabs[i]
+          const tabStyle = tab.style
+          tab.classList.remove('right-stacked')
+          deltaWidth += Math.abs(parseInt(tabStyle.marginLeft, 10)) || 0
+          tabStyle.zIndex = 1
+          tabStyle.marginLeft = '0px'
+          ++i
+        }
+
+        // Stack tabs on left
+        i = 1
+        while (tabs[i] && i - 1 !== currentTabIndex && deltaWidth > 0) {
+          const tab = tabs[i]
+          const tabStyle = tab.style
+          const prevTabWidth = tabs[i - 1].offsetWidth - 10
+          const currentMargin = Math.abs(parseInt(tabStyle.marginLeft, 10)) || 0
+          if (currentMargin < prevTabWidth) {
+            const marginLeft = Math.min(deltaWidth + Math.abs(currentMargin), prevTabWidth)
+            tabStyle.marginLeft = `-${marginLeft}px`
+            deltaWidth -= marginLeft - currentMargin
+          }
+          ++i
+        }
+
+        // Stack tabs on right
+        i = this.tabs.length - 1
+        let zIndex = 1
+        while (tabs[i] && i !== this.currentTabIndex && deltaWidth > 0) {
+          const tab = tabs[i]
+          const tabStyle = tab.style
+          const prevTabWidth = tabs[i - 1].offsetWidth - 10
+          const currentMargin = Math.abs(parseInt(tabStyle.marginLeft, 10)) || 0
+          if (currentMargin < prevTabWidth) {
+            const marginLeft = Math.min(deltaWidth + Math.abs(currentMargin), prevTabWidth)
+            tabStyle.marginLeft = `-${marginLeft}px`
+            tabStyle.zIndex = zIndex
+            tab.classList.add('right-stacked')
+            deltaWidth -= marginLeft - currentMargin
+          }
+          --i
+          ++zIndex
+        }
+        ++i
+
+        if (tabs[i] && tabs[i - 1] && Math.abs(parseInt(tabs[i].style.marginLeft, 10)) > 0) {
+          tabs[i - 1].style.zIndex = zIndex + 1
+          tabs[i - 1].classList.add('right-stacked')
+        }
+      },
+      listenEvents() {
+        event.on('update-tabs', () => {
+          this.updateTabsStack()
+        })
       }
     }
   }
