@@ -595,8 +595,8 @@
           this.createNewTab({}, callback)
         })
 
-        event.on('close-tab', index => {
-          this.closeTab(index)
+        event.on('close-tab', (index, callback = () => {}) => {
+          this.closeTab(index).then(callback)
         })
 
         event.on('file-rename', (index, name) => {
