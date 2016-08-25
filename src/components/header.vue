@@ -147,9 +147,11 @@
 
 <template>
   <header class="header"
+    v-el:header
     :class="{'single-tab': tabs.length === 1, 'is-mac': isMac}"
     @dblclick="createNewTab">
-    <div class="tab-container">
+    <div class="tab-container"
+      v-el:tab-container>
       <div class="tab"
         @click="setCurrentTab($index)"
         id="tab{{ $index }}"
@@ -247,14 +249,6 @@
     ready() {
       this.listenEvents()
     },
-    computed: {
-      header() {
-        return $('.header')
-      },
-      tabContainer() {
-        return $('.tab-container')
-      }
-    },
     methods: {
       closeTab(e, index) {
         event.emit('close-tab', index, this.updateTabsStack)
@@ -308,8 +302,8 @@
         $(`#tab${index}`).classList.remove('hover')
       },
       updateTabsStack() {
-        const header = this.header
-        const tabContainer = this.tabContainer
+        const header = this.$els.header
+        const tabContainer = this.$els.tabContainer
         const tabs = tabContainer.children
         const currentTabIndex = this.currentTabIndex
 
