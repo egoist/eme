@@ -45,17 +45,12 @@ app.on('ready', () => {
 
   if (!isDev) {
     const {pathsToOpen, resourcePath} = argv
-    if (pathsToOpen.length > 0) {
-      if (pathsToOpen) {
-        const pathToOpen = pathsToOpen[0]
-        const locationToOpen = `${resourcePath}/${pathToOpen}`
-        mainWindow.webContents.on('did-finish-load', () => {
-          mainWindow.webContents.send('open-file', locationToOpen)
-        })
-      } else {
-        // open dirctory
-        // mainWindow.send('open-dirctory', resourcePath)
-      }
+    const pathToOpen = pathsToOpen[0]
+    if (pathToOpen && resourcePath) {
+      const locationToOpen = `${resourcePath}/${pathToOpen}`
+      mainWindow.webContents.on('did-finish-load', () => {
+        mainWindow.webContents.send('open-file', locationToOpen)
+      })
     }
   }
 
