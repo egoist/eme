@@ -53,7 +53,9 @@ const mutations = {
     const tab = {
       ...payload,
       ...renderHTML(payload),
-      wordCount: wordCount(payload.content)
+      wordCount: wordCount(payload.content),
+      charCount: payload.content.length,
+      charCountWithoutSpace: payload.content.replace(/\s/g, '').length
     }
     state.tabs.push(tab)
     state.currentTabIndex++
@@ -72,6 +74,8 @@ const mutations = {
       tab.attrs = parsed.attrs
     }
     tab.wordCount = wordCount(tab.content)
+    tab.charCount = tab.content.length
+    tab.charCountWithoutSpace = tab.content.replace(/\s/g, '').length
   },
   UPDATE_FILE_PATH(state, {index, filePath}) {
     const tab = state.tabs[index]

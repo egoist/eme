@@ -15,6 +15,15 @@
       margin-right: 10px;
     }
 
+    .word-count-select {
+      background-color: transparent;
+      border: none;
+      font-size: 12px;
+      outline: none;
+      color: #666; 
+      -webkit-appearance: none;
+    }
+
     &.mac-footer {
       box-shadow: inset 0 1px 0 #f5f4f5;
       background-image: linear-gradient(to bottom,#e8e6e8 0,#d1cfd1 100%);
@@ -99,7 +108,13 @@
 <template>
   <footer class="footer" :class="{'mac-footer': isMac}">
     <span class="file-path" v-if="status.filePath">{{ status.filePath }}</span>
-    <span class="word-count">{{ status.wordCount }} words</span>
+    <span class="word-count">
+      <select class="word-count-select">
+        <option>{{ status.wordCount }} words</option>
+        <option>{{ status.charCount }} characters</option>
+        <option>{{ status.charCountWithoutSpace }} characters (no space)</option>
+      </select>
+    </span>
     <span class="pdf-link clickable-link" v-if="status.pdf" @click="openPDF(status.pdf)">PDF</span>
     <div class="footer-right">
       <presentation-control
@@ -131,6 +146,8 @@
           const editor = state.editor.tabs[state.editor.currentTabIndex] || {}
           return {
             wordCount: editor.wordCount || 0,
+            charCount: editor.charCount || 0,
+            charCountWithoutSpace: editor.charCountWithoutSpace || 0,
             filePath: editor.filePath ?
               tildify(editor.filePath) :
               'untitled',
