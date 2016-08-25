@@ -597,7 +597,7 @@
           this.createNewTab({}, callback)
         })
 
-        event.on('close-tab', (index) => {
+        event.on('close-tab', index => {
           this.closeTab(index).then(() => {
             event.emit('update-tabs')
           })
