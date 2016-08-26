@@ -111,8 +111,8 @@
     <span class="word-count">
       <select class="word-count-select">
         <option>{{ status.wordCount }} words</option>
+        <option>{{ status.lineCount }} lines</option>
         <option>{{ status.charCount }} characters</option>
-        <option>{{ status.charCountWithoutSpace }} characters (no space)</option>
       </select>
     </span>
     <span class="pdf-link clickable-link" v-if="status.pdf" @click="openPDF(status.pdf)">PDF</span>
@@ -134,6 +134,7 @@
   import tildify from 'tildify'
   import {isMac} from 'utils/os'
   import {shell} from 'electron'
+  import wordCount from 'word-count'
 
   import PresentationControl from 'components/presentation-control'
   import WritingModes from 'components/writing-modes'
@@ -143,17 +144,17 @@
       getters: {
         currentTabIndex: state => state.editor.currentTabIndex,
         status: state => {
-          const editor = state.editor.tabs[state.editor.currentTabIndex] || {}
+          const tab = state.editor.tabs[state.editor.currentTabIndex] || {}
           return {
-            wordCount: editor.wordCount || 0,
-            charCount: editor.charCount || 0,
-            charCountWithoutSpace: editor.charCountWithoutSpace || 0,
-            filePath: editor.filePath ?
-              tildify(editor.filePath) :
+            wordCount: tab.content ? wordCount(tab.content) : 0,
+            charCount: tab.content ? tab.content.length : 0,
+            lineCount: (tab.content && tab.editor) ? tab.editor.lineCount() : 0,
+            filePath: tab.filePath ?
+              tildify(tab.filePath) :
               'untitled',
-            writingMode: editor.writingMode,
-            pdf: editor.pdf,
-            isPresentationMode: editor.isPresentationMode
+            writingMode: tab.writingMode,
+            pdf: tab.pdf,
+            isPresentationMode: tab.isPresentationMode
           }
         }
       }

@@ -1,7 +1,6 @@
 import path from 'path'
 import {remote} from 'electron'
 import md from 'utils/markdown'
-import wordCount from 'word-count'
 import fm from 'front-matter'
 
 const win = remote.getCurrentWindow()
@@ -52,10 +51,7 @@ const mutations = {
   INIT_NEW_TAB(state, payload) {
     const tab = {
       ...payload,
-      ...renderHTML(payload),
-      wordCount: wordCount(payload.content),
-      charCount: payload.content.length,
-      charCountWithoutSpace: payload.content.replace(/\s/g, '').length
+      ...renderHTML(payload)
     }
     state.tabs.push(tab)
     state.currentTabIndex++
@@ -73,9 +69,6 @@ const mutations = {
       tab.html = parsed.html
       tab.attrs = parsed.attrs
     }
-    tab.wordCount = wordCount(tab.content)
-    tab.charCount = tab.content.length
-    tab.charCountWithoutSpace = tab.content.replace(/\s/g, '').length
   },
   UPDATE_FILE_PATH(state, {index, filePath}) {
     const tab = state.tabs[index]
