@@ -258,17 +258,14 @@
       async handleSave(index) {
         try {
           const tab = this.tabs[index]
-          if (tab.filePath) {
-            await this.save({index, filePath: tab.filePath})
-            return true
-          }
-          const filePath = remote.dialog.showSaveDialog(currentWindow, {
+          const filePath = tab.filePath || remote.dialog.showSaveDialog(currentWindow, {
             filters: [
               {name: 'Markdown', extensions: ['markdown', 'md']}
             ]
           })
           if (filePath) {
             await this.save({index, filePath})
+            ipcRenderer.send('add-recent-file', filePath)
             return true
           }
         } catch (err) {
