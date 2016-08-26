@@ -3,6 +3,7 @@
   padding: 10px;
   height: 100%;
   font-size: 20px;
+  text-align: center;
   align-items: center;
   justify-content: center;
   flex-direction: column;
@@ -25,9 +26,11 @@
   }
   &.left {
     align-items: stretch;
+    text-align: left;
   }
   &.right {
     align-items: flex-end;
+    text-align: right;
     img {
       float: right;
     }
