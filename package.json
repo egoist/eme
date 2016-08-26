@@ -80,6 +80,6 @@
     "unique-random-array": "^1.0.0",
     "vue": "^1.0.26",
     "vuex": "^1.0.0-rc.2",
-    "word-count": "^0.2.2"
+    "wordcount": "^1.1.1"
   }
 }

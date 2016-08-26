@@ -134,7 +134,7 @@
   import tildify from 'tildify'
   import {isMac} from 'utils/os'
   import {shell} from 'electron'
-  import wordCount from 'word-count'
+  import wordCount from 'wordcount'
 
   import PresentationControl from 'components/presentation-control'
   import WritingModes from 'components/writing-modes'
