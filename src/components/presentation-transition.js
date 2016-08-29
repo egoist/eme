@@ -22,7 +22,6 @@ export default {
     const t = makeTransition(animation, direction)
     var data = {
       props: {
-        name,
         ...t,
         mode: 'out-in'
       },
