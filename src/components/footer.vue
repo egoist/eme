@@ -20,7 +20,7 @@
       border: none;
       font-size: 12px;
       outline: none;
-      color: #666; 
+      color: #666;
       -webkit-appearance: none;
     }
 
@@ -140,6 +140,7 @@
   import WritingModes from 'components/writing-modes'
 
   export default {
+    name: 'footer',
     vuex: {
       getters: {
         currentTabIndex: state => state.editor.currentTabIndex,

@@ -147,26 +147,20 @@
 
 <template>
   <header class="header"
-    v-el:header
+    ref="header"
     :class="{'single-tab': tabs.length === 1, 'is-mac': isMac}"
     @dblclick="createNewTab">
     <div class="tab-container"
-      v-el:tab-container>
+      ref="tabContainer">
       <div class="tab"
-        @click="setCurrentTab($index)"
-        id="tab{{ $index }}"
-        data-index="{{ $index }}"
-        v-for="tab in tabs"
+        @click="setCurrentTab(index)"
+        :id="'tab-' + index"
+        :data-index="index"
+        v-for="(tab, index) in tabs"
         track-by="uid"
-        :class="{'current-tab': $index === currentTabIndex}"
-        drop="handleDragAndDrop"
-        drag-start="handleDragStart"
-        drag-enter="handleDragEnter"
-        drag-leave="handleDragLeave"
-        drag-end="handleDragEnd"
-        @mouseover="hoverTab($index)"
-        @mouseleave="unhoverTab($index)"
-        v-drag-and-drop>
+        :class="{'current-tab': index === currentTabIndex}"
+        @mouseover="hoverTab(index)"
+        @mouseleave="unhoverTab(index)">
         <div :class="{'dragzone': dragging}"></div>
         <span class="tab-title" v-if="tab && !tab.rename">
           {{ tab.title || 'untitled' }}
@@ -176,15 +170,15 @@
             class="rename-input"
             @dblclick.stop
             @click.stop
-            @keyup.enter="renameCurrentFile($event, $index)"
-            @keyup.esc="cancelRename($event, $index)"
+            @keyup.enter="renameCurrentFile($event, index)"
+            @keyup.esc="cancelRename($event, index)"
             :value="tab.title" />
         </span>
         <span
           class="tab-indicator"
           v-if="!dragging">
           <span class="dot" v-show="!tab.saved"></span>
-          <span class="cross" @click.stop="closeTab($event, $index)">×</span>
+          <span class="cross" @click.stop="closeTab($event, index)">×</span>
         </span>
         <span class="tab-indicator" v-if="dragging"></span>
       </div>
@@ -199,6 +193,7 @@
   import {$$, $} from 'utils/dom'
 
   export default {
+    name: 'header',
     vuex: {
       getters: {
         tabs: state => state.editor.tabs.map(tab => {
@@ -246,7 +241,7 @@
     data() {
       return {isMac}
     },
-    ready() {
+    mounted() {
       this.listenEvents()
     },
     methods: {
@@ -296,14 +291,14 @@
         }
       },
       hoverTab(index) {
-        $(`#tab${index}`).classList.add('hover')
+        $(`#tab-${index}`).classList.add('hover')
       },
       unhoverTab(index) {
-        $(`#tab${index}`).classList.remove('hover')
+        $(`#tab-${index}`).classList.remove('hover')
       },
       updateTabsStack() {
-        const header = this.$els.header
-        const tabContainer = this.$els.tabContainer
+        const header = this.$refs.header
+        const tabContainer = this.$refs.tabContainer
         const tabs = tabContainer.children
         const currentTabIndex = this.currentTabIndex
 

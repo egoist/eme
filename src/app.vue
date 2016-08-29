@@ -26,6 +26,7 @@
   const currentWindow = remote.getCurrentWindow()
 
   export default {
+    name: 'app',
     data() {
       return {
         isDistractionFreeMode: false,
@@ -42,7 +43,7 @@
       appMain,
       appFooter
     },
-    ready() {
+    mounted() {
       ipcRenderer.on('toggle-distraction-free-mode', () => {
         this.isDistractionFreeMode = !this.isDistractionFreeMode
       })

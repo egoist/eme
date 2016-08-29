@@ -23,26 +23,31 @@
 <template>
   <div class="presentation">
     <div class="slides">
-      <div
-        :class="[
-          'slide',
-          'markdown-body',
-          'animated',
-          status.attrs.align
-        ]"
-        :transition="transitionName"
-        track-by="$index"
-        v-for="slide in slides"
-        v-show="$index === status.current"
-        v-html="slide">
-      </div>
+      <template v-for="(slide, index) in slides">
+        <presentation-transition :animation="animation" :direction="status.direction">
+          <div
+            :class="[
+              'slide',
+              'markdown-body',
+              'animated',
+              status.attrs.align
+            ]"
+            :key="index"
+            v-show="index === status.current"
+            v-html="slide">
+          </div>
+        </presentation-transition>
+      </template>
     </div>
     <div class="indicator" :style="{width: ((status.current + 1) / status.total) * 100 + '%'}"></div>
   </div>
 </template>
 
 <script>
+  import PresentationTransition from 'components/presentation-transition'
+
   export default {
+    name: 'presentation',
     props: {
       slides: {
         type: Array
@@ -75,6 +80,9 @@
           transform: `translateX(${(index - this.status.current) * 100}%) translateY(0)`
         }
       }
+    },
+    components: {
+      PresentationTransition
     }
   }
 </script>

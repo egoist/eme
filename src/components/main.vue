@@ -91,30 +91,30 @@
     <div
       class="tab-body"
       :class="[
-        'tab-body-' + $index,
+        'tab-body-' + index,
         writingModeClassName,
         {
           'vim-mode': currentTab && currentTab.isVimMode,
           resizing: resizing
         }
       ]"
-      v-for="tab in tabs"
-      @mousemove="resizeMove($event, $index)"
+      v-for="(tab, index) in tabs"
+      @mousemove="resizeMove($event, index)"
       @mouseup="resizeEnd"
       @mouseleave="resizeEnd"
-      v-show="$index === currentTabIndex">
+      v-show="index === currentTabIndex">
       <div
         class="editor"
         :class="{'focus-mode': tab.isFocusMode}"
         :style="{ width: tab.split + '%' }"
         v-show="currentTab && currentTab.writingMode !== 'preview'">
-        <textarea class="editor-input" :id="'editor-' + $index">{{ tab.content }}</textarea>
-        <div class="resize-bar" @mousedown="resizeStart($event, $index)"></div>
+        <textarea class="editor-input" :id="'editor-' + index">{{ tab.content }}</textarea>
+        <div class="resize-bar" @mousedown="resizeStart($event, index)"></div>
       </div>
       <div
         :class="[
           'preview',
-          'preview-' + $index,
+          'preview-' + index,
           {
             'preview-presentation': tab.isPresentationMode
           }
@@ -123,11 +123,9 @@
         v-show="currentTab && currentTab.writingMode !== 'writing'">
         <presentation
           :slides="tab.html"
-          v-if="tab.isPresentationMode && currentTabIndex === $index">
+          v-if="tab.isPresentationMode && currentTabIndex === index">
         </presentation>
-        <div :class="'markdown-body markdown-body-' + $index" v-else>
-          {{{ tab.html }}}
-        </div>
+        <div :class="'markdown-body markdown-body-' + index" v-else v-html="tab.html"></div>
       </div>
     </div>
   </div>
@@ -165,6 +163,7 @@
   const config = currentWindow.$config
 
   export default {
+    name: 'main',
     vuex: {
       getters: {
         tabs: state => state.editor.tabs,
@@ -196,7 +195,7 @@
     created() {
       document.title = 'untitled - EME'
     },
-    ready() {
+    mounted() {
       this.createNewTab()
 
       this.listenIpc()

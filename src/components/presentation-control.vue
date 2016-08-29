@@ -43,7 +43,7 @@
         }
       }
     },
-    ready() {
+    mounted() {
       this.addListerners()
     },
     methods: {

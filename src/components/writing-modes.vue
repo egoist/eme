@@ -51,7 +51,7 @@
         }
       }
     },
-    ready() {
+    mounted() {
       this.addListeners()
     },
     methods: {

@@ -2,14 +2,12 @@
 import Vue from 'vue'
 import store from './vuex/store'
 import app from './app'
-import DnD from 'directives/dnd'
-import Transitions from 'utils/transitions'
+// import DnD from 'directives/dnd'
 
-Vue.use(DnD)
-Vue.use(Transitions)
+// Vue.use(DnD)
 
 new Vue({
-  el: 'body',
+  el: '#app',
   store,
-  components: {app}
+  render: h => h(app)
 })
