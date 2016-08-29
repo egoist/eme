@@ -16,6 +16,9 @@ const {parseShellCommand} = require('./eme/shell')
 const {
   isDev
 } = require('./eme/utils')
+const contextMenu = require('./eme/context-menu')
+
+require('electron-context-menu')(contextMenu)
 
 const platform = os.platform()
 
