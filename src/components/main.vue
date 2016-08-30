@@ -483,16 +483,12 @@
           if (this.tabs.length === 0) {
             currentWindow.destroy()
           } else {
-            this.closeTab(this.currentTabIndex).then(() => {
-              event.emit('update-tabs')
-            })
+            this.closeTab(this.currentTabIndex)
           }
         })
 
         ipcRenderer.on('new-tab', (e, filePath) => {
-          this.createNewTab({filePath}, () => {
-            event.emit('update-tabs')
-          }).catch(handleError)
+          this.createNewTab({filePath}).catch(handleError)
         })
 
         ipcRenderer.on('close-window', () => {

@@ -1,6 +1,6 @@
 # EME [![version](https://img.shields.io/github/release/egoist/eme.svg?style=flat-square)](https://github.com/egoist/eme/releases) [![downloads](https://img.shields.io/github/downloads/egoist/eme/total.svg?style=flat-square)](https://github.com/egoist/eme/releases) [![downloads latest](https://img.shields.io/github/downloads/egoist/eme/latest/total.svg?style=flat-square)](https://github.com/egoist/eme/releases/latest) [![build](https://img.shields.io/circleci/project/egoist/eme/dev.svg?style=flat-square)](https://circleci.com/gh/egoist/eme) [![donate](https://img.shields.io/badge/$-donate-ff69b4.svg?maxAge=2592000&style=flat-square)](#donate)
 
-![preview](/media/preview.png)
+![preview](./media/preview.png)
 
 ## Download
 
