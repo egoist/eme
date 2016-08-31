@@ -162,7 +162,7 @@
   import path from 'path'
   import {isMac} from 'utils/os'
   import event from 'utils/event'
-  import {$$, $} from 'utils/dom'
+  import {$} from 'utils/dom'
 
   export default {
     name: 'header',

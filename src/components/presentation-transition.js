@@ -20,7 +20,7 @@ export default {
       animation
     } = context.props
     const t = makeTransition(animation, direction)
-    var data = {
+    const data = {
       props: {
         ...t,
         mode: 'out-in'
