@@ -154,8 +154,8 @@
       v-el:tab-container>
       <div class="tab"
         @click="setCurrentTab($index)"
-        id="tab{{ $index }}"
-        data-index="{{ $index }}"
+        :id="'tab-' + $index"
+        :data-index="$index"
         v-for="tab in tabs"
         track-by="uid"
         :class="{'current-tab': $index === currentTabIndex}"
@@ -296,10 +296,10 @@
         }
       },
       hoverTab(index) {
-        $(`#tab${index}`).classList.add('hover')
+        $(`#tab-${index}`).classList.add('hover')
       },
       unhoverTab(index) {
-        $(`#tab${index}`).classList.remove('hover')
+        $(`#tab-${index}`).classList.remove('hover')
       },
       updateTabsStack() {
         const header = this.$els.header
