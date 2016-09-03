@@ -2,6 +2,7 @@
 const fs = require('fs')
 const os = require('os')
 const path = require('path')
+const net = require('net')
 const {
   app,
   BrowserWindow,
@@ -21,6 +22,7 @@ const contextMenu = require('./eme/context-menu')
 require('electron-context-menu')(contextMenu)
 
 const platform = os.platform()
+const socketPath = process.platform === 'win32' ? '\\\\.\\pipe\\eme' : path.join(os.tmpdir(), 'eme.sock')
 
 const appMenu = buildMenu({
   createWindow: emeWindow.createWindow
@@ -36,29 +38,89 @@ const createMainWindow = () => {
   }
   const win = emeWindow.createWindow({windowState})
   windowState.manage(win)
+
   return win
 }
 
 let mainWindow // eslint-disable-line
 let pdfWindow // eslint-disable-line
+
+const listenForArgumentsFromNewProcess = () => {
+  if (process.platform !== 'win32' && fs.existsSync(socketPath)) {
+    fs.unlinkSync(socketPath)
+  } else if (process.platform === 'win32' && fs.existsSync(socketPath)) {
+    return
+  }
+
+  const server = net.createServer(connection => {
+    let data = ''
+    connection.on('data', chunk => {
+      data += chunk
+    })
+    connection.on('end', () => {
+      const argv = JSON.parse(data)
+      const {pathsToOpen, resourcePath} = argv
+      const pathToOpen = pathsToOpen[0]
+      const locationToOpen = `${resourcePath}/${pathToOpen}`
+      if (emeWindow && emeWindow.wins !== 0) {
+        if (mainWindow.isMinimized()) {
+          mainWindow.restore()
+        } else {
+          mainWindow.focus()
+        }
+        if (fs.existsSync(locationToOpen)) {
+          mainWindow.webContents.send('open-file', locationToOpen)
+        }
+      } else {
+        initialize(argv) // eslint-disable-line
+      }
+    })
+  })
+
+  server.listen({path: socketPath})
+  server.on('error', error => console.error `Application server failed', ${error}`)
+}
+
+const initialize = argv => {
+  mainWindow = createMainWindow()
+  listenForArgumentsFromNewProcess()
+  if (!isDev && argv) {
+    const {pathsToOpen, resourcePath} = argv
+    if (pathsToOpen.length > 0) {
+      if (pathsToOpen) {
+        const pathToOpen = pathsToOpen[0]
+        const locationToOpen = `${resourcePath}/${pathToOpen}`
+        if (fs.existsSync(locationToOpen)) {
+          mainWindow.webContents.on('did-finish-load', () => {
+            mainWindow.webContents.send('open-file', locationToOpen)
+          })
+        }
+      } else {
+        // open dirctory
+        // mainWindow.send('open-dirctory', resourcePath)
+      }
+    }
+  }
+  if (platform === 'darwin') {
+    mainWindow.setSheetOffset(36)
+  }
+}
+
 app.on('ready', () => {
   const argv = parseShellCommand()
   Menu.setApplicationMenu(appMenu)
-  mainWindow = createMainWindow()
-
-  if (!isDev) {
-    const {pathsToOpen, resourcePath} = argv
-    const pathToOpen = pathsToOpen[0]
-    if (pathToOpen && resourcePath) {
-      const locationToOpen = `${resourcePath}/${pathToOpen}`
-      mainWindow.webContents.on('did-finish-load', () => {
-        mainWindow.webContents.send('open-file', locationToOpen)
+  if (process.platform !== 'win32' && !fs.existsSync(socketPath)) {
+    initialize(argv)
+  } else {
+    const client = net.connect({path: socketPath}, () => {
+      client.write(JSON.stringify(argv), () => {
+        client.end()
+        app.quit()
       })
-    }
-  }
-
-  if (platform === 'darwin') {
-    mainWindow.setSheetOffset(36)
+    })
+    client.on('error', () =>
+      initialize(argv)
+    )
   }
 })
 
@@ -70,7 +132,7 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   if (emeWindow.wins === 0) {
-    mainWindow = createMainWindow()
+    initialize()
     if (platform === 'darwin') {
       mainWindow.setSheetOffset(36)
     }

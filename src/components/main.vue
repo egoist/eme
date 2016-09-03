@@ -423,7 +423,9 @@
           }
         }
         if (filePath) {
-          openFile(filePath)
+          if (!this.tabs.find(tab => tab.filePath === filePath)) {
+            openFile(filePath)
+          }
         } else {
           const files = remote.dialog.showOpenDialog(currentWindow, {
             properties: ['openFile'],
