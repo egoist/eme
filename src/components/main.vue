@@ -153,7 +153,6 @@
   import {$} from 'utils/dom'
   import {isMac} from 'utils/os'
   import event from 'utils/event'
-  import uid from 'utils/uid'
   import makeHTML from 'utils/make-html'
   import fs from 'utils/fs-promise'
   import {appPath} from 'utils/resolve-path'
@@ -356,7 +355,6 @@
           pdf: '',
           rename: false,
           split: 50,
-          uid: uid(),
           slideIndex: 0,
           isSlideSwitching: false,
           slideDirection: 'left'
@@ -484,16 +482,12 @@
           if (this.tabs.length === 0) {
             currentWindow.destroy()
           } else {
-            this.closeTab(this.currentTabIndex).then(() => {
-              event.emit('update-tabs')
-            })
+            this.closeTab(this.currentTabIndex)
           }
         })
 
         ipcRenderer.on('new-tab', (e, filePath) => {
-          this.createNewTab({filePath}, () => {
-            event.emit('update-tabs')
-          }).catch(handleError)
+          this.createNewTab({filePath}).catch(handleError)
         })
 
         ipcRenderer.on('close-window', () => {
@@ -595,9 +589,7 @@
         })
 
         event.on('close-tab', index => {
-          this.closeTab(index).then(() => {
-            event.emit('update-tabs')
-          })
+          this.closeTab(index)
         })
 
         event.on('file-rename', (index, name) => {
