@@ -224,7 +224,6 @@
   import {$} from 'utils/dom'
   import SvgIcon from 'components/svg-icon'
 
-
   export default {
     vuex: {
       getters: {
