@@ -106,7 +106,7 @@
       <div
         class="editor"
         :class="{'focus-mode': tab.isFocusMode}"
-        :style="{ width: tab.split + '%' }"
+        :style="{width: getSplitWidth('editor')}"
         v-show="currentTab && currentTab.writingMode !== 'preview'">
         <textarea class="editor-input" :id="'editor-' + $index">{{ tab.content }}</textarea>
         <div class="resize-bar" @mousedown="resizeStart($event, $index)"></div>
@@ -119,8 +119,8 @@
             'preview-presentation': tab.isPresentationMode
           }
         ]"
-        :style="{ width: (100 - tab.split) + '%' }"
-        v-show="currentTab && currentTab.writingMode !== 'writing'">
+        :style="{width: getSplitWidth('preview')}"
+        v-show="currentTab && currentTab.writingMode !== 'editor'">
         <presentation
           :slides="tab.html"
           v-if="tab.isPresentationMode && currentTabIndex === $index">
@@ -203,6 +203,20 @@
       this.handleDrag()
     },
     methods: {
+      getSplitWidth(area) {
+        if (!this.currentTab) {
+          return '50%'
+        }
+        if (this.currentTab.writingMode !== 'default') {
+          return '100%'
+        }
+        if (area === 'editor') {
+          return this.currentTab.split + '%'
+        }
+        if (area === 'preview') {
+          return (100 - this.currentTab.split) + '%'
+        }
+      },
       restoreAppState(state) {
         if (state.tabs.length > 0) {
           const startTabsCount = this.tabs.length
@@ -355,7 +369,7 @@
           isPresentationMode: false,
           pdf: '',
           rename: false,
-          split: 50,
+          split: this.settings.writingMode === 'default' ? 50 : 100,
           slideIndex: 0,
           isSlideSwitching: false,
           slideDirection: 'left'

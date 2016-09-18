@@ -3,8 +3,8 @@
     <span
       aria-label="Editor only"
       class="footer-icon-item writing-mode hint--top-left hint--rounded"
-      :class="{active: writingMode === 'writing'}"
-      @click="setWritingMode('writing')">
+      :class="{active: writingMode === 'editor'}"
+      @click="setWritingMode('editor')">
       <svg-icon name="pencil" class="footer-icon"></svg-icon>
     </span>
     <span
@@ -28,7 +28,7 @@
   import SvgIcon from 'components/svg-icon'
   import {cmdOrCtrl} from 'utils/key'
 
-  const modes = ['writing', 'default', 'preview']
+  const modes = ['editor', 'default', 'preview']
 
   export default {
     props: {

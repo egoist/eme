@@ -96,7 +96,10 @@
           border-bottom: 1px solid #ddd;
           border-left-width: 1px;
           border-left-color: #ddd;
-          border-right: 0 solid #ddd;
+          border-right: 1px solid #ddd;
+          &:not(.unsaved) {
+            border-right-width: 0;
+          }
         }
       }
       &:hover {
@@ -184,7 +187,7 @@
         :data-index="$index"
         v-for="tab in tabs"
         track-by="$index"
-        :class="{'current-tab': $index === currentTabIndex}"
+        :class="{'current-tab': $index === currentTabIndex, unsaved: !tab.saved}"
         @mouseover="hoverTab($index)"
         @mouseleave="unhoverTab($index)">
         <span class="tab-title" v-if="tab && !tab.rename">
