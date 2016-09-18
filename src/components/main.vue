@@ -168,7 +168,8 @@
       getters: {
         tabs: state => state.editor.tabs,
         currentTabIndex: state => state.editor.currentTabIndex,
-        currentTab: state => state.editor.tabs[state.editor.currentTabIndex]
+        currentTab: state => state.editor.tabs[state.editor.currentTabIndex],
+        settings: state => state.app.settings
       },
       actions: {
         updateSaved({dispatch}, payload) {
@@ -349,7 +350,7 @@
           saved: true,
           editor: null,
           isFocusMode: false,
-          writingMode: 'default',
+          writingMode: this.settings.writingMode,
           isVimMode: false,
           isPresentationMode: false,
           pdf: '',

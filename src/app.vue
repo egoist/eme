@@ -2,6 +2,16 @@
 <style src="animate.css/animate.css"></style>
 <style src="./css/reset"></style>
 <style src="./css/editor-reset"></style>
+<style>
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9980;
+  }
+</style>
 
 <template>
   <div id="app"
@@ -9,6 +19,12 @@
       'distraction-free': isDistractionFreeMode,
       'full-screen': isFullScreen
     }">
+    <div
+      class="overlay"
+      @click="togglePreferencePane"
+      v-if="showPreferencePane">
+    </div>
+    <preference-pane v-if="showPreferencePane"></preference-pane>
     <app-header v-if="!isDistractionFreeMode || (isDistractionFreeMode && !isFullScreen)"></app-header>
     <app-main></app-main>
     <app-footer v-if="showFooter()"></app-footer>
@@ -21,6 +37,7 @@
   import appHeader from './components/header'
   import appMain from './components/main'
   import appFooter from './components/footer'
+  import preferencePane from './components/preference-pane'
   import {$} from 'utils/dom'
 
   const currentWindow = remote.getCurrentWindow()
@@ -35,12 +52,19 @@
     vuex: {
       getters: {
         tabsAmount: state => state.editor.tabs.length,
+        showPreferencePane: state => state.app.showPreferencePane
+      },
+      actions: {
+        togglePreferencePane({dispatch}) {
+          dispatch('TOGGLE_PREFERENCE_PANE')
+        }
       }
     },
     components: {
       appHeader,
       appMain,
-      appFooter
+      appFooter,
+      preferencePane
     },
     ready() {
       ipcRenderer.on('toggle-distraction-free-mode', () => {

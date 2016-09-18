@@ -6,6 +6,9 @@ const config = new Config({
     lastAppState: {
       tabs: [],
       currentTabIndex: null
+    },
+    settings: {
+      writingMode: 'default'
     }
   }
 })

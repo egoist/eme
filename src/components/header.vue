@@ -284,7 +284,7 @@
       },
       openSettings() {
         if (this.clickable) {
-          console.log('open!')
+          this.$store.dispatch('TOGGLE_PREFERENCE_PANE')
         }
       }
     },
