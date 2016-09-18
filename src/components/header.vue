@@ -16,28 +16,37 @@
     .tab-container {
       display: flex;
       width: calc(100% - 50px);
-      overflow-x: auto;
+      overflow: hidden;
       height: $header-height;
+      &:hover {
+        overflow: auto;
+        overflow-y: hidden;
+      }
+      &.undraggable {
+        -webkit-app-region: no-drag;
+      }
     }
     .tab {
       height: $header-height;
       line-height: $header-height;
       padding: 0 10px;
-      padding-right: 0;
+      padding-right: 40px;
       position: relative;
       text-align: center;
       border-left: 1px solid #ddd;
       border-bottom: 1px solid #ddd;
       display: flex;
       flex: 1;
+      width: 100%;
+      white-space: nowrap;
       background-color: white;
+      overflow: hidden;
+      text-overflow: ellipsis;
       .tab-title {
         color: #999;
-        white-space: nowrap;
         -webkit-user-select: none;
-        overflow: hidden;
-        text-overflow: ellipsis;
         width: 100%;
+        display: block;
         &.rename-input {
           height: 24px;
           line-height: 24px;
@@ -74,15 +83,11 @@
     }
 
     &.single-tab {
-      .tab-container {
-        width: 100%;
-      }
       .tab {
         &.current-tab {
           border-bottom: 1px solid #ddd;
           border-left-width: 1px;
           border-left-color: #ddd;
-          border-right: none;
         }
       }
     }
@@ -92,7 +97,10 @@
       width: 30px;
       text-align: center;
       height: calc(100% - 1px);
-      position: relative;
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
       >span {
         position: relative;
         top: -1px;
@@ -126,6 +134,7 @@
     :class="{'single-tab': tabs.length === 1, 'is-mac': isMac}"
     @dblclick="createNewTab">
     <div class="tab-container"
+      :class="{undraggable: tabs.length > 1}"
       v-el:tab-container>
       <div class="tab"
         @click="setCurrentTab($index)"
