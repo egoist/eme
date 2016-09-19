@@ -11,6 +11,10 @@
     bottom: 0;
     left: 0;
     right: 0;
+    -webkit-app-region: drag;
+    box-shadow: inset 0 1px 0 #f5f4f5;
+    background-image: linear-gradient(to bottom,#e8e6e8 0,#d1cfd1 100%);
+    border-top: 1px solid #c2c0c2;
     > span {
       margin-right: 10px;
     }
@@ -20,14 +24,8 @@
       border: none;
       font-size: 12px;
       outline: none;
-      color: #666; 
+      color: #666;
       -webkit-appearance: none;
-    }
-
-    &.mac-footer {
-      box-shadow: inset 0 1px 0 #f5f4f5;
-      background-image: linear-gradient(to bottom,#e8e6e8 0,#d1cfd1 100%);
-      border-top: 1px solid #c2c0c2;
     }
 
     .footer-right {
@@ -106,7 +104,7 @@
 </style>
 
 <template>
-  <footer class="footer" :class="{'mac-footer': isMac}">
+  <footer class="footer">
     <span class="file-path" v-if="status.filePath">{{ status.filePath }}</span>
     <span class="word-count">
       <select class="word-count-select">
@@ -132,7 +130,6 @@
 
 <script>
   import tildify from 'tildify'
-  import {isMac} from 'utils/os'
   import {shell} from 'electron'
   import wordCount from 'wordcount'
 
@@ -157,11 +154,6 @@
             isPresentationMode: tab.isPresentationMode
           }
         }
-      }
-    },
-    data() {
-      return {
-        isMac
       }
     },
     methods: {

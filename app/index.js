@@ -139,3 +139,9 @@ ipcMain.on('add-recent-file', (e, filePath) => {
 ipcMain.on('log', (e, msg) => {
   console.log(JSON.stringify(msg, null, 2))
 })
+
+ipcMain.on('reload-menu', () => {
+  Menu.setApplicationMenu(buildMenu({
+    createWindow: emeWindow.createWindow
+  }))
+})

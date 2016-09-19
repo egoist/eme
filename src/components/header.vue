@@ -7,6 +7,11 @@
     height: $header-height;
     border-bottom: 1px solid #ddd;
     -webkit-app-region: drag;
+    &:hover {
+      .settings-trigger {
+        opacity: 1;
+      }
+    }
     &.is-mac {
       padding-left: 80px;
       .full-screen & {
@@ -54,9 +59,6 @@
           padding: 5px;
         }
       }
-      &:last-child {
-        border-right: 1px solid #ddd;
-      }
       &.current-tab {
         border-left-color: #1976D2;
         background-color: white;
@@ -82,12 +84,29 @@
       }
     }
 
+    &:not(.single-tab) {
+      .tab:last-child {
+        border-right: 1px solid #ddd;
+      }
+    }
+
     &.single-tab {
       .tab {
         &.current-tab {
           border-bottom: 1px solid #ddd;
           border-left-width: 1px;
           border-left-color: #ddd;
+          border-right: 1px solid #ddd;
+          &:not(.unsaved) {
+            border-right-width: 0;
+          }
+        }
+      }
+      &:hover {
+        .tab {
+          &.current-tab {
+            border-right-width: 1px;
+          }
         }
       }
     }
@@ -125,11 +144,37 @@
         transform: translate(-50%, -50%);
       }
     }
+
+    .settings-trigger {
+      $color: #b1b1b1;
+      $colorActive: #666;
+
+      opacity: 0;
+      display: flex;
+      justify-content: center;
+      width: 50px;
+      svg {
+        width: 14px;
+        color: $color;
+        circle {
+          color: $color;
+        }
+      }
+      &:hover {
+        svg {
+          color: $colorActive;
+          circle {
+            color: $colorActive;
+          }
+        }
+      }
+    }
   }
 </style>
 
 <template>
-  <header class="header"
+  <header
+    class="header single-tab"
     v-el:header
     :class="{'single-tab': tabs.length === 1, 'is-mac': isMac}"
     @dblclick="createNewTab">
@@ -142,7 +187,7 @@
         :data-index="$index"
         v-for="tab in tabs"
         track-by="$index"
-        :class="{'current-tab': $index === currentTabIndex}"
+        :class="{'current-tab': $index === currentTabIndex, unsaved: !tab.saved}"
         @mouseover="hoverTab($index)"
         @mouseleave="unhoverTab($index)">
         <span class="tab-title" v-if="tab && !tab.rename">
@@ -165,6 +210,13 @@
         <span class="tab-indicator" v-if="dragging"></span>
       </div>
     </div>
+    <svg-icon
+      class="settings-trigger"
+      name="settings"
+      @mousedown="clickable = true"
+      @mousemove="clickable = false"
+      @mouseup="openSettings">
+    </svg-icon>
   </header>
 </template>
 
@@ -173,6 +225,7 @@
   import {isMac} from 'utils/os'
   import event from 'utils/event'
   import {$} from 'utils/dom'
+  import SvgIcon from 'components/svg-icon'
 
   export default {
     vuex: {
@@ -197,7 +250,10 @@
       }
     },
     data() {
-      return {isMac}
+      return {
+        isMac,
+        clickable: false
+      }
     },
     methods: {
       closeTab(e, index) {
@@ -228,7 +284,15 @@
       },
       unhoverTab(index) {
         $(`#tab-${index}`).classList.remove('hover')
+      },
+      openSettings() {
+        if (this.clickable) {
+          this.$store.dispatch('TOGGLE_PREFERENCE_PANE')
+        }
       }
+    },
+    components: {
+      SvgIcon
     }
   }
 </script>

@@ -1,7 +1,19 @@
+import {remote} from 'electron'
+
+const currentWindow = remote.getCurrentWindow()
+
 const state = {
+  showPreferencePane: false,
+  settings: currentWindow.$config.get('settings')
 }
 
 const mutations = {
+  TOGGLE_PREFERENCE_PANE(state) {
+    state.showPreferencePane = !state.showPreferencePane
+  },
+  UPDATE_SETTINGS(state, settings) {
+    state.settings = settings
+  }
 }
 
 export default {

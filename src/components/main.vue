@@ -106,7 +106,7 @@
       <div
         class="editor"
         :class="{'focus-mode': tab.isFocusMode}"
-        :style="{ width: tab.split + '%' }"
+        :style="{width: getSplitWidth('editor')}"
         v-show="currentTab && currentTab.writingMode !== 'preview'">
         <textarea class="editor-input" :id="'editor-' + $index">{{ tab.content }}</textarea>
         <div class="resize-bar" @mousedown="resizeStart($event, $index)"></div>
@@ -119,8 +119,8 @@
             'preview-presentation': tab.isPresentationMode
           }
         ]"
-        :style="{ width: (100 - tab.split) + '%' }"
-        v-show="currentTab && currentTab.writingMode !== 'writing'">
+        :style="{width: getSplitWidth('preview')}"
+        v-show="currentTab && currentTab.writingMode !== 'editor'">
         <presentation
           :slides="tab.html"
           v-if="tab.isPresentationMode && currentTabIndex === $index">
@@ -168,7 +168,8 @@
       getters: {
         tabs: state => state.editor.tabs,
         currentTabIndex: state => state.editor.currentTabIndex,
-        currentTab: state => state.editor.tabs[state.editor.currentTabIndex]
+        currentTab: state => state.editor.tabs[state.editor.currentTabIndex],
+        settings: state => state.app.settings
       },
       actions: {
         updateSaved({dispatch}, payload) {
@@ -202,6 +203,20 @@
       this.handleDrag()
     },
     methods: {
+      getSplitWidth(area) {
+        if (!this.currentTab) {
+          return '50%'
+        }
+        if (this.currentTab.writingMode !== 'default') {
+          return '100%'
+        }
+        if (area === 'editor') {
+          return this.currentTab.split + '%'
+        }
+        if (area === 'preview') {
+          return (100 - this.currentTab.split) + '%'
+        }
+      },
       restoreAppState(state) {
         if (state.tabs.length > 0) {
           const startTabsCount = this.tabs.length
@@ -349,12 +364,12 @@
           saved: true,
           editor: null,
           isFocusMode: false,
-          writingMode: 'default',
+          writingMode: this.settings.writingMode,
           isVimMode: false,
           isPresentationMode: false,
           pdf: '',
           rename: false,
-          split: 50,
+          split: this.settings.writingMode === 'default' ? 50 : 100,
           slideIndex: 0,
           isSlideSwitching: false,
           slideDirection: 'left'
@@ -376,12 +391,15 @@
             scrollbarStyle: 'simple',
             autofocus: true,
             dragDrop: false,
-            tabSize: 2,
+            tabSize: this.settings.tabSize,
+            indentWithTabs: this.settings.indentWithTabs,
             extraKeys: {
               Enter: 'newlineAndIndentContinueMarkdownList',
-              Tab(cm) {
-                const spaces = Array(cm.getOption('indentUnit') + 1).join(' ')
-                cm.replaceSelection(spaces)
+              Tab: cm => {
+                if (!this.settings.indentWithTabs) {
+                  const spaces = Array(cm.getOption('indentUnit') + 1).join(' ')
+                  cm.replaceSelection(spaces)
+                }
               }
             }
           })

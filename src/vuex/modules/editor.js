@@ -60,7 +60,7 @@ const mutations = {
     const tab = state.tabs[index]
     tab.content = content
     // render html in non-writing mode
-    if (tab.writingMode !== 'writing') {
+    if (tab.writingMode !== 'editor') {
       const parsed = renderHTML({
         filePath: tab.filePath,
         content,
@@ -133,10 +133,20 @@ const mutations = {
   },
   SET_WRITING_MODE(state, {index, mode}) {
     const tab = state.tabs[index]
+    if (tab.split === 100) {
+      if (mode === 'default') tab.split = 50
+      else if (mode === 'preview') tab.split = 0
+    } else if (tab.split === 50) {
+      if (mode === 'editor') tab.split = 100
+      else if (mode === 'preview') tab.split = 0
+    } else if (tab.split === 0) {
+      if (mode === 'editor') tab.split = 100
+      else if (mode === 'default') tab.split = 50
+    }
 
     // if previous mode is writing mode
     // render html before switching
-    if (tab.writingMode === 'writing') {
+    if (tab.writingMode === 'editor') {
       const parsed = renderHTML(tab)
       tab.html = parsed.html
       tab.attrs = parsed.attrs

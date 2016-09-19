@@ -3,8 +3,8 @@
     <span
       aria-label="Editor only"
       class="footer-icon-item writing-mode hint--top-left hint--rounded"
-      :class="{active: writingMode === 'writing'}"
-      @click="setWritingMode('writing')">
+      :class="{active: writingMode === 'editor'}"
+      @click="setWritingMode('editor')">
       <svg-icon name="pencil" class="footer-icon"></svg-icon>
     </span>
     <span
@@ -25,10 +25,10 @@
 </template>
 
 <script>
+  import {ipcRenderer} from 'electron'
   import SvgIcon from 'components/svg-icon'
-  import {cmdOrCtrl} from 'utils/key'
 
-  const modes = ['writing', 'default', 'preview']
+  const modes = ['editor', 'default', 'preview']
 
   export default {
     props: {
@@ -56,18 +56,14 @@
     },
     methods: {
       addListeners() {
-        this.handleSwitchingMode = e => {
-          if (e[cmdOrCtrl] && e.shiftKey && e.which === 220) {
-            const current = modes.indexOf(this.writingMode)
-            if (current === modes.length - 1) {
-              this.setWritingMode(modes[0])
-            } else {
-              this.setWritingMode(modes[current + 1])
-            }
+        ipcRenderer.on('switch-writing-mode', () => {
+          const current = modes.indexOf(this.writingMode)
+          if (current === modes.length - 1) {
+            this.setWritingMode(modes[0])
+          } else {
+            this.setWritingMode(modes[current + 1])
           }
-        }
-
-        window.addEventListener('keydown', this.handleSwitchingMode, false)
+        })
       },
       removeListeners() {
         window.removeEventListener('keydown', this.handleSwitchingMode)

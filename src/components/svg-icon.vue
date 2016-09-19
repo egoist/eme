@@ -10,13 +10,15 @@
   import eye from 'src/svg/eye.svg'
   import arrowLeft from 'src/svg/arrow-left.svg'
   import arrowRight from 'src/svg/arrow-right.svg'
+  import settings from 'src/svg/settings.svg'
 
   const icons = {
     pencil,
     alignHorizontalMiddle,
     eye,
     arrowRight,
-    arrowLeft
+    arrowLeft,
+    settings
   }
 
   export default {

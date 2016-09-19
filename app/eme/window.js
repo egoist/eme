@@ -1,9 +1,10 @@
 'use strict'
 const path = require('path')
+const electron = require('electron')
 const {
   BrowserWindow,
   shell
-} = require('electron')
+} = electron
 const config = require('./config')
 
 const isDev = process.env.NODE_ENV === 'development'
