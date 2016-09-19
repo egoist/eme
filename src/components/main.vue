@@ -391,8 +391,17 @@
             scrollbarStyle: 'simple',
             autofocus: true,
             dragDrop: false,
-            tabSize: 2,
-            indentWithTabs: false
+            tabSize: this.settings.tabSize,
+            indentWithTabs: this.settings.indentWithTabs,
+            extraKeys: {
+              Enter: 'newlineAndIndentContinueMarkdownList',
+              Tab: cm => {
+                if (!this.settings.indentWithTabs) {
+                  const spaces = Array(cm.getOption('indentUnit') + 1).join(' ')
+                  cm.replaceSelection(spaces)
+                }
+              }
+            }
           })
 
           setTimeout(() => {

@@ -13,6 +13,8 @@ const config = new Config({
     },
     settings: {
       writingMode: 'default',
+      tabSize: 2,
+      indentWithTabs: false,
       keys: {
         openNewTab: `${cmdOrCtrl}+t`,
         openFile: `${cmdOrCtrl}+o`,

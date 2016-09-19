@@ -81,6 +81,7 @@
         }
         .form-group {
           margin-bottom: 10px;
+          max-width: 90%;
         }
         .form-control {
           outline: none;
@@ -88,6 +89,7 @@
           border: 1px solid #ccc;
           border-radius: 3px;
           padding: 5px;
+          width: 100%;
           &:focus {
             border-color: #6db3fd;
             box-shadow: 3px 3px 0 #6db3fd,-3px -3px 0 #6db3fd,-3px 3px 0 #6db3fd,3px -3px 0 #6db3fd;
@@ -111,26 +113,42 @@
       </div>
     </div>
     <div class="pane-body" v-show="active === 0">
-      <form>
-        <div class="form-group">
-          <label>Default Writing Mode</label>
-          <select class="form-control" v-model="settings.writingMode">
-            <option
-              value="default"
-              :selected="settings.writingMode === 'default'">
-              Show both editor and preview
-            </option>
-            <option
-              value="editor"
-              :selected="settings.writingMode === 'editor'">
-              Editor only
-            </option>
-            <option
-              value="preview"
-              :selected="settings.writingMode === 'preview'">
-              Preview only
-            </option>
-          </select>
+      <form class="row">
+        <div class="col col-half">
+          <div class="form-group">
+            <label>Default Writing Mode</label>
+            <select class="form-control" v-model="settings.writingMode">
+              <option
+                value="default"
+                :selected="settings.writingMode === 'default'">
+                Show both editor and preview
+              </option>
+              <option
+                value="editor"
+                :selected="settings.writingMode === 'editor'">
+                Editor only
+              </option>
+              <option
+                value="preview"
+                :selected="settings.writingMode === 'preview'">
+                Preview only
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="col col-half">
+          <div class="form-group">
+            <label>Tab Size</label>
+            <input
+              type="text"
+              class="form-control"
+              v-model="settings.tabSize">
+          </div>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" v-model="settings.indentWithTabs"> Indent With Tabs
+            </label>
+          </div>
         </div>
       </form>
     </div>
@@ -220,6 +238,7 @@
       update() {
         $config.set('settings', this.settings)
         this.$store.dispatch('UPDATE_SETTINGS', this.settings)
+        // TODO: reflect tabs settings in current active editor
       }
     },
     beforeDestroy() {
