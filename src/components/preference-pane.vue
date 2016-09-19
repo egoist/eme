@@ -213,7 +213,6 @@
       return {
         tabs: ['General', 'Keys'],
         active: 0,
-        recordingType: null,
         settings: JSON.parse(JSON.stringify($config.get('settings')))
       }
     },
@@ -221,12 +220,6 @@
       update() {
         $config.set('settings', this.settings)
         this.$store.dispatch('UPDATE_SETTINGS', this.settings)
-      },
-      startRecordingKeys(type) {
-        this.recordingType = type
-      },
-      stopRecordingKeys() {
-        this.recordingType = null
       }
     },
     beforeDestroy() {
