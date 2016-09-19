@@ -25,8 +25,8 @@
 </template>
 
 <script>
+  import {ipcRenderer} from 'electron'
   import SvgIcon from 'components/svg-icon'
-  import {cmdOrCtrl} from 'utils/key'
 
   const modes = ['editor', 'default', 'preview']
 
@@ -56,18 +56,14 @@
     },
     methods: {
       addListeners() {
-        this.handleSwitchingMode = e => {
-          if (e[cmdOrCtrl] && e.shiftKey && e.which === 220) {
-            const current = modes.indexOf(this.writingMode)
-            if (current === modes.length - 1) {
-              this.setWritingMode(modes[0])
-            } else {
-              this.setWritingMode(modes[current + 1])
-            }
+        ipcRenderer.on('switch-writing-mode', () => {
+          const current = modes.indexOf(this.writingMode)
+          if (current === modes.length - 1) {
+            this.setWritingMode(modes[0])
+          } else {
+            this.setWritingMode(modes[current + 1])
           }
-        }
-
-        window.addEventListener('keydown', this.handleSwitchingMode, false)
+        })
       },
       removeListeners() {
         window.removeEventListener('keydown', this.handleSwitchingMode)

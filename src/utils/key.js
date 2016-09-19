@@ -1,3 +1,4 @@
 import {isMac} from './os'
 
-export const cmdOrCtrl = isMac ? 'metaKey' : 'ctrlKey'
+export const cmdOrCtrl = isMac ? 'command' : 'control'
+

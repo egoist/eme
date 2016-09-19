@@ -4,7 +4,7 @@ const currentWindow = remote.getCurrentWindow()
 
 const state = {
   showPreferencePane: false,
-  settings: currentWindow.$config.store.settings
+  settings: currentWindow.$config.get('settings')
 }
 
 const mutations = {

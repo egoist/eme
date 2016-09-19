@@ -34,6 +34,7 @@
     }
     .pane-tab {
       color: #666;
+      user-select: none;
       flex: 1;
       padding: 3px;
       font-size: 12px;
@@ -78,8 +79,19 @@
           font-weight: bold;
           margin-bottom: 5px;
         }
+        .form-group {
+          margin-bottom: 10px;
+        }
         .form-control {
+          outline: none;
           font-size: 16px;
+          border: 1px solid #ccc;
+          border-radius: 3px;
+          padding: 5px;
+          &:focus {
+            border-color: #6db3fd;
+            box-shadow: 3px 3px 0 #6db3fd,-3px -3px 0 #6db3fd,-3px 3px 0 #6db3fd,3px -3px 0 #6db3fd;
+          }
         }
       }
     }
@@ -93,11 +105,12 @@
       <div
         class="pane-tab"
         :class="{active: active === $index}"
+        @click="active = $index"
         v-for="tab in tabs">
         {{ tab }}
       </div>
     </div>
-    <div class="pane-body">
+    <div class="pane-body" v-show="active === 0">
       <form>
         <div class="form-group">
           <label>Default Writing Mode</label>
@@ -121,11 +134,76 @@
         </div>
       </form>
     </div>
+
+    <div class="pane-body" v-show="active === 1">
+      <form class="row">
+        <div class="col col-half">
+          <div class="form-group">
+            <label>New Tab</label>
+            <input
+              type="text"
+              class="form-control"
+              v-model="settings.keys.openNewTab">
+          </div>
+          <div class="form-group">
+            <label>Open File</label>
+            <input
+              type="text"
+              class="form-control"
+              v-model="settings.keys.openFile">
+          </div>
+          <div class="form-group">
+            <label>Open Last Session</label>
+            <input
+              type="text"
+              class="form-control"
+              v-model="settings.keys.openLastSession">
+          </div>
+          <div class="form-group">
+            <label>Switching Writing Mode</label>
+            <input
+              type="text"
+              class="form-control"
+              v-model="settings.keys.switchWritingMode">
+          </div>
+        </div>
+        <div class="col col-half">
+          <div class="form-group">
+            <label>Distraction Free Mode</label>
+            <input
+              type="text"
+              class="form-control"
+              v-model="settings.keys.distractionFreeMode">
+          </div>
+          <div class="form-group">
+            <label>Focus Mode</label>
+            <input
+              type="text"
+              class="form-control"
+              v-model="settings.keys.focusMode">
+          </div>
+          <div class="form-group">
+            <label>Vim Mode</label>
+            <input
+              type="text"
+              class="form-control"
+              v-model="settings.keys.vimMode">
+          </div>
+          <div class="form-group">
+            <label>Presentation Mode</label>
+            <input
+              type="text"
+              class="form-control"
+              v-model="settings.keys.presentationMode">
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
 <script>
-  import {remote} from 'electron'
+  import {remote, ipcRenderer} from 'electron'
 
   const currentWindow = remote.getCurrentWindow()
   const $config = currentWindow.$config
@@ -135,17 +213,25 @@
       return {
         tabs: ['General', 'Keys'],
         active: 0,
-        settings: $config.get('settings')
+        recordingType: null,
+        settings: JSON.parse(JSON.stringify($config.get('settings')))
       }
     },
     methods: {
       update() {
         $config.set('settings', this.settings)
         this.$store.dispatch('UPDATE_SETTINGS', this.settings)
+      },
+      startRecordingKeys(type) {
+        this.recordingType = type
+      },
+      stopRecordingKeys() {
+        this.recordingType = null
       }
     },
     beforeDestroy() {
       this.update()
+      ipcRenderer.send('reload-menu')
     }
   }
 </script>

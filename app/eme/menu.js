@@ -88,13 +88,15 @@ module.exports = cb => {
     }]
   }
 
+  const keys = config.get('settings.keys')
+
   const template = [
     {
       label: 'File',
       submenu: [
         {
           label: 'New Tab',
-          accelerator: 'CmdOrCtrl+T',
+          accelerator: keys.openNewTab,
           click(item, focusedWindow) {
             if (focusedWindow) {
               focusedWindow.webContents.send('new-tab')
@@ -105,14 +107,14 @@ module.exports = cb => {
         },
         {
           label: 'Open',
-          accelerator: 'CmdOrCtrl+O',
+          accelerator: keys.openFile,
           click(item, focusedWindow) {
             openFileInWindow(focusedWindow)
           }
         },
         {
           label: 'Open Last Session',
-          accelerator: 'CmdOrCtrl+L',
+          accelerator: keys.openLastSession,
           click(item, focusedWindow) {
             if (focusedWindow) focusedWindow.webContents.send('open-last-session')
           }
@@ -207,30 +209,40 @@ module.exports = cb => {
         },
         {
           label: 'Toggle Distraction Free mode',
-          accelerator: 'CmdOrCtrl+J',
+          accelerator: keys.distractionFreeMode,
           click(item, focusedWindow) {
             if (focusedWindow) focusedWindow.webContents.send('toggle-distraction-free-mode')
           }
         },
         {
           label: 'Toggle Focus Mode',
-          accelerator: 'CmdOrCtrl+\\',
+          accelerator: keys.focusMode,
           click(item, focusedWindow) {
             if (focusedWindow) focusedWindow.webContents.send('toggle-focus-mode')
           }
         },
         {
           label: 'Toggle Vim Mode',
-          accelerator: 'CmdOrCtrl+I',
+          accelerator: keys.vimMode,
           click(item, focusedWindow) {
             if (focusedWindow) focusedWindow.webContents.send('toggle-vim-mode')
           }
         },
         {
           label: 'Toggle Presentation Mode',
-          accelerator: 'CmdOrCtrl+K',
+          accelerator: keys.presentationMode,
           click(item, focusedWindow) {
             if (focusedWindow) focusedWindow.webContents.send('toggle-presentation-mode')
+          }
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Switch Writing Mode',
+          accelerator: keys.switchWritingMode,
+          click(item, focusedWindow) {
+            if (focusedWindow) focusedWindow.webContents.send('switch-writing-mode')
           }
         },
         {
