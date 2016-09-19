@@ -392,13 +392,7 @@
             autofocus: true,
             dragDrop: false,
             tabSize: 2,
-            extraKeys: {
-              Enter: 'newlineAndIndentContinueMarkdownList',
-              Tab(cm) {
-                const spaces = Array(cm.getOption('indentUnit') + 1).join(' ')
-                cm.replaceSelection(spaces)
-              }
-            }
+            indentWithTabs: false
           })
 
           setTimeout(() => {
