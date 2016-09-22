@@ -399,9 +399,10 @@
             extraKeys: {
               Enter: 'newlineAndIndentContinueMarkdownList',
               Tab: cm => {
-                if (!this.settings.indentWithTabs) {
-                  const spaces = Array(cm.getOption('indentUnit') + 1).join(' ')
-                  cm.replaceSelection(spaces)
+                if (this.settings.indentWithTabs) {
+                  cm.replaceSelection('\t')
+                } else {
+                  cm.replaceSelection(' '.repeat(cm.getOption('tabSize')))
                 }
               },
               'Alt-F': 'findPersistent'
