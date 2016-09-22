@@ -225,7 +225,16 @@
   import {isMac} from 'utils/os'
   import event from 'utils/event'
   import {$} from 'utils/dom'
+  import {cmdOrCtrl} from 'utils/key'
   import SvgIcon from 'components/svg-icon'
+
+  function getLeftTabIndex(total, active) {
+    return (total + (active - 1)) % total
+  }
+
+  function getRightTabIndex(total, active) {
+    return (active + 1) % total
+  }
 
   export default {
     vuex: {
@@ -254,6 +263,18 @@
         isMac,
         clickable: false
       }
+    },
+    created() {
+      Mousetrap.bindGlobal(`${cmdOrCtrl}+shift+[`, () => {
+        if (this.tabs.length < 2) return
+        const index = getLeftTabIndex(this.tabs.length, this.currentTabIndex)
+        this.setCurrentTab(index)
+      })
+      Mousetrap.bindGlobal(`${cmdOrCtrl}+shift+]`, () => {
+        if (this.tabs.length < 2) return
+        const index = getRightTabIndex(this.tabs.length, this.currentTabIndex)
+        this.setCurrentTab(index)
+      })
     },
     methods: {
       closeTab(e, index) {
