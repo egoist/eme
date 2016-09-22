@@ -136,19 +136,22 @@
 <script>
   import path from 'path'
   import {ipcRenderer, remote, shell} from 'electron'
-  import CodeMirror from 'codemirror'
-  import 'codemirror/lib/codemirror.css'
+  import objectPicker from 'object-picker'
+
+  import CodeMirror from 'codemirror/lib/codemirror'
+  import 'codemirror/addon/scroll/simplescrollbars.js'
   import 'codemirror/mode/markdown/markdown'
   import 'codemirror/mode/gfm/gfm'
   import 'codemirror/mode/javascript/javascript'
   import 'codemirror/mode/clike/clike'
   import 'codemirror/mode/htmlmixed/htmlmixed'
   import 'codemirror/addon/edit/continuelist'
-  import 'codemirror/addon/scroll/simplescrollbars'
-  import 'codemirror/addon/selection/active-line'
+  import 'codemirror/addon/selection/active-line.js'
   import 'codemirror/addon/dialog/dialog.js'
+  import 'codemirror/addon/search/search.js'
+  import 'codemirror/addon/search/searchcursor.js'
+  import 'codemirror/addon/search/jump-to-line.js'
   import 'codemirror/keymap/vim'
-  import objectPicker from 'object-picker'
 
   import {$} from 'utils/dom'
   import {isMac} from 'utils/os'
@@ -400,7 +403,8 @@
                   const spaces = Array(cm.getOption('indentUnit') + 1).join(' ')
                   cm.replaceSelection(spaces)
                 }
-              }
+              },
+              'Alt-F': 'findPersistent'
             }
           })
 
@@ -682,9 +686,11 @@
         }
       },
       resizeEnd() {
-        this.resizing = false
-        this.editor.refresh()
-        this.editor.focus()
+        if (this.resizing) {
+          this.resizing = false
+          this.editor.refresh()
+          this.editor.focus()
+        }
       }
     },
     components: {

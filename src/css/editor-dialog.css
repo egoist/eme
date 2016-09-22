@@ -1,7 +1,7 @@
 .CodeMirror-dialog {
   position: absolute;
   left: 0;
-  right: 10px;
+  right: 0;
   background: inherit;
   z-index: 15;
   padding: 0 .8em;
@@ -13,6 +13,7 @@
 
 .CodeMirror-dialog-top {
   top: 0;
+  border-bottom: 1px solid #ddd;
 }
 
 .CodeMirror-dialog-bottom {

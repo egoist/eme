@@ -76,7 +76,7 @@ module.exports = {
     }
   },
   postcss,
-  target: 'electron',
+  target: 'electron-renderer',
   plugins: [
     new webpack.ExternalsPlugin('commonjs2', [
       './vendor/markdown-it-katex'

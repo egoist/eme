@@ -1,5 +1,6 @@
 <style src="hint.css/hint.css"></style>
 <style src="animate.css/animate.css"></style>
+<style src="codemirror/lib/codemirror.css"></style>
 <style src="./css/reset"></style>
 <style src="./css/editor-reset"></style>
 <style>
