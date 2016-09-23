@@ -29,6 +29,9 @@ $light: #ccc;
     }
     &.single-tab {
       .tab {
+        .tab-title {
+          color: white;
+        }
         &.current-tab {
           border-color: $light-dark;
         }
@@ -63,7 +66,7 @@ $light: #ccc;
   }
 
   .editor {
-    border-right-color: $light-dark;
+    border-right-color: $dark;
     .CodeMirror {
       background-color: $dark !important;
     }

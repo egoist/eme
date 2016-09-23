@@ -1,4 +1,4 @@
-import {isMac} from './os'
+import {platform} from './os'
 
-export const cmdOrCtrl = isMac ? 'command' : 'control'
+export const cmdOrCtrl = platform === 'darwin' ? 'command' : 'control'
 

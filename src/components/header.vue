@@ -54,7 +54,6 @@
       &.current-tab {
         border-left-width: 2px;
         border-bottom: none;
-        padding-left: 90px;
       }
       &.hover {
         .tab-indicator {
@@ -79,6 +78,7 @@
 
     &.single-tab {
       .tab {
+        padding-left: 90px;
         &.current-tab {
           border-bottom: 1px solid;
           border-left-width: 1px;
@@ -140,8 +140,8 @@
       .full-screen & {
         padding-left: 0;
       }
-      .single-tab {
-        .tab.current-tab {
+      &.single-tab {
+        .tab {
           padding-left: 0;
         }
       }
