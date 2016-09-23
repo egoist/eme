@@ -66,7 +66,7 @@ $light: #ccc;
   }
 
   .editor {
-    border-right-color: $dark;
+    border-right-color: $light-dark;
     .CodeMirror {
       background-color: $dark !important;
     }

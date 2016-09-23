@@ -111,7 +111,11 @@
       <div
         class="editor"
         :class="{'focus-mode': tab.isFocusMode}"
-        :style="{width: getSplitWidth('editor'), 'font-size': settings.fontSize + 'px'}"
+        :style="{
+          width: getSplitWidth('editor'),
+          'font-size': settings.fontSize + 'px',
+          'border-right-width': currentTab.writingMode === 'default' ? '1px' : '0'
+        }"
         v-show="currentTab && currentTab.writingMode !== 'preview'">
         <textarea class="editor-input" :id="'editor-' + $index">{{ tab.content }}</textarea>
         <div class="resize-bar" @mousedown="resizeStart($event, $index)"></div>
