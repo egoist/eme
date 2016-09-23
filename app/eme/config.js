@@ -16,7 +16,7 @@ const config = new Config({
       colorSchema: 'base16-light',
       highlight: 'github',
       fontSize: 16,
-      font: `-apple-system, BlinkMacSystemFont,'avenir next', avenir,helvetica, 'helvetica neue',Ubuntu,'segoe ui', arial,sans-serif`,
+      font: 'Menlo, "DejaVu Sans Mono", "Lucida Console", monos',
       writingMode: 'default',
       tabSize: 2,
       indentWithTabs: false,
