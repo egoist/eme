@@ -54,6 +54,7 @@
       &.current-tab {
         border-left-width: 2px;
         border-bottom: none;
+        padding-left: 90px;
       }
       &.hover {
         .tab-indicator {
@@ -139,12 +140,10 @@
       .full-screen & {
         padding-left: 0;
       }
-    }
-  }
-  #app:not('.is-mac') {
-    .header.single-tab {
-      .tab.current-tab {
-        padding-left: 90px;
+      .single-tab {
+        .tab.current-tab {
+          padding-left: 0;
+        }
       }
     }
   }

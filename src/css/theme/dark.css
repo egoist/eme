@@ -82,7 +82,7 @@ $light: #ccc;
     .footer-right .footer-icon-group .footer-icon-item {
       border-color: $light-dark;
       .footer-icon path {
-        fill: $grey-500;
+        fill: #2f2e2e;
       }
       &.active {
         .footer-icon path {
