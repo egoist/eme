@@ -1,6 +1,6 @@
 'use strict'
 const os = require('os')
-const Config = require('electron-config')
+const Config = require('./utils/electron-config')
 
 const cmdOrCtrl = os.platform() === 'darwin' ? 'command' : 'ctrl'
 
@@ -15,7 +15,6 @@ const config = new Config({
       theme: 'white',
       colorSchema: 'base16-light',
       highlight: 'github',
-      das: 123,
       fontSize: 16,
       font: `-apple-system, BlinkMacSystemFont,'avenir next', avenir,helvetica, 'helvetica neue',Ubuntu,'segoe ui', arial,sans-serif`,
       writingMode: 'default',
