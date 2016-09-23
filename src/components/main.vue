@@ -636,6 +636,7 @@
           for (const option in options) {
             this.editor.setOption(option, options[option])
           }
+          this.editor.refresh()
         })
       },
       async closeTab(index) {

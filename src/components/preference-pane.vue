@@ -89,12 +89,12 @@
           outline: none;
           font-size: 16px;
           width: 100%;
-          &[type="text"] {
+          &:not([type="range"]) {
             padding: 5px;
             border: 1px solid #ccc;
             border-radius: 3px;
           }
-          &[type="text"]:focus {
+          &:not([type="range"]):focus {
             border-color: #6db3fd;
             box-shadow: 3px 3px 0 #6db3fd,-3px -3px 0 #6db3fd,-3px 3px 0 #6db3fd,3px -3px 0 #6db3fd;
           }
@@ -200,7 +200,7 @@
           <div class="form-group">
             <label>Tab Size</label>
             <input
-              type="text"
+              type="number"
               class="form-control"
               v-model="settings.tabSize">
           </div>
