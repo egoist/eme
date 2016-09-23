@@ -54,7 +54,7 @@
       height: 100%;
     }
     .CodeMirror-scroll {
-      padding-bottom: 15px;
+      padding-bottom: 17px;
     }
     .CodeMirror-sizer {
       padding-left: 10px;

@@ -86,7 +86,7 @@ $light: #ccc;
       }
       &.active {
         .footer-icon path {
-          fill: $light;
+          fill: white;
         }
       }
     }
