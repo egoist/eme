@@ -11,16 +11,17 @@ body {
   font-size: 1rem;
   line-height: 1.5;
   overflow: hidden;
+  text-rendering: geometricPrecision;
+  font-family: -apple-system, BlinkMacSystemFont,
+            'avenir next', avenir,
+            helvetica, 'helvetica neue',
+            Ubuntu,
+            'segoe ui', arial,
+            sans-serif;
 }
 
-body,
 .CodeMirror {
-  font-family: -apple-system, BlinkMacSystemFont,
-               'avenir next', avenir,
-               helvetica, 'helvetica neue',
-               Ubuntu,
-               'segoe ui', arial,
-               sans-serif !important;
+  font-family: inherit !important;
 }
 
 html,
@@ -32,6 +33,7 @@ body,
 
 .markdown-body {
   word-break: break-word;
+  font-family: inherit;
 
   *::-webkit-scrollbar {
     background-color: transparent;

@@ -2,7 +2,8 @@
 <style src="animate.css/animate.css"></style>
 <style src="codemirror/lib/codemirror.css"></style>
 <style src="./css/reset"></style>
-<style src="./css/editor-reset"></style>
+<style src="src/css/theme/white"></style>
+<style src="src/css/theme/dark"></style>
 <style>
   .overlay {
     position: fixed;
@@ -16,10 +17,14 @@
 
 <template>
   <div id="app"
-    :class="{
-      'distraction-free': isDistractionFreeMode,
-      'full-screen': isFullScreen
-    }">
+    :class="[
+      {
+        'distraction-free': isDistractionFreeMode,
+        'full-screen': isFullScreen
+      },
+      'theme-' + theme,
+      highlight
+    ]">
     <div
       class="overlay"
       @click="togglePreferencePane"
@@ -53,7 +58,9 @@
     vuex: {
       getters: {
         tabsAmount: state => state.editor.tabs.length,
-        showPreferencePane: state => state.app.showPreferencePane
+        showPreferencePane: state => state.app.showPreferencePane,
+        theme: state => state.app.settings.theme,
+        highlight: state => state.app.settings.highlight
       },
       actions: {
         togglePreferencePane({dispatch}) {

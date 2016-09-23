@@ -5,7 +5,7 @@
     display: flex;
     cursor: default;
     height: $header-height;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid;
     -webkit-app-region: drag;
     &:hover {
       .settings-trigger {
@@ -38,17 +38,15 @@
       padding-right: 40px;
       position: relative;
       text-align: center;
-      border-left: 1px solid #ddd;
-      border-bottom: 1px solid #ddd;
+      border-left: 1px solid;
+      border-bottom: 1px solid;
       display: flex;
       flex: 1;
       width: 100%;
       white-space: nowrap;
-      background-color: white;
       overflow: hidden;
       text-overflow: ellipsis;
       .tab-title {
-        color: #999;
         -webkit-user-select: none;
         width: 100%;
         display: block;
@@ -60,17 +58,11 @@
         }
       }
       &.current-tab {
-        border-left-color: #1976D2;
-        background-color: white;
         border-left-width: 2px;
         border-bottom: none;
-        .tab-title {
-          color: #333;
-        }
       }
       &.hover {
         .tab-indicator {
-          background-color: rgba(255, 255, 255, 0.84);
           .dot {
             display: none;
           }
@@ -86,26 +78,18 @@
 
     &:not(.single-tab) {
       .tab:last-child {
-        border-right: 1px solid #ddd;
+        border-right: 1px solid;
       }
     }
 
     &.single-tab {
       .tab {
         &.current-tab {
-          border-bottom: 1px solid #ddd;
+          border-bottom: 1px solid;
           border-left-width: 1px;
-          border-left-color: #ddd;
-          border-right: 1px solid #ddd;
+          border-right: 1px solid transparent;
           &:not(.unsaved) {
-            border-right-width: 0;
-          }
-        }
-      }
-      &:hover {
-        .tab {
-          &.current-tab {
-            border-right-width: 1px;
+            border-right-color: transparent;
           }
         }
       }
@@ -127,7 +111,6 @@
       .dot {
         width: 5px;
         height: 5px;
-        background-color: #4b89ff;
         border-radius: 50%;
         display: inline-block;
       }
@@ -146,27 +129,12 @@
     }
 
     .settings-trigger {
-      $color: #b1b1b1;
-      $colorActive: #666;
-
       opacity: 0;
       display: flex;
       justify-content: center;
       width: 50px;
       svg {
         width: 14px;
-        color: $color;
-        circle {
-          color: $color;
-        }
-      }
-      &:hover {
-        svg {
-          color: $colorActive;
-          circle {
-            color: $colorActive;
-          }
-        }
       }
     }
   }

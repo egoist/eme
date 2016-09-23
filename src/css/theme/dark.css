@@ -1,0 +1,125 @@
+@import "color-preset";
+
+$dark: black;
+$light-dark: #333;
+$light: white;
+
+.theme-dark {
+  background-color: $dark;
+  .header {
+    background-color: $dark;
+    border-bottom-color: $light-dark;
+    .tab {
+      border-bottom-color: $light-dark;
+      border-left-color: $light-dark;
+      .tab-title {
+        color: $grey-500;
+      }
+      &.current-tab {
+        background-color: $dark;
+        .tab-title {
+          color: $light;
+        }
+      }
+    }
+    &:not(.single-tab) {
+      .tab:last-child {
+        border-right-color: $light-dark;
+      }
+    }
+    &.single-tab {
+      .tab {
+        &.current-tab {
+          border-color: $light-dark;
+        }
+      }
+      &:hover {
+        .tab {
+          &.current-tab {
+            border-right-color: $light-dark;
+          }
+        }
+      }
+    }
+    .settings-trigger {
+      $color: $light;
+      $colorActive: $grey-200;
+
+      svg {
+        color: $color;
+        circle {
+          color: $color;
+        }
+      }
+      &:hover {
+        svg {
+          color: $colorActive;
+          circle {
+            color: $colorActive;
+          }
+        }
+      }
+    }
+  }
+
+  .editor {
+    border-right-color: $light-dark;
+    .CodeMirror {
+      background-color: $dark !important;
+    }
+  }
+
+  .footer, .footer * {
+    color: $grey-100;
+  }
+
+  .footer {
+    border-top-color: $light-dark;
+    background-color: $dark;
+    .footer-icon path {
+      fill: $grey-100;
+    }
+    .footer-right .footer-icon-group .footer-icon-item {
+      border-color: $light-dark;
+      .footer-icon path {
+        fill: $grey-500;
+      }
+      &.active {
+        .footer-icon path {
+          fill: $light;
+        }
+      }
+    }
+  }
+
+
+  .tab-indicator {
+    .dot {
+      background-color: $light;
+    }
+    .cross {
+      color: $light;
+    }
+  }
+
+  .CodeMirror-simplescroll-horizontal div,
+  .CodeMirror-simplescroll-vertical div {
+    background-color: $light-dark;
+    border-color: $grey-800;
+  }
+
+  .markdown-body {
+    color: $light;
+    h1, h2 {
+      border-bottom-color: $light-dark;
+    }
+    kbd {
+      background-color: transparent;
+      color: $light;
+    }
+
+    pre {
+      background-color: transparent;
+    }
+  }
+}

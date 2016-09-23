@@ -5,16 +5,12 @@
     background-color: #f0f0f0;
     padding: 0 10px;
     font-size: 12px;
-    color: #666;
-    border-top: 1px solid #e2e2e2;
+    border-top: 1px solid;
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     -webkit-app-region: drag;
-    box-shadow: inset 0 1px 0 #f5f4f5;
-    background-image: linear-gradient(to bottom,#e8e6e8 0,#d1cfd1 100%);
-    border-top: 1px solid #c2c0c2;
     > span {
       margin-right: 10px;
     }
@@ -24,8 +20,8 @@
       border: none;
       font-size: 12px;
       outline: none;
-      color: #666;
       -webkit-appearance: none;
+      text-rendering: geometricPrecision;
     }
 
     .footer-right {
@@ -39,11 +35,7 @@
         .footer-icon-item {
           height: 16px;
           line-height: 16px;
-          background-color: #fcfcfc;
-          background-image: linear-gradient(to bottom,#fcfcfc 0,#f1f1f1 100%);
           border: 1px solid;
-          border-color: #c2c0c2 #c2c0c2 #a19fa1;
-          box-shadow: 0 1px 1px rgba(0,0,0,.06);
           margin-left: -1px;
           padding: 0 5px;
           text-align: center;
@@ -53,16 +45,7 @@
           position: relative;
           z-index: 1;
           &.active {
-            background-color: #6d6c6d;
-            background-image: none;
-            color: white;
-            border-color: transparent;
             z-index: 2;
-            .footer-icon {
-              path {
-                fill: white;
-              }
-            }
           }
           &:first-child {
             border-radius: 4px 0 0 4px;
@@ -84,9 +67,6 @@
   .footer-icon {
     svg {
       width: 12px;
-    }
-    path {
-      fill: #666;
     }
     .disabled & path {
       fill: #ccc;

@@ -12,6 +12,15 @@ const config = new Config({
       currentTabIndex: null
     },
     settings: {
+      theme: 'white',
+      colorSchema: 'base16-light',
+      highlight: 'github',
+      font: `-apple-system, BlinkMacSystemFont,
+            'avenir next', avenir,
+            helvetica, 'helvetica neue',
+            Ubuntu,
+            'segoe ui', arial,
+            sans-serif`,
       writingMode: 'default',
       tabSize: 2,
       indentWithTabs: false,

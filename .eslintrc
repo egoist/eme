@@ -8,9 +8,13 @@
     "curly": ["error", "multi-line"],
     "no-warning-comments": 0,
     "max-lines": 0,
-    "quote-props": ["error", "as-needed"]
+    "quote-props": ["error", "as-needed"],
+    "guard-for-in": 0
   },
   "env": {
     "browser": "true"
+  },
+  "globals": {
+    "Mousetrap": true
   }
 }

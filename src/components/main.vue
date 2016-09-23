@@ -1,7 +1,12 @@
-<style src="highlight.js/styles/github"></style>
-<style src="../css/base16-light"></style>
-<style src="../css/editor-dialog"></style>
-<style src="../css/editor-scrollbar"></style>
+<!-- codemirror theme -->
+<style src="src/css/codemirror/tomorrow-night-bright"></style>
+<style src="src/css/codemirror/base16-light"></style>
+<style src="src/css/codemirror/editor-dialog"></style>
+<style src="src/css/codemirror/editor-scrollbar"></style>
+<style src="src/css/codemirror/editor-reset"></style>
+<!-- highlight.js theme -->
+<style src="src/css/highlight/github"></style>
+<style src="src/css/highlight/tomorrow-night-bright"></style>
 
 <style>
   .main {
@@ -40,7 +45,7 @@
     cursor: text;
     overflow-x: hidden !important;
     position: relative;
-    border-right: 1px solid #e3e3e3;
+    border-right: 1px solid;
     .editor-input {
       display: none;
     }
@@ -86,7 +91,7 @@
 </style>
 
 <template>
-  <div class="main">
+  <div class="main" :style="{'font-family': settings.font}">
     <tip v-if="tabs.length === 0"></tip>
     <div
       class="tab-body"
@@ -387,7 +392,7 @@
           const textarea = tabEl.querySelector(`#editor-${index}`)
           const editor = CodeMirror.fromTextArea(textarea, {
             mode: 'gfm',
-            theme: 'base16-light',
+            theme: this.settings.colorSchema,
             lineNumbers: false,
             matchBrackets: true,
             lineWrapping: true,
@@ -622,6 +627,12 @@
         event.on('focus-current-tab', () => {
           this.editor.refresh()
           this.editor.focus()
+        })
+
+        event.on('update-editor-options', options => {
+          for (const option in options) {
+            this.editor.setOption(option, options[option])
+          }
         })
       },
       async closeTab(index) {

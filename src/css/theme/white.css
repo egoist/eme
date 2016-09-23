@@ -1,0 +1,104 @@
+.theme-white {
+  .header {
+    background-color: white;
+    border-bottom-color: #ddd;
+    .tab {
+      border-left-color: #ddd;
+      border-bottom-color: #ddd;
+      .tab-title {
+        color: #999;
+      }
+      &.current-tab {
+        border-left-color: #1976D2;
+        background-color: white;
+        .tab-title {
+          color: #333;
+        }
+      }
+    }
+    &:not(.single-tab) {
+      .tab:last-child {
+        border-right-color: #ddd;
+      }
+    }
+    &.single-tab {
+      .tab {
+        &.current-tab {
+          border-color: #ddd;
+        }
+      }
+      &:hover {
+        .tab {
+          &.current-tab {
+            border-right-color: #ddd;
+          }
+        }
+      }
+    }
+    .settings-trigger {
+      $color: #b1b1b1;
+      $colorActive: #666;
+
+      svg {
+        color: $color;
+        circle {
+          color: $color;
+        }
+      }
+      &:hover {
+        svg {
+          color: $colorActive;
+          circle {
+            color: $colorActive;
+          }
+        }
+      }
+    }
+  }
+
+  .editor {
+    border-right-color: #e3e3e3;
+    .CodeMirror {
+      background-color: white !important;
+    }
+  }
+
+  .footer, .footer * {
+    color: #666;
+  }
+  .footer {
+    border-top-color: #c2c0c2;
+    box-shadow: inset 0 1px 0 #f5f4f5;
+    background-image: linear-gradient(to bottom,#e8e6e8 0,#d1cfd1 100%);
+    .footer-icon path {
+      fill: #666;
+    }
+    .footer-right {
+      .footer-icon-group {
+        .footer-icon-item {
+          border-color: #c2c0c2 #c2c0c2 #a19fa1;
+          box-shadow: 0 1px 1px rgba(0,0,0,.06);
+          background-color: #fcfcfc;
+          background-image: linear-gradient(to bottom,#fcfcfc 0,#f1f1f1 100%);
+          &.active {
+            background-color: #6d6c6d;
+            background-image: none;
+            color: white;
+            border-color: transparent;
+            .footer-icon {
+              path {
+                fill: white;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .tab-indicator {
+    .dot {
+      background-color: #4b89ff;
+    }
+  }
+}

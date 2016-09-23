@@ -5,7 +5,7 @@
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
     width: 70%;
-    height: 70%;
+    height: 70vmin;
     overflow: hidden;
     box-shadow: 0 0 30px rgba(0,0,0,.1);
     border: 1px solid #bebebe;
@@ -72,6 +72,8 @@
     }
     .pane-body {
       padding: 10px 20px;
+      height: 100%;
+      overflow: auto;
       form {
         label {
           display: block;
@@ -116,6 +118,43 @@
       <form class="row">
         <div class="col col-half">
           <div class="form-group">
+            <label>App Theme</label>
+            <select class="form-control" v-model="settings.theme">
+              <option
+                value="white"
+                :selected="settings.theme === 'white'">
+                White
+              </option>
+              <option
+                value="dark"
+                :selected="settings.theme === 'dark'">
+                Dark
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Color Schema</label>
+            <select class="form-control" v-model="settings.colorSchema">
+              <option
+                :value="colorSchema"
+                v-for="colorSchema in colorSchemas"
+                :selected="settings.colorSchema === colorSchema">
+                {{ colorSchema }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Code Highlight Style</label>
+            <select class="form-control" v-model="settings.highlight">
+              <option
+                :value="highlight"
+                v-for="highlight in highlights"
+                :selected="settings.highlight === highlight">
+                {{ highlight }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
             <label>Default Writing Mode</label>
             <select class="form-control" v-model="settings.writingMode">
               <option
@@ -137,6 +176,13 @@
           </div>
         </div>
         <div class="col col-half">
+          <div class="form-group">
+            <label>Font</label>
+            <input
+              type="text"
+              class="form-control"
+              v-model="settings.font">
+          </div>
           <div class="form-group">
             <label>Tab Size</label>
             <input
@@ -222,6 +268,7 @@
 
 <script>
   import {remote, ipcRenderer} from 'electron'
+  import event from 'utils/event'
 
   const currentWindow = remote.getCurrentWindow()
   const $config = currentWindow.$config
@@ -231,7 +278,15 @@
       return {
         tabs: ['General', 'Keys'],
         active: 0,
-        settings: JSON.parse(JSON.stringify($config.get('settings')))
+        settings: JSON.parse(JSON.stringify($config.get('settings'))),
+        colorSchemas: [
+          'base16-light',
+          'tomorrow-night-bright'
+        ],
+        highlights: [
+          'github',
+          'tomorrow-night-bright'
+        ]
       }
     },
     methods: {
@@ -244,6 +299,9 @@
     beforeDestroy() {
       this.update()
       ipcRenderer.send('reload-menu')
+      event.emit('update-editor-options', {
+        theme: this.settings.colorSchema
+      })
     }
   }
 </script>
