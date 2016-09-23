@@ -28,7 +28,8 @@ const config = new Config({
         distractionFreeMode: `${cmdOrCtrl}+j`,
         vimMode: `${cmdOrCtrl}+i`,
         focusMode: `${cmdOrCtrl}+\\`,
-        presentationMode: `${cmdOrCtrl}+k`
+        presentationMode: `${cmdOrCtrl}+k`,
+        toggleNightMode: `${cmdOrCtrl}+shift+n`
       }
     }
   }

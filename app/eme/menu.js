@@ -208,6 +208,16 @@ module.exports = cb => {
           type: 'separator'
         },
         {
+          label: 'Toggle Night Mode',
+          accelerator: keys.toggleNightMode,
+          click(item, focusedWindow) {
+            if (focusedWindow) focusedWindow.webContents.send('toggle-night-mode')
+          }
+        },
+        {
+          type: 'separator'
+        },
+        {
           label: 'Toggle Distraction Free mode',
           accelerator: keys.distractionFreeMode,
           click(item, focusedWindow) {

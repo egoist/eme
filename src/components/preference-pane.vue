@@ -138,7 +138,7 @@
             </select>
           </div>
           <div class="form-group">
-            <label>Color Schema</label>
+            <label>Markdown Color Schema</label>
             <select class="form-control" v-model="settings.colorSchema">
               <option
                 :value="colorSchema"
@@ -247,6 +247,13 @@
         </div>
         <div class="col col-half">
           <div class="form-group">
+            <label>Night Mode</label>
+            <input
+              type="text"
+              class="form-control"
+              v-model="settings.keys.toggleNightMode">
+          </div>
+          <div class="form-group">
             <label>Distraction Free Mode</label>
             <input
               type="text"
@@ -310,10 +317,6 @@
     },
     methods: {
       update() {
-        if (this.settings.theme === 'dark') {
-          // force switching colorSchema to a readable one in dark mode
-          this.settings.colorSchema = 'tomorrow-night-bright'
-        }
         this.$store.dispatch('UPDATE_SETTINGS', this.settings)
         event.emit('update-editor-options', {
           theme: this.settings.colorSchema,

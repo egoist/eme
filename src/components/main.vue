@@ -541,6 +541,14 @@
 
           closeInOrder(() => this.saveAppState({tabs, currentTabIndex}))
         })
+        ipcRenderer.on('toggle-night-mode', () => {
+          this.$store.dispatch('TOGGLE_NIGHT_MODE')
+          this.updateEditorOptions({
+            theme: this.settings.colorSchema
+          })
+          config.set('settings.theme', this.settings.theme)
+          config.set('settings.colorSchema', this.settings.colorSchema)
+        })
 
         window.onbeforeunload = () => {
           if (currentWindow.$state.unsaved === 0) {
@@ -631,11 +639,14 @@
         })
 
         event.on('update-editor-options', options => {
-          for (const option in options) {
-            this.editor.setOption(option, options[option])
-          }
-          this.editor.refresh()
+          this.updateEditorOptions(options)
         })
+      },
+      updateEditorOptions(options) {
+        for (const option in options) {
+          this.editor.setOption(option, options[option])
+        }
+        this.editor.refresh()
       },
       async closeTab(index) {
         const tab = this.tabs[index]
