@@ -12,12 +12,6 @@
         opacity: 1;
       }
     }
-    &.is-mac {
-      padding-left: 80px;
-      .full-screen & {
-        padding-left: 0;
-      }
-    }
     .tab-container {
       display: flex;
       width: calc(100% - 50px);
@@ -138,13 +132,29 @@
       }
     }
   }
+
+  .is-mac {
+    .header {
+      padding-left: 80px;
+      .full-screen & {
+        padding-left: 0;
+      }
+    }
+  }
+  #app:not('.is-mac') {
+    .header.single-tab {
+      .tab.current-tab {
+        padding-left: 90px;
+      }
+    }
+  }
 </style>
 
 <template>
   <header
     class="header single-tab"
     v-el:header
-    :class="{'single-tab': tabs.length === 1, 'is-mac': isMac}"
+    :class="{'single-tab': tabs.length === 1}"
     @dblclick="createNewTab">
     <div class="tab-container"
       :class="{undraggable: tabs.length > 1}"
@@ -190,7 +200,6 @@
 
 <script>
   import path from 'path'
-  import {isMac} from 'utils/os'
   import event from 'utils/event'
   import {$} from 'utils/dom'
   import {cmdOrCtrl} from 'utils/key'
@@ -228,7 +237,6 @@
     },
     data() {
       return {
-        isMac,
         clickable: false
       }
     },

@@ -162,7 +162,6 @@
   import 'codemirror/keymap/vim'
 
   import {$} from 'utils/dom'
-  import {isMac} from 'utils/os'
   import event from 'utils/event'
   import makeHTML from 'utils/make-html'
   import fs from 'utils/fs-promise'
@@ -200,7 +199,6 @@
     },
     data() {
       return {
-        isMac,
         resizing: false
       }
     },

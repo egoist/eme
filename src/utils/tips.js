@@ -1,6 +1,6 @@
-import {isMac} from './os'
+import {platform} from './os'
 
-const metaKey = isMac ? 'Command' : 'Ctrl'
+const metaKey = platform === 'darwin' ? 'Command' : 'Ctrl'
 
 export default [
   `Use <kbd>${metaKey} \\</kbd> to toggle focus mode`,

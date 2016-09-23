@@ -20,7 +20,8 @@
     :class="[
       {
         'distraction-free': isDistractionFreeMode,
-        'full-screen': isFullScreen
+        'full-screen': isFullScreen,
+        'is-mac': platform === 'darwin'
       },
       'theme-' + theme,
       highlight
@@ -45,6 +46,7 @@
   import appFooter from './components/footer'
   import preferencePane from './components/preference-pane'
   import {$} from 'utils/dom'
+  import {platform} from 'utils/os'
 
   const currentWindow = remote.getCurrentWindow()
 
@@ -52,7 +54,8 @@
     data() {
       return {
         isDistractionFreeMode: false,
-        isFullScreen: currentWindow.isFullScreen()
+        isFullScreen: currentWindow.isFullScreen(),
+        platform
       }
     },
     vuex: {
