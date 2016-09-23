@@ -45,11 +45,16 @@ body,
     border-radius: 2px;
     border: 1px solid #e2e2e2;
   }
+
+  kbd {
+    line-height: 1em;
+    font-size: .85em;
+  }
 }
 
 .markdown-body ul,
 .markdown-body ol {
-  padding-left: 20px;
+  padding-left: 1.3em;
 }
 
 input, textarea {

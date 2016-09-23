@@ -659,8 +659,7 @@
 .markdown-body kbd {
   display: inline-block;
   padding: 3px 5px;
-  font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
-  line-height: 10px;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
   color: #555;
   vertical-align: middle;
   background-color: #fcfcfc;

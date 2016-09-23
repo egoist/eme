@@ -2,7 +2,7 @@
 
 $dark: black;
 $light-dark: #333;
-$light: white;
+$light: #ccc;
 
 .theme-dark {
   background-color: $dark;
@@ -18,7 +18,7 @@ $light: white;
       &.current-tab {
         background-color: $dark;
         .tab-title {
-          color: $light;
+          color: white;
         }
       }
     }
@@ -120,11 +120,18 @@ $light: white;
 
     pre {
       background-color: transparent;
+      code {
+        color: #50E3C2;
+      }
     }
 
     *::-webkit-scrollbar-thumb {
       background-color: transparent;
       border-color: $grey-800;
+    }
+
+    code {
+      color: white;
     }
   }
 }
