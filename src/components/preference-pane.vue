@@ -40,6 +40,7 @@
       font-size: 12px;
       text-align: center;
       position: relative;
+      height: 26px;
       border-left: 1px solid #989698;
       background-color: #b8b6b8;
       background-image: linear-gradient(to bottom,#b8b6b8 0,#b0aeb0 100%);
@@ -72,7 +73,7 @@
     }
     .pane-body {
       padding: 10px 20px;
-      height: 100%;
+      height: calc(100% - 50px);
       overflow: auto;
       form {
         label {
