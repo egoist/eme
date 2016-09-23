@@ -310,6 +310,10 @@
     },
     methods: {
       update() {
+        if (this.settings.theme === 'dark') {
+          // force switching colorSchema to a readable one in dark mode
+          this.settings.colorSchema = 'tomorrow-night-bright'
+        }
         this.$store.dispatch('UPDATE_SETTINGS', this.settings)
         event.emit('update-editor-options', {
           theme: this.settings.colorSchema,
