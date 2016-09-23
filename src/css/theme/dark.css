@@ -104,7 +104,7 @@ $light: white;
 
   .CodeMirror-simplescroll-horizontal div,
   .CodeMirror-simplescroll-vertical div {
-    background-color: $light-dark;
+    background-color: black;
     border-color: $grey-800;
   }
 
@@ -120,6 +120,11 @@ $light: white;
 
     pre {
       background-color: transparent;
+    }
+
+    *::-webkit-scrollbar-thumb {
+      background-color: transparent;
+      border-color: $grey-800;
     }
   }
 }

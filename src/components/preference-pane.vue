@@ -303,19 +303,24 @@
         ]
       }
     },
+    created() {
+      this.$watch('settings', () => {
+        this.update()
+      }, {deep: true})
+    },
     methods: {
       update() {
-        $config.set('settings', this.settings)
         this.$store.dispatch('UPDATE_SETTINGS', this.settings)
-        // TODO: reflect tabs settings in current active editor
+        event.emit('update-editor-options', {
+          theme: this.settings.colorSchema,
+          tabSize: this.settings.tabSize,
+          indentWithTabs: this.settings.indentWithTabs
+        })
       }
     },
     beforeDestroy() {
-      this.update()
+      $config.set('settings', this.settings)
       ipcRenderer.send('reload-menu')
-      event.emit('update-editor-options', {
-        theme: this.settings.colorSchema
-      })
     }
   }
 </script>
