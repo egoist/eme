@@ -111,7 +111,7 @@
       <div
         class="editor"
         :class="{'focus-mode': tab.isFocusMode}"
-        :style="{width: getSplitWidth('editor')}"
+        :style="{width: getSplitWidth('editor'), 'font-size': settings.fontSize + 'px'}"
         v-show="currentTab && currentTab.writingMode !== 'preview'">
         <textarea class="editor-input" :id="'editor-' + $index">{{ tab.content }}</textarea>
         <div class="resize-bar" @mousedown="resizeStart($event, $index)"></div>
@@ -130,7 +130,10 @@
           :slides="tab.html"
           v-if="tab.isPresentationMode && currentTabIndex === $index">
         </presentation>
-        <div :class="'markdown-body markdown-body-' + $index" v-else>
+        <div
+          :class="'markdown-body markdown-body-' + $index"
+          :style="{'font-size': settings.fontSize + 'px'}"
+          v-else>
           {{{ tab.html }}}
         </div>
       </div>

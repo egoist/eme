@@ -88,13 +88,18 @@
         .form-control {
           outline: none;
           font-size: 16px;
-          border: 1px solid #ccc;
-          border-radius: 3px;
-          padding: 5px;
           width: 100%;
-          &:focus {
+          &[type="text"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+          }
+          &[type="text"]:focus {
             border-color: #6db3fd;
             box-shadow: 3px 3px 0 #6db3fd,-3px -3px 0 #6db3fd,-3px 3px 0 #6db3fd,3px -3px 0 #6db3fd;
+          }
+          &[type="range"] {
+            border: none;
           }
         }
       }
@@ -177,7 +182,16 @@
         </div>
         <div class="col col-half">
           <div class="form-group">
-            <label>Font</label>
+            <label>Font Size: {{ settings.fontSize }}px</label>
+            <input
+              type="range"
+              min="12"
+              max="60"
+              class="form-control"
+              v-model="settings.fontSize">
+          </div>
+          <div class="form-group">
+            <label>Font Family</label>
             <input
               type="text"
               class="form-control"
