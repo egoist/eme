@@ -425,15 +425,18 @@
           }, 0)
 
           editor.on('change', e => {
-            this.updateSaved({
-              index: this.currentTabIndex,
-              saved: false
+            const content = e.getValue()
+            setTimeout(() => {
+              this.updateSaved({
+                index: this.currentTabIndex,
+                saved: false
+              })
+              this.$store.dispatch('UPDATE_CONTENT', {
+                index: this.currentTabIndex,
+                content
+              })
+              this.handleScroll()
             })
-            this.$store.dispatch('UPDATE_CONTENT', {
-              index: this.currentTabIndex,
-              content: e.getValue()
-            })
-            this.handleScroll()
           })
 
           this.$store.dispatch('SET_EDITOR', {index, editor})
