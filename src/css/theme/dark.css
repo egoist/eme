@@ -87,6 +87,11 @@ $light: #ccc;
       .footer-icon path {
         fill: #2f2e2e;
       }
+      &:hover {
+        .footer-icon path {
+          fill: #ccc;
+        }
+      }
       &.active {
         .footer-icon path {
           fill: white;

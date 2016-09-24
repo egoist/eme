@@ -114,7 +114,7 @@
         :style="{
           width: getSplitWidth('editor'),
           'font-size': settings.fontSize + 'px',
-          'border-right-width': currentTab.writingMode === 'default' ? '1px' : '0'
+          'border-right-width': currentTab && currentTab.writingMode === 'default' ? '1px' : '0'
         }"
         v-show="currentTab && currentTab.writingMode !== 'preview'">
         <textarea class="editor-input" :id="'editor-' + $index">{{ tab.content }}</textarea>

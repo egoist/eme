@@ -9,7 +9,6 @@
   flex-direction: column;
   flex-wrap: nowrap;
   transition: transform .3s ease;
-  background-color: white;
   .presentation & {
     position: absolute;
     top: 0;
