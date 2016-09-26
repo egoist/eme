@@ -10,7 +10,7 @@ const tildify = require('tildify')
 const axios = require('axios')
 const compare = require('semver-compare')
 const config = require('./config')
-const {InstallShell} = require('./shell')
+const {installShell} = process.platform === 'win32' ? require('./win-shell') : require('./shell')
 
 const version = app.getVersion()
 const checkForUpdates = {
@@ -122,6 +122,15 @@ module.exports = cb => {
         {
           label: 'Open Recent',
           submenu: recentFiles
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Install Shell Command',
+          click() {
+            installShell()
+          }
         },
         {
           type: 'separator'
@@ -336,7 +345,7 @@ module.exports = cb => {
         {
           label: 'Install Shell Command',
           click() {
-            new InstallShell().installShell()
+            installShell()
           }
         },
         {

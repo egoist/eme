@@ -5,31 +5,28 @@ const spawn = require('child_process').spawn
 const yargs = require('yargs')
 const {app} = require('electron')
 
-class InstallShell {
 
-  installShell() {
-    const commandName = 'eme'
-    const commandPath = path.join(this.getResourcesDirectory(), 'app', 'eme.sh')
-    const destinationPath = path.join(this.getInstallDirectory(), commandName)
-    this.createSymLink(commandPath, destinationPath)
-  }
+function installShell() {
+  const commandPath = path.join(getResourcesDirectory(), 'app', 'eme.sh')
+  const destinationPath = path.join(getInstallDirectory(), 'eme')
+  createSymLink(commandPath, destinationPath)
+}
 
-  getInstallDirectory() {
-    return '/usr/local/bin'
-  }
+function getInstallDirectory() {
+  return '/usr/local/bin'
+}
 
-  getResourcesDirectory() {
-    return process.resourcesPath
-  }
+function getResourcesDirectory() {
+  return process.resourcesPath
+}
 
-  createSymLink(commandPath, destinationPath) {
-    try {
-      spawn('rm', ['-f', destinationPath])
-      spawn('mkdir', ['-p', path.dirname(destinationPath)])
-      spawn('ln', ['-s', commandPath, destinationPath])
-    } catch (e) {
-      console.log(e)
-    }
+function createSymLink(commandPath, destinationPath) {
+  try {
+    spawn('rm', ['-f', destinationPath])
+    spawn('mkdir', ['-p', path.dirname(destinationPath)])
+    spawn('ln', ['-s', commandPath, destinationPath])
+  } catch (e) {
+    console.log(e)
   }
 }
 
@@ -79,6 +76,6 @@ Usage: eme [options] [path ...]
 }
 
 module.exports = {
-  InstallShell,
+  installShell,
   parseShellCommand
 }

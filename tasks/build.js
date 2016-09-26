@@ -2,10 +2,8 @@
 'use strict'
 const minimist = require('minimist')
 const packager = require('electron-packager')
-const deb = require('electron-installer-debian')
 const exec = require('child_process').exec
 const pkg = require('../app/package.json')
-
 const args = minimist(process.argv.slice(2))
 const target = args._[0]
 
@@ -39,6 +37,7 @@ platforms.macos = () => {
 }
 
 platforms.linux = () => {
+  const deb = require('electron-installer-debian')
   packager(Object.assign({}, defaults, {
     platform: 'linux',
     arch: 'x64',
