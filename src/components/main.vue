@@ -132,6 +132,7 @@
         v-show="currentTab && currentTab.writingMode !== 'editor'">
         <presentation
           :slides="tab.html"
+          :style="{'font-size': settings.fontSize + 'px'}"
           v-if="tab.isPresentationMode && currentTabIndex === $index">
         </presentation>
         <div

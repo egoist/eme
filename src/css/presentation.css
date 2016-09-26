@@ -2,7 +2,7 @@
   display: flex;
   padding: 10px;
   height: 100%;
-  font-size: 20px;
+  font-size: inherit;
   text-align: center;
   align-items: center;
   justify-content: center;

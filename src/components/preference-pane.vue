@@ -44,6 +44,8 @@
       border-left: 1px solid #989698;
       background-color: #b8b6b8;
       background-image: linear-gradient(to bottom,#b8b6b8 0,#b0aeb0 100%);
+      transition: box-shadow .3s linear;
+      cursor: default;
 
       &:first-child {
         border-left: 0;
@@ -54,21 +56,8 @@
         background-image: linear-gradient(to bottom,#d4d2d4 0,#cccacc 100%);
       }
 
-      &:after {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        content: "";
-        opacity: 0;
-        transition: opacity .1s linear;
-        z-index: 1;
-        background-color: rgba(0,0,0,.08);
-      }
-
-      &:hover:not(.active):after {
-        opacity: 1
+      &:hover:not(.active) {
+        box-shadow: inset 0 0 5px #999;
       }
     }
     .pane-body {
