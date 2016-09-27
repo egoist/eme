@@ -12,6 +12,7 @@ You can manually download the latest release [here](https://github.com/egoist/em
 - Focus mode, writing without distractions.
 - Exportable, from Markdown to HTML/PDF... You name it.
 - Supporting math typesetting, good for students and professionals.
+- Auto-sync files to GitHub Gist after being saved, optional.
 
 ## WIKI
 
