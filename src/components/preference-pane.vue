@@ -77,6 +77,10 @@
           font-size: 12px;
           margin-top: -6px;
           line-height: 1.4;
+          a {
+            color: #4078c0;
+            text-decoration: none;
+          }
         }
         .form-group {
           margin-bottom: 10px;
@@ -287,7 +291,9 @@
         <div class="form-group">
           <label>GitHub token</label>
           <p class="label-description">You can generate a private token at
-            &nbsp;<a target="_blank" href="https://github.com/settings/tokens">github.com/settings/tokens</a>, you should select scope `gist`.</p>
+          &nbsp;<a target="_blank" href="https://github.com/settings/tokens">github.com/settings/tokens</a>, and select scope `gist`.
+            <a target="_blank" href="https://gist.github.com/egoist/d73372645dcc636e4b282ea70d043a0f">Still have no clue?</a>
+          </p>
           <input
             type="text"
             class="form-control"
