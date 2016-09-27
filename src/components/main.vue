@@ -772,7 +772,7 @@
           console.log('Gist is not published due to empty content!')
           return
         }
-        if (!this.settings.autoSaveGist) {
+        if (!this.settings.autoSaveGist || !this.settings.tokens.github) {
           console.log('Auto-save GitHub Gist is disabled!')
           return
         }
