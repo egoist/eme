@@ -151,6 +151,15 @@ module.exports = cb => {
           type: 'separator'
         },
         {
+          label: 'Publish to GitHub Gist',
+          click(item, focusedWindow) {
+            if (focusedWindow) focusedWindow.webContents.send('publish-to-github-gist')
+          }
+        },
+        {
+          type: 'separator'
+        },
+        {
           label: 'Export as PDF',
           accelerator: 'CmdOrCtrl+Shift+P',
           click(item, focusedWindow) {
