@@ -292,7 +292,7 @@
           <label>GitHub token</label>
           <p class="label-description">Generate a private token at
           &nbsp;<a target="_blank" href="https://github.com/settings/tokens">github.com/settings/tokens</a>, and select scope `gist`.
-            <a target="_blank" href="https://gist.github.com/egoist/d73372645dcc636e4b282ea70d043a0f">Still have no clue?</a>
+            <a target="_blank" href="https://gist.github.com/egoist/6855062dca8cd02d5b74430066d740b8">Still have no clue?</a>
           </p>
           <input
             type="text"

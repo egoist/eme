@@ -1,10 +1,10 @@
 import fetch from 'fetch-enhance'
 import store from 'store'
 
-const token = store.state.app.settings.tokens.github
-
 export function createOrUpdateGist(payload, id) {
+  const token = store.state.app.settings.tokens.github
   const headers = new Headers()
+
   if (token) {
     headers.append('Authorization', `token ${token}`)
   }
