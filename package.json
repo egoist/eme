@@ -5,8 +5,8 @@
   "scripts": {
     "test": "npm run lint",
     "lint": "npm run lint:app && npm run lint:src",
-    "lint:app": "eslint app/index.js app/eme/*.js",
-    "lint:src": "eslint src/**/*.vue src/**/*.js",
+    "lint:app": "eslint app/index.js app/eme --ext .js",
+    "lint:src": "eslint src/* src/* --ext .js --ext .vue",
     "dev": "node tasks/dev.js",
     "install:all": "npm install && cd app && npm install",
     "start": "cross-env NODE_ENV=development electron app/",
