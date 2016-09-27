@@ -293,9 +293,13 @@
             class="form-control"
             v-model="settings.tokens.github">
         </div>
+        <div class="form-group">
+          <label>
+            <input v-model="settings.autoSaveGist" type="checkbox"> Auto-update GitHub Gist after you save the file
+          </label>
+        </div>
       </form>
     </div>
-
   </div>
 </template>
 

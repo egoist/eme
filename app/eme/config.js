@@ -24,6 +24,7 @@ const config = new Config({
       tokens: {
         github: ''
       },
+      autoSaveGist: false,
       keys: {
         openNewTab: `${cmdOrCtrl}+t`,
         openFile: `${cmdOrCtrl}+o`,
