@@ -7,7 +7,6 @@
     width: 70%;
     height: 70vmin;
     overflow: hidden;
-    box-shadow: 0 0 30px rgba(0,0,0,.1);
     border: 1px solid #bebebe;
     border-radius: 6px;
     z-index: 9990;
