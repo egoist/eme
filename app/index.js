@@ -142,7 +142,6 @@ ipcMain.on('add-recent-file', (e, filePath) => {
 })
 
 ipcMain.on('remove-recent-file', (e, fileToRemove) => {
-  const files = config.get('recentFiles')
   config.set('recentFiles', config.get('recentFiles').filter(filePath => {
     return filePath !== fileToRemove
   }))
