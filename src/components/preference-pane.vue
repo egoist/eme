@@ -70,6 +70,14 @@
           font-weight: bold;
           margin-bottom: 5px;
         }
+        .label-description {
+          margin: 0;
+          padding: 5px 0;
+          color: #666;
+          font-size: 12px;
+          margin-top: -6px;
+          line-height: 1.4;
+        }
         .form-group {
           margin-bottom: 10px;
           max-width: 90%;
@@ -273,6 +281,21 @@
         </div>
       </form>
     </div>
+
+    <div class="pane-body" v-show="active === 2">
+      <form>
+        <div class="form-group">
+          <label>GitHub token</label>
+          <p class="label-description">You can generate a private token at
+            &nbsp;<a target="_blank" href="https://github.com/settings/tokens">github.com/settings/tokens</a>, you should select scope `gist`.</p>
+          <input
+            type="text"
+            class="form-control"
+            v-model="settings.tokens.github">
+        </div>
+      </form>
+    </div>
+
   </div>
 </template>
 
@@ -286,7 +309,7 @@
   export default {
     data() {
       return {
-        tabs: ['General', 'Keys'],
+        tabs: ['General', 'Keys', 'Account'],
         active: 0,
         settings: JSON.parse(JSON.stringify($config.get('settings'))),
         colorSchemas: [

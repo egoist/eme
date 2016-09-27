@@ -11,6 +11,7 @@ const config = new Config({
       tabs: [],
       currentTabIndex: null
     },
+    gists: {},
     settings: {
       theme: 'white',
       colorSchema: 'base16-light',
@@ -20,6 +21,9 @@ const config = new Config({
       writingMode: 'default',
       tabSize: 2,
       indentWithTabs: false,
+      tokens: {
+        github: ''
+      },
       keys: {
         openNewTab: `${cmdOrCtrl}+t`,
         openFile: `${cmdOrCtrl}+o`,

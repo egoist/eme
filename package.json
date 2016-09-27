@@ -69,6 +69,7 @@
     "babel-runtime": "^6.11.6",
     "codemirror": "^5.17.0",
     "color-preset": "^0.1.1",
+    "fetch-enhance": "^0.1.1",
     "highlight.js": "^9.5.0",
     "hint.css": "2.3.2",
     "markdown-it": "^7.0.0",

@@ -86,6 +86,18 @@
 <template>
   <footer class="footer">
     <span class="file-path" v-if="status.filePath">{{ status.filePath }}</span>
+    <span
+      class="pdf-link clickable-link"
+      v-if="status.pdf"
+      @click="openPDF(status.pdf)">
+      PDF
+    </span>
+    <span
+      class="clickable-link"
+      v-if="status.gist"
+      @click="openURL(status.gist)">
+      Gist
+    </span>
     <span class="word-count">
       <select class="word-count-select">
         <option>{{ status.wordCount }} words</option>
@@ -93,7 +105,6 @@
         <option>{{ status.charCount }} characters</option>
       </select>
     </span>
-    <span class="pdf-link clickable-link" v-if="status.pdf" @click="openPDF(status.pdf)">PDF</span>
     <div class="footer-right">
       <presentation-control
         :writing-mode="status.writingMode"
@@ -131,7 +142,8 @@
               'untitled',
             writingMode: tab.writingMode,
             pdf: tab.pdf,
-            isPresentationMode: tab.isPresentationMode
+            isPresentationMode: tab.isPresentationMode,
+            gist: tab.gist
           }
         }
       }
@@ -139,6 +151,9 @@
     methods: {
       openPDF(pdf) {
         shell.showItemInFolder(pdf)
+      },
+      openURL(id) {
+        shell.openExternal(`https://gist.github.com/${id}`)
       }
     },
     components: {

@@ -11,6 +11,7 @@ const axios = require('axios')
 const compare = require('semver-compare')
 const config = require('./config')
 const {InstallShell} = require('./shell')
+const event = require('./event')
 
 const version = app.getVersion()
 const checkForUpdates = {
@@ -121,7 +122,18 @@ module.exports = cb => {
         },
         {
           label: 'Open Recent',
-          submenu: recentFiles
+          submenu: recentFiles.concat([
+            {
+              type: 'separator'
+            },
+            {
+              label: 'Clear all',
+              click() {
+                config.set('recentFiles', [])
+                event.emit('reload-menu')
+              }
+            }
+          ])
         },
         {
           type: 'separator'
@@ -152,6 +164,7 @@ module.exports = cb => {
         },
         {
           label: 'Publish to GitHub Gist',
+          accelerator: 'CmdOrCtrl+Option+G',
           click(item, focusedWindow) {
             if (focusedWindow) focusedWindow.webContents.send('publish-to-github-gist')
           }

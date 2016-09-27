@@ -30,7 +30,8 @@ module.exports = {
       utils: path.join(__dirname, '../src/utils'),
       components: path.join(__dirname, '../src/components'),
       css: path.join(__dirname, '../src/css'),
-      directives: path.join(__dirname, '../src/directives')
+      directives: path.join(__dirname, '../src/directives'),
+      store: path.join(__dirname, '../src/vuex/store')
     }
   },
   module: {
