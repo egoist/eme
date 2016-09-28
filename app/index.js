@@ -37,7 +37,7 @@ const createMainWindow = () => {
 }
 
 const showAboutWindow = () => {
-  const win = emeWindow.createWindow({
+  emeWindow.createWindow({
     homepage: 'file://' + path.join(__dirname, 'pages/about.html'),
     windowState: {
       title: 'About EME',
