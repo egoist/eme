@@ -172,6 +172,7 @@
   import fs from 'utils/fs-promise'
   import {appPath} from 'utils/resolve-path'
   import handleError from 'utils/handle-error'
+  import {createOrUpdateGist} from 'utils/gist'
   import tip from 'components/tip'
   import presentation from 'components/presentation'
 
@@ -189,6 +190,14 @@
       actions: {
         updateSaved({dispatch}, payload) {
           dispatch('UPDATE_SAVE_STATUS', payload)
+        },
+        updateFileGist({dispatch}, gistId) {
+          dispatch('UPDATE_FILE_GIST', gistId)
+          const filePath = this.currentTab.filePath
+          config.set('gists', {
+            ...config.get('gists'),
+            [filePath]: gistId
+          })
         }
       }
     },
@@ -204,7 +213,8 @@
     },
     data() {
       return {
-        resizing: false
+        resizing: false,
+        shouldCheckContentSaved: true
       }
     },
     created() {
@@ -293,6 +303,7 @@
           })
           if (filePath) {
             await this.save({index, filePath})
+            this.createOrUpdateGist().catch(handleError)
             ipcRenderer.send('add-recent-file', filePath)
             return true
           }
@@ -326,8 +337,9 @@
           this.handleSave(index).catch(handleError)
         }
       },
-      async handleRenamed(name, index) {
+      async handleRenamed(index, name) {
         const tab = this.tabs[index]
+
         const newPath = path.join(path.dirname(tab.filePath), name)
 
         this.$store.dispatch('UPDATE_RENAME_STATUS', {
@@ -344,33 +356,50 @@
             message: `"${name}" already exists.`
           })
         } catch (e) {
+          // store old filename to delete in gist in the end
+          let oldFilePath = tab.filePath
           await fs.rename(tab.filePath, newPath)
           this.$store.dispatch('UPDATE_FILE_PATH', {
             index,
             filePath: newPath
           })
-          console.log(`rename as ... ${newPath}`)
+          console.log(`renamed as ... ${newPath}`)
+          // remove old file in recent file history
+          // add new file to histoy
+          ipcRenderer.send('add-recent-file', newPath)
+          ipcRenderer.send('remove-recent-file', oldFilePath)
+          // update the renamed file in gist
+          // delete the old file in gist at the same time
+          // this.createOrUpdate here equals to delete
+          // just pass null as relevant file's value
+          this.createOrUpdateGist(oldFilePath)
+          oldFilePath = null
         }
       },
       async overrideTab(filePath) {
+        this.shouldCheckContentSaved = false
         const index = this.currentTabIndex
         const content = await fs.readFile(filePath, 'utf8')
         this.editor.getDoc().setValue(content)
         this.$store.dispatch('UPDATE_CONTENT_WITH_FILEPATH', {
           index,
           content,
-          filePath
+          filePath,
+          gist: config.get('gists')[filePath] || ''
         })
         this.updateSaved({
           index,
           saved: true
         })
+        this.shouldCheckContentSaved = true
       },
       async createNewTab(tab = {}, created = () => {}) {
         let content = ''
+        let gist = ''
         const filePath = tab.filePath || ''
         if (filePath) {
           content = await fs.readFile(filePath, 'utf8')
+          gist = config.get('gists')[filePath] || ''
         }
         const index = this.tabs.length
         const tabDefaults = {
@@ -386,7 +415,8 @@
           split: this.settings.writingMode === 'default' ? 50 : 100,
           slideIndex: 0,
           isSlideSwitching: false,
-          slideDirection: 'left'
+          slideDirection: 'left',
+          gist
         }
         this.$store.dispatch('INIT_NEW_TAB', {
           ...tabDefaults,
@@ -426,7 +456,9 @@
           }, 0)
 
           editor.on('change', e => {
+            if (!this.shouldCheckContentSaved) return
             const content = e.getValue()
+            console.log('changed')
             setTimeout(() => {
               this.updateSaved({
                 index: this.currentTabIndex,
@@ -629,6 +661,10 @@
           }
         })
 
+        ipcRenderer.on('publish-to-github-gist', () => {
+          this.createOrUpdateGist()
+        })
+
         event.on('new-tab', callback => {
           this.createNewTab({}, callback)
         })
@@ -723,6 +759,44 @@
           this.resizing = false
           this.editor.refresh()
           this.editor.focus()
+        }
+      },
+      async createOrUpdateGist(oldFilePath) {
+        if (!this.currentTab.filePath) {
+          handleError({
+            message: 'You should save the file before publish it to GitHub Gist!'
+          })
+          return
+        }
+        if (!this.currentTab.content) {
+          console.log('Gist is not published due to empty content!')
+          return
+        }
+        if (!this.settings.autoSaveGist || !this.settings.tokens.github) {
+          console.log('Auto-save GitHub Gist is disabled!')
+          return
+        }
+        const filename = path.basename(this.currentTab.filePath)
+        const files = {
+          [filename]: {
+            content: this.currentTab.content
+          }
+        }
+        // in case a rename action triggers saving file
+        // we should delete the file before rename in gist
+        if (oldFilePath) {
+          files[path.basename(oldFilePath)] = null
+        }
+        try {
+          const payload = {files}
+          const res = await createOrUpdateGist(payload, this.currentTab.gist)
+          const data = await res.json()
+          this.updateFileGist(data.id)
+          this.filePathBeforeRename = []
+        } catch (err) {
+          console.log(err.stack)
+          const res = await err.data.json()
+          handleError({message: res.message})
         }
       }
     },

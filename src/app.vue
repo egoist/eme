@@ -45,7 +45,6 @@
   import appMain from './components/main'
   import appFooter from './components/footer'
   import preferencePane from './components/preference-pane'
-  import {$} from 'utils/dom'
   import {platform} from 'utils/os'
 
   const currentWindow = remote.getCurrentWindow()

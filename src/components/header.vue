@@ -261,7 +261,7 @@
       renameCurrentFile(e, index) {
         const name = e.target.value
         if (name) {
-          event.emit('file-rename', name, index)
+          event.emit('file-rename', index, name)
         } else {
           this.$store.dispatch('UPDATE_RENAME_STATUS', {
             index,

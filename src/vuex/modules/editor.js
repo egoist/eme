@@ -75,7 +75,12 @@ const mutations = {
     tab.filePath = filePath
     document.title = `${path.basename(filePath)} - EME`
   },
-  UPDATE_CONTENT_WITH_FILEPATH(state, {index, content, filePath}) {
+  UPDATE_CONTENT_WITH_FILEPATH(state, {
+    index,
+    content,
+    filePath,
+    gist
+  }) {
     const tab = state.tabs[index]
     const parsed = renderHTML({
       content,
@@ -86,6 +91,7 @@ const mutations = {
     tab.html = parsed.html
     tab.attrs = parsed.attrs
     tab.filePath = filePath
+    tab.gist = gist
     document.title = `${path.basename(filePath)} - EME`
   },
   UPDATE_SAVE_STATUS(state, {index, saved}) {
@@ -216,6 +222,10 @@ const mutations = {
   SLIDE_SWITCHING(state, payload) {
     const tab = state.tabs[state.currentTabIndex]
     tab.isSlideSwitching = payload
+  },
+  UPDATE_FILE_GIST(state, gistId) {
+    const tab = state.tabs[state.currentTabIndex]
+    tab.gist = gistId
   }
 }
 

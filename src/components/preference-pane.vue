@@ -7,7 +7,6 @@
     width: 70%;
     height: 70vmin;
     overflow: hidden;
-    box-shadow: 0 0 30px rgba(0,0,0,.1);
     border: 1px solid #bebebe;
     border-radius: 6px;
     z-index: 9990;
@@ -70,6 +69,18 @@
           width: 100%;
           font-weight: bold;
           margin-bottom: 5px;
+        }
+        .label-description {
+          margin: 0;
+          padding: 5px 0;
+          color: #666;
+          font-size: 12px;
+          margin-top: -6px;
+          line-height: 1.4;
+          a {
+            color: #4078c0;
+            text-decoration: none;
+          }
         }
         .form-group {
           margin-bottom: 10px;
@@ -274,6 +285,27 @@
         </div>
       </form>
     </div>
+
+    <div class="pane-body" v-show="active === 2">
+      <form>
+        <div class="form-group">
+          <label>GitHub token</label>
+          <p class="label-description">Generate a private token at
+          &nbsp;<a target="_blank" href="https://github.com/settings/tokens">github.com/settings/tokens</a>, and select scope `gist`.
+            <a target="_blank" href="https://gist.github.com/egoist/6855062dca8cd02d5b74430066d740b8">Still have no clue?</a>
+          </p>
+          <input
+            type="text"
+            class="form-control"
+            v-model="settings.tokens.github">
+        </div>
+        <div class="form-group">
+          <label>
+            <input v-model="settings.autoSaveGist" type="checkbox"> Auto-update GitHub Gist after you save the file (only available when you filled in a GitHub token above)
+          </label>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -287,7 +319,7 @@
   export default {
     data() {
       return {
-        tabs: ['General', 'Keys'],
+        tabs: ['General', 'Keys', 'Account'],
         active: 0,
         settings: JSON.parse(JSON.stringify($config.get('settings'))),
         colorSchemas: [

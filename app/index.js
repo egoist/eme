@@ -9,6 +9,7 @@ const {
   ipcMain
 } = require('electron')
 const windowStateKeeper = require('electron-window-state')
+const event = require('./eme/event')
 const buildMenu = require('./eme/menu')
 const emeWindow = require('./eme/window')
 const config = require('./eme/config')
@@ -37,6 +38,12 @@ const createMainWindow = () => {
   const win = emeWindow.createWindow({windowState})
   windowState.manage(win)
   return win
+}
+
+const reloadMenu = () => {
+  Menu.setApplicationMenu(buildMenu({
+    createWindow: emeWindow.createWindow
+  }))
 }
 
 let mainWindow // eslint-disable-line
@@ -131,9 +138,14 @@ ipcMain.on('add-recent-file', (e, filePath) => {
   }
 
   config.set('recentFiles', files)
-  Menu.setApplicationMenu(buildMenu({
-    createWindow: emeWindow.createWindow
+  reloadMenu()
+})
+
+ipcMain.on('remove-recent-file', (e, fileToRemove) => {
+  config.set('recentFiles', config.get('recentFiles').filter(filePath => {
+    return filePath !== fileToRemove
   }))
+  reloadMenu()
 })
 
 ipcMain.on('log', (e, msg) => {
@@ -141,7 +153,9 @@ ipcMain.on('log', (e, msg) => {
 })
 
 ipcMain.on('reload-menu', () => {
-  Menu.setApplicationMenu(buildMenu({
-    createWindow: emeWindow.createWindow
-  }))
+  reloadMenu()
+})
+
+event.on('reload-menu', () => {
+  reloadMenu()
 })
