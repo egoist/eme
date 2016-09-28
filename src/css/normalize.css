@@ -1,0 +1,28 @@
+html {
+  font-size: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  overflow: hidden;
+  text-rendering: geometricPrecision;
+  font-family: -apple-system, BlinkMacSystemFont,
+            'avenir next', avenir,
+            helvetica, 'helvetica neue',
+            Ubuntu,
+            'segoe ui', arial,
+            sans-serif;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  width: 100%;
+}

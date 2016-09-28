@@ -17,7 +17,9 @@ const postcss = [
 module.exports = {
   entry: {
     app: ['./src/index.js'],
-    presentation: './src/css/presentation.css'
+    presentation: './src/css/presentation.css',
+    vendor: ['vue', 'vuex'],
+    about: ['./src/about.js']
   },
   output: {
     path: process.cwd() + '/app/dist',
@@ -80,8 +82,13 @@ module.exports = {
   target: 'electron-renderer',
   plugins: [
     new webpack.ExternalsPlugin('commonjs2', [
-      './vendor/markdown-it-katex'
+      './vendor/markdown-it-katex',
+      '../package.json'
     ].concat(Object.keys(appPkg.dependencies))),
-    new ExtractTextPlugin('[name].css')
+    new ExtractTextPlugin('[name].css'),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      filename: 'vendor.js'
+    })
   ]
 }

@@ -23,10 +23,6 @@ require('electron-context-menu')(contextMenu)
 
 const platform = os.platform()
 
-const appMenu = buildMenu({
-  createWindow: emeWindow.createWindow
-})
-
 const createMainWindow = () => {
   const windowState = windowStateKeeper({
     defaultWidth: 800,
@@ -39,6 +35,29 @@ const createMainWindow = () => {
   windowState.manage(win)
   return win
 }
+
+const showAboutWindow = () => {
+  const win = emeWindow.createWindow({
+    homepage: 'file://' + path.join(__dirname, 'pages/about.html'),
+    windowState: {
+      title: 'About EME',
+      width: 360,
+      height: 408,
+      resizable: false,
+      center: true,
+      fullscreenable: false,
+      maximizable: false,
+      titleBarStyle: 'hidden-inset',
+      frame: false,
+      backgroundColor: '#ECECEC'
+    }
+  })
+}
+
+const appMenu = buildMenu({
+  createWindow: emeWindow.createWindow,
+  showAboutWindow
+})
 
 const reloadMenu = () => {
   Menu.setApplicationMenu(buildMenu({

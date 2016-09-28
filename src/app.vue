@@ -1,7 +1,8 @@
 <style src="hint.css/hint.css"></style>
 <style src="animate.css/animate.css"></style>
 <style src="codemirror/lib/codemirror.css"></style>
-<style src="./css/reset"></style>
+<style src="src/css/normalize"></style>
+<style src="src/css/reset"></style>
 <style src="src/css/theme/white"></style>
 <style src="src/css/theme/dark"></style>
 <style>
