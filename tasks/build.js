@@ -9,9 +9,6 @@ const pkg = require('../app/package.json')
 const args = minimist(process.argv.slice(2))
 const target = args._[0]
 
-exec('rm -rf dist')
-exec('mkdir -p dist/installers')
-
 const platforms = {}
 const defaults = {
   version: '1.3.2',
@@ -30,6 +27,10 @@ const cb = (err, paths) => {
 }
 
 platforms.macos = () => {
+  exec('mkdir -p dist/installers')
+  exec('rm -rf dist/EME-darwin-x64')
+  exec('rm -rf dist/installers/*.dmg')
+  
   packager(Object.assign({}, defaults, {
     platform: 'darwin',
     arch: 'x64',
@@ -42,6 +43,10 @@ platforms.macos = () => {
 }
 
 platforms.linux = () => {
+  exec('mkdir -p dist/installers')
+  exec('rm -rf dist/EME-linux-x64')
+  exec('rm -rf dist/installers/*.deb')
+  
   packager(Object.assign({}, defaults, {
     platform: 'linux',
     arch: 'x64',
