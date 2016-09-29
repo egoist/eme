@@ -31,7 +31,7 @@ Pull requests are always welcome! Check out the [these issues](https://github.co
 If you want to build the binary for a specified platform, run the command:
 
 ```bash
-$ npm run macos # .app
+$ npm run macos # .dmg
 $ npm run windows # portable .exe
 $ npm run linux # .deb
 ```
