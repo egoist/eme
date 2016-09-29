@@ -3,7 +3,8 @@
 const minimist = require('minimist')
 const packager = require('electron-packager')
 const deb = require('electron-installer-debian')
-const exec = require('child_process').execSync
+const scripy = require('scripy')
+const $ = require('shelljs')
 const pkg = require('../app/package.json')
 
 const args = minimist(process.argv.slice(2))
@@ -18,6 +19,7 @@ const defaults = {
   overwrite: true,
   prune: true
 }
+
 const cb = (err, paths) => {
   if (err) {
     console.log(err.message)
@@ -27,10 +29,10 @@ const cb = (err, paths) => {
 }
 
 platforms.macos = () => {
-  exec('mkdir -p dist/installers')
-  exec('rm -rf dist/EME-darwin-x64')
-  exec('rm -rf dist/installers/*.dmg')
-  
+  $.mkdir('-p', 'dist/installers')
+  $.rm('-rf', 'dist/EME-darwin-x64')
+  $.rm('-rf', 'dist/installers/*.dmg')
+
   packager(Object.assign({}, defaults, {
     platform: 'darwin',
     arch: 'x64',
@@ -38,15 +40,17 @@ platforms.macos = () => {
     icon: './build/icon.icns'
   }), (err, paths) => {
     cb(err, paths)
-    exec(`appdmg ./tasks/appdmg.json ./dist/installers/EME-macos-${pkg.version}.dmg`)
+    scripy.sync(`appdmg ./tasks/appdmg.json ./dist/installers/EME-macos-${pkg.version}.dmg`, {
+      stdio: 'inherit'
+    })
   })
 }
 
 platforms.linux = () => {
-  exec('mkdir -p dist/installers')
-  exec('rm -rf dist/EME-linux-x64')
-  exec('rm -rf dist/installers/*.deb')
-  
+  $.mkdir('-p', 'dist/installers')
+  $.rm('-rf', 'dist/EME-linux-x64')
+  $.rm('-rf', 'dist/installers/*.deb')
+
   packager(Object.assign({}, defaults, {
     platform: 'linux',
     arch: 'x64',
@@ -65,6 +69,9 @@ platforms.linux = () => {
 }
 
 platforms.windows = () => {
+  $.rm('-rf', 'dist/EME-win32-ia32')
+  $.rm('-rf', 'dist/EME-windows-*.zip')
+
   packager(Object.assign({}, defaults, {
     platform: 'win32',
     arch: 'ia32',
@@ -74,7 +81,7 @@ platforms.windows = () => {
     }
   }), (err, paths) => {
     cb(err, paths)
-    exec(`cd dist/EME-win32-ia32 && zip -ryXq9 ../EME-windows-${pkg.version}.zip *`)
+    $.exec(`cd dist/EME-win32-ia32 && zip -ryXq9 ../EME-windows-${pkg.version}.zip *`)
   })
 }
 
