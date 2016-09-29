@@ -3,11 +3,14 @@
 const minimist = require('minimist')
 const packager = require('electron-packager')
 const deb = require('electron-installer-debian')
-const exec = require('child_process').exec
+const exec = require('child_process').execSync
 const pkg = require('../app/package.json')
 
 const args = minimist(process.argv.slice(2))
 const target = args._[0]
+
+exec('rm -rf dist')
+exec('mkdir -p dist/installers')
 
 const platforms = {}
 const defaults = {
@@ -34,7 +37,7 @@ platforms.macos = () => {
     icon: './build/icon.icns'
   }), (err, paths) => {
     cb(err, paths)
-    exec(`cd dist/EME-darwin-x64 && zip -ryXq9 ../EME-macos-${pkg.version}.zip EME.app`)
+    exec(`appdmg ./tasks/appdmg.json ./dist/installers/EME-macos-${pkg.version}.dmg`)
   })
 }
 
