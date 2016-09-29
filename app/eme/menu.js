@@ -89,7 +89,8 @@ module.exports = cb => {
     }]
   }
 
-  const keys = config.get('settings.keys')
+  const settings = config.get('settings')
+  const keys = settings.keys
 
   const template = [
     {
@@ -165,6 +166,7 @@ module.exports = cb => {
         {
           label: 'Publish to GitHub Gist',
           accelerator: 'CmdOrCtrl+Option+G',
+          enabled: Boolean(settings.autoSaveGist && settings.tokens.github),
           click(item, focusedWindow) {
             if (focusedWindow) focusedWindow.webContents.send('publish-to-github-gist')
           }
