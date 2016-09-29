@@ -54,15 +54,15 @@ const showAboutWindow = () => {
   })
 }
 
-const appMenu = buildMenu({
+const menuOptions = {
   createWindow: emeWindow.createWindow,
   showAboutWindow
-})
+}
+
+const appMenu = buildMenu(menuOptions)
 
 const reloadMenu = () => {
-  Menu.setApplicationMenu(buildMenu({
-    createWindow: emeWindow.createWindow
-  }))
+  Menu.setApplicationMenu(buildMenu(menuOptions))
 }
 
 let mainWindow // eslint-disable-line
