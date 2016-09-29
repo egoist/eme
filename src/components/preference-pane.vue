@@ -289,20 +289,19 @@
     <div class="pane-body" v-show="active === 2">
       <form>
         <div class="form-group">
-          <label>GitHub token</label>
-          <p class="label-description">Generate a private token at
+          <label>GitHub Gist</label>
+          <label>
+            <input v-model="settings.autoSaveGist" type="checkbox"> Auto-update GitHub Gist after you save the file (only available when you filled in a GitHub token above)
+          </label>
+          <p class="label-description" v-if="settings.autoSaveGist">Generate a private token at
           &nbsp;<a target="_blank" href="https://github.com/settings/tokens">github.com/settings/tokens</a>, and select scope `gist`.
             <a target="_blank" href="https://gist.github.com/egoist/6855062dca8cd02d5b74430066d740b8">Still have no clue?</a>
           </p>
           <input
             type="text"
             class="form-control"
+            v-if="settings.autoSaveGist"
             v-model="settings.tokens.github">
-        </div>
-        <div class="form-group">
-          <label>
-            <input v-model="settings.autoSaveGist" type="checkbox"> Auto-update GitHub Gist after you save the file (only available when you filled in a GitHub token above)
-          </label>
         </div>
       </form>
     </div>
@@ -319,7 +318,7 @@
   export default {
     data() {
       return {
-        tabs: ['General', 'Keys', 'Account'],
+        tabs: ['General', 'Keys', 'Sync'],
         active: 0,
         settings: JSON.parse(JSON.stringify($config.get('settings'))),
         colorSchemas: [
