@@ -76,7 +76,7 @@ app.on('ready', () => {
     const {pathsToOpen, resourcePath} = argv
     const pathToOpen = pathsToOpen[0]
     if (pathToOpen && resourcePath) {
-      const locationToOpen = `${resourcePath}/${pathToOpen}`
+      const locationToOpen = path.resolve(resourcePath, pathToOpen)
       mainWindow.webContents.on('did-finish-load', () => {
         mainWindow.webContents.send('open-file', locationToOpen)
       })
