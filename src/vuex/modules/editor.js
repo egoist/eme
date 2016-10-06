@@ -164,9 +164,14 @@ const mutations = {
       if (mode !== 'preview') tab.editor.focus()
     }, 0)
   },
-  UPDATE_PDF(state, {index, pdf}) {
+  START_EXPORTING(state, {index}) {
+    const tab = state.tabs[index]
+    tab.exporting = true
+  },
+  FINISH_EXPORTING_PDF(state, {index, pdf}) {
     const tab = state.tabs[index]
     tab.pdf = pdf
+    tab.exporting = false
   },
   REORDER_TABS(state, {oldIndex, newIndex}) {
     const tabs = state.tabs

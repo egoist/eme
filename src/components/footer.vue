@@ -87,6 +87,11 @@
   <footer class="footer">
     <span class="file-path" v-if="status.filePath">{{ status.filePath }}</span>
     <span
+      class="loading dots"
+      v-show="status.exporting">
+      Exporting
+    </span>
+    <span
       class="pdf-link clickable-link"
       v-if="status.pdf"
       @click="openPDF(status.pdf)">
@@ -143,7 +148,8 @@
             writingMode: tab.writingMode,
             pdf: tab.pdf,
             isPresentationMode: tab.isPresentationMode,
-            gist: tab.gist
+            gist: tab.gist,
+            exporting: tab.exporting
           }
         }
       }

@@ -411,6 +411,7 @@
           isVimMode: false,
           isPresentationMode: false,
           pdf: '',
+          exporting: false,
           rename: false,
           split: this.settings.writingMode === 'default' ? 50 : 100,
           slideIndex: 0,
@@ -627,7 +628,11 @@
               {name: 'PDF', extensions: ['pdf']}
             ]
           })
+
           if (filePath) {
+            this.$store.dispatch('START_EXPORTING', {
+              index: this.currentTabIndex
+            })
             const html = makeHTML({
               html: this.currentTab.html,
               css: [
@@ -647,7 +652,7 @@
 
         ipcRenderer.on('finish-exporting-pdf', (e, err, filePath) => {
           if (!err) {
-            this.$store.dispatch('UPDATE_PDF', {
+            this.$store.dispatch('FINISH_EXPORTING_PDF', {
               index: this.currentTabIndex,
               pdf: filePath
             })
