@@ -53,7 +53,7 @@ const showAboutWindow = () => {
     ].join('\n'),
     buttons: ['OK'],
     noLink: true
-  }, result => null)
+  }, () => null)
 }
 
 const menuOptions = {
