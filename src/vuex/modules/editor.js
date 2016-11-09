@@ -2,7 +2,6 @@ import path from 'path'
 import {remote} from 'electron'
 import md from 'utils/markdown'
 import fm from 'front-matter'
-import xss from 'xss'
 
 const win = remote.getCurrentWindow()
 win.$state.unsaved = 0
@@ -38,7 +37,7 @@ const renderHTML = tab => {
   }
   return {
     attrs: data.attributes,
-    html: xss(render({content: data.body, filePath: tab.filePath}))
+    html: render({content: data.body, filePath: tab.filePath})
   }
 }
 
