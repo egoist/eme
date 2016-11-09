@@ -18,8 +18,7 @@ module.exports = {
   entry: {
     app: ['./src/index.js'],
     presentation: './src/css/presentation.css',
-    vendor: ['vue', 'vuex'],
-    about: ['./src/about.js']
+    vendor: ['vue', 'vuex']
   },
   output: {
     path: process.cwd() + '/app/dist',
