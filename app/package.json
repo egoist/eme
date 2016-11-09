@@ -23,5 +23,6 @@
     "semver-compare": "^1.0.0",
     "tildify": "^1.2.0",
     "yargs": "^5.0.0"
-  }
+  },
+  "commit": "2d43d0cde71eaede6a48d9a5ce0f5e431a7adc55"
 }

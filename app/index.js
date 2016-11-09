@@ -6,7 +6,8 @@ const {
   app,
   BrowserWindow,
   Menu,
-  ipcMain
+  ipcMain,
+  dialog
 } = require('electron')
 const windowStateKeeper = require('electron-window-state')
 const event = require('./eme/event')
@@ -18,6 +19,7 @@ const {
   isDev
 } = require('./eme/utils')
 const contextMenu = require('./eme/context-menu')
+const pkg = require('./package.json')
 
 require('electron-context-menu')(contextMenu)
 
@@ -37,21 +39,21 @@ const createMainWindow = () => {
 }
 
 const showAboutWindow = () => {
-  emeWindow.createWindow({
-    homepage: 'file://' + path.join(__dirname, 'pages/about.html'),
-    windowState: {
-      title: 'About EME',
-      width: 360,
-      height: 408,
-      resizable: false,
-      center: true,
-      fullscreenable: false,
-      maximizable: false,
-      titleBarStyle: 'hidden-inset',
-      frame: false,
-      backgroundColor: '#ECECEC'
-    }
-  })
+  dialog.showMessageBox({
+    title: pkg.productName,
+    message: pkg.productName,
+    type: 'info',
+    detail: [
+      `Version ${app.getVersion()}`,
+      `Commit ${pkg.commit || 'Unknown'}`,
+      `Date ${pkg.date || 'Unknown'}`,
+      `Shell ${process.versions.electron}`,
+      `Renderer ${process.versions.chrome}`,
+      `Node ${process.versions.node}`
+    ].join('\n'),
+    buttons: ['OK'],
+    noLink: true
+  }, result => null)
 }
 
 const menuOptions = {
