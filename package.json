@@ -15,9 +15,7 @@
     "dev-server": "node scripts/server.js",
     "macos": "node tasks/build.js macos",
     "linux": "node tasks/build.js linux",
-    "windows": "node tasks/build.js windows",
-    "update:commit": "node tasks/update-commit.js",
-    "premacos": "npm run update:commit"
+    "windows": "node tasks/build.js windows"
   },
   "repository": {
     "type": "git",
@@ -29,6 +27,7 @@
   ],
   "devDependencies": {
     "autoprefixer": "^6.4.0",
+    "babel-core": "^6.18.2",
     "babel-eslint": "^6.1.2",
     "babel-loader": "^6.2.4",
     "babel-plugin-transform-runtime": "^6.9.0",
@@ -54,12 +53,10 @@
     "postcss-mixins": "^5.0.0",
     "postcss-nested": "^1.0.0",
     "postcss-simple-vars": "^3.0.0",
-    "repo-latest-commit": "^0.1.3",
     "scripy": "^0.3.0",
     "shelljs": "^0.7.4",
     "style-loader": "^0.13.1",
     "svg-inline-loader": "^0.6.1",
-    "update-pkg": "^1.0.1",
     "url-loader": "^0.5.7",
     "vue-hot-reload-api": "^1.3.3",
     "vue-html-loader": "^1.2.3",

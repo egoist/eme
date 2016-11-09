@@ -241,7 +241,7 @@ babel-code-frame@^6.16.0:
     esutils "^2.0.2"
     js-tokens "^2.0.0"
 
-babel-core@^6.18.0, babel-core@^6.9.0:
+babel-core, babel-core@^6.18.0, babel-core@^6.9.0:
   version "6.18.2"
   resolved "http://registry.npm.taobao.org/babel-core/download/babel-core-6.18.2.tgz#d8bb14dd6986fa4f3566a26ceda3964fa0e04e5b"
   dependencies:
@@ -1601,12 +1601,6 @@ dot-case@^2.1.0:
   dependencies:
     no-case "^2.2.0"
 
-dot-prop@^4.0.0:
-  version "4.0.0"
-  resolved "http://registry.npm.taobao.org/dot-prop/download/dot-prop-4.0.0.tgz#9cbe8b4c47a12033d8c4e20be33db9a8f80bd188"
-  dependencies:
-    is-obj "^1.0.0"
-
 ecc-jsbn@~0.1.1:
   version "0.1.1"
   resolved "http://registry.npm.taobao.org/ecc-jsbn/download/ecc-jsbn-0.1.1.tgz#0fc73a9ed5f0d53c38193398523ef7e543777505"
@@ -2689,10 +2683,6 @@ is-number@^2.0.2, is-number@^2.1.0:
   resolved "http://registry.npm.taobao.org/is-number/download/is-number-2.1.0.tgz#01fcbbb393463a548f2f466cce16dece49db908f"
   dependencies:
     kind-of "^3.0.2"
-
-is-obj@^1.0.0:
-  version "1.0.1"
-  resolved "http://registry.npm.taobao.org/is-obj/download/is-obj-1.0.1.tgz#3e4729ac1f5fde025cd7d83a896dab9f4f67db0f"
 
 is-path-cwd@^1.0.0:
   version "1.0.0"
@@ -4395,12 +4385,6 @@ repeating@^2.0.0:
   dependencies:
     is-finite "^1.0.0"
 
-repo-latest-commit@^0.1.3:
-  version "0.1.3"
-  resolved "http://registry.npm.taobao.org/repo-latest-commit/download/repo-latest-commit-0.1.3.tgz#8b36b28fe3456011b10a6ff3d15f7b0c16fd28f7"
-  dependencies:
-    split-on-first-space "^0.1.0"
-
 request@^2.45.0, request@^2.58.0, request@^2.67.0, request@^2.72.0, request@^2.74.0, request@^2.75.0:
   version "2.78.0"
   resolved "http://registry.npm.taobao.org/request/download/request-2.78.0.tgz#e1c8dec346e1c81923b24acdb337f11decabe9cc"
@@ -4701,10 +4685,6 @@ spdx-license-ids@^1.0.2:
 speedometer@~0.1.2:
   version "0.1.4"
   resolved "http://registry.npm.taobao.org/speedometer/download/speedometer-0.1.4.tgz#9876dbd2a169d3115402d48e6ea6329c8816a50d"
-
-split-on-first-space@^0.1.0:
-  version "0.1.0"
-  resolved "http://registry.npm.taobao.org/split-on-first-space/download/split-on-first-space-0.1.0.tgz#7b71f594bc961c963155909144b8faf430b1fc04"
 
 sprintf-js@~1.0.2:
   version "1.0.3"
@@ -5096,14 +5076,6 @@ unique-random-array@^1.0.0:
 unique-random@^1.0.0:
   version "1.0.0"
   resolved "http://registry.npm.taobao.org/unique-random/download/unique-random-1.0.0.tgz#ce3e224c8242cd33a0e77b0d7180d77e6b62d0c4"
-
-update-pkg@^1.0.1:
-  version "1.1.0"
-  resolved "http://registry.npm.taobao.org/update-pkg/download/update-pkg-1.1.0.tgz#559c6bb8e63b6269de16d563b60b62f556012520"
-  dependencies:
-    dot-prop "^4.0.0"
-    mkdirp "^0.5.1"
-    pify "^2.3.0"
 
 upper-case-first@^1.1.0, upper-case-first@^1.1.2:
   version "1.1.2"
