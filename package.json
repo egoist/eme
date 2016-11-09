@@ -26,7 +26,6 @@
     "editor"
   ],
   "devDependencies": {
-    "appdmg": "^0.4.5",
     "autoprefixer": "^6.4.0",
     "babel-core": "^6.18.2",
     "babel-eslint": "^6.1.2",
