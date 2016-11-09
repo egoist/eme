@@ -15,7 +15,9 @@
     "dev-server": "node scripts/server.js",
     "macos": "node tasks/build.js macos",
     "linux": "node tasks/build.js linux",
-    "windows": "node tasks/build.js windows"
+    "windows": "node tasks/build.js windows",
+    "update:commit": "node tasks/update-commit.js",
+    "premacos": "npm run update:commit"
   },
   "repository": {
     "type": "git",

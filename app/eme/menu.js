@@ -319,10 +319,7 @@ module.exports = cb => {
       label: name,
       submenu: [
         {
-          label: 'About',
-          click() {
-            cb.showAboutWindow()
-          }
+          role: 'about'
         },
         {
           type: 'separator'
