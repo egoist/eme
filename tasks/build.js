@@ -2,7 +2,6 @@
 'use strict'
 const minimist = require('minimist')
 const packager = require('electron-packager')
-const deb = require('electron-installer-debian')
 const scripy = require('scripy')
 const $ = require('shelljs')
 const pkg = require('../app/package.json')
@@ -57,7 +56,7 @@ platforms.linux = () => {
     'app-bundle-id': 'com.egoistian.eme'
   }), (err, paths) => {
     cb(err, paths)
-    deb({
+    require('electron-installer-debian')({
       src: 'dist/EME-linux-x64',
       dest: 'dist/installers',
       arch: 'amd64',
