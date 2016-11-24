@@ -23,11 +23,11 @@ export default Vue => {
       ['Right', 'Left'] :
       ['Left', 'Right']
 
-    Vue.transition(`${type}-${direction}`, {
-      ...transition,
-      enterClass: `${type}In${directions[0]}`,
-      leaveClass: `${type}Out${directions[1]}`
-    })
+    // Vue.transition(`${type}-${direction}`, {
+    //   ...transition,
+    //   enterClass: `${type}In${directions[0]}`,
+    //   leaveClass: `${type}Out${directions[1]}`
+    // })
   }
 
   for (const type of types) {

@@ -96,18 +96,18 @@
     <div
       class="tab-body"
       :class="[
-        'tab-body-' + $index,
+        'tab-body-' + index,
         writingModeClassName,
         {
           'vim-mode': currentTab && currentTab.isVimMode,
           resizing: resizing
         }
       ]"
-      v-for="tab in tabs"
-      @mousemove="resizeMove($event, $index)"
+      v-for="(tab, index) in tabs"
+      @mousemove="resizeMove($event, index)"
       @mouseup="resizeEnd"
       @mouseleave="resizeEnd"
-      v-show="$index === currentTabIndex">
+      v-show="index === currentTabIndex">
       <div
         class="editor"
         :class="{'focus-mode': tab.isFocusMode}"
@@ -117,13 +117,13 @@
           'border-right-width': currentTab && currentTab.writingMode === 'default' ? '1px' : '0'
         }"
         v-show="currentTab && currentTab.writingMode !== 'preview'">
-        <textarea class="editor-input" :id="'editor-' + $index">{{ tab.content }}</textarea>
-        <div class="resize-bar" @mousedown="resizeStart($event, $index)"></div>
+        <textarea class="editor-input" :id="'editor-' + index">{{ tab.content }}</textarea>
+        <div class="resize-bar" @mousedown="resizeStart($event, index)"></div>
       </div>
       <div
         :class="[
           'preview',
-          'preview-' + $index,
+          'preview-' + index,
           {
             'preview-presentation': tab.isPresentationMode
           }
@@ -133,13 +133,13 @@
         <presentation
           :slides="tab.html"
           :style="{'font-size': settings.fontSize + 'px'}"
-          v-if="tab.isPresentationMode && currentTabIndex === $index">
+          v-if="tab.isPresentationMode && currentTabIndex === index">
         </presentation>
         <div
-          :class="'markdown-body markdown-body-' + $index"
+          :class="'markdown-body markdown-body-' + index"
           :style="{'font-size': settings.fontSize + 'px'}"
+          v-html="tab.html"
           v-else>
-          {{{ tab.html }}}
         </div>
       </div>
     </div>
@@ -221,7 +221,7 @@
     created() {
       document.title = 'untitled - EME'
     },
-    ready() {
+    mounted() {
       this.createNewTab()
 
       this.listenIpc()

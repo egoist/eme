@@ -23,19 +23,20 @@
 <template>
   <div class="presentation">
     <div class="slides">
-      <div
-        :class="[
-          'slide',
-          'markdown-body',
-          'animated',
-          status.attrs.align
-        ]"
-        :transition="transitionName"
-        track-by="$index"
-        v-for="slide in slides"
-        v-show="$index === status.current"
-        v-html="slide">
-      </div>
+      <transition :name="transitionName">
+        <div
+          :class="[
+            'slide',
+            'markdown-body',
+            'animated',
+            status.attrs.align
+          ]"
+          key="index"
+          v-for="(slide, index) in slides"
+          v-show="index === status.current"
+          v-html="slide">
+        </div>
+      </transition>
     </div>
     <div class="indicator" :style="{width: ((status.current + 1) / status.total) * 100 + '%'}"></div>
   </div>

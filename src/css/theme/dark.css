@@ -1,4 +1,4 @@
-@import "color-preset";
+@import "color-preset/material.css";
 
 $dark: black;
 $light-dark: #333;

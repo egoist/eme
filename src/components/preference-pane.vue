@@ -114,9 +114,9 @@
     <div class="pane-tabs">
       <div
         class="pane-tab"
-        :class="{active: active === $index}"
-        @click="active = $index"
-        v-for="tab in tabs">
+        :class="{active: active === index}"
+        @click="active = index"
+        v-for="(tab, index) in tabs">
         {{ tab }}
       </div>
     </div>
