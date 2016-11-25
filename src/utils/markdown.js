@@ -1,9 +1,49 @@
 /* eslint-disable camelcase, max-params */
 import MarkdownIt from 'markdown-it'
 import taskList from 'markdown-it-task-lists'
-import hljs from 'highlight.js'
+import hljs from 'highlight.js/lib/highlight'
 import frontMatter from 'markdown-it-front-matter'
+import sanitizer from 'markdown-it-sanitizer'
 import katex from './vendor/markdown-it-katex'
+
+const langs = [
+  'cpp',
+  'coffeescript',
+  'css',
+  'dockerfile',
+  'elixir',
+  'elm',
+  'erlang',
+  'go',
+  'haskell',
+  'ini',
+  'javascript',
+  'less',
+  'lua',
+  'makefile',
+  'livescript',
+  'markdown',
+  'matlab',
+  'nginx',
+  'ocaml',
+  'perl',
+  'php',
+  'python',
+  'ruby',
+  'scala',
+  'rust',
+  'scss',
+  'sql',
+  'stylus',
+  'swift',
+  'typescript',
+  'xml',
+  'yaml'
+]
+
+langs.forEach(lang => {
+  hljs.registerLanguage(lang, require(`highlight.js/lib/languages/${lang}`))
+})
 
 const md = new MarkdownIt({
   html: true,
@@ -27,6 +67,7 @@ const md = new MarkdownIt({
 md.use(taskList)
 md.use(katex)
 md.use(frontMatter, fm => console.log(fm))
+md.use(sanitizer)
 
 // add target _blank
 const defaultRender = md.renderer.rules.link_open || function (tokens, idx, options, env, self) {

@@ -4,3 +4,4 @@ node_modules
 /app/dist
 /dist
 stats.html
+stats.json

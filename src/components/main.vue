@@ -138,7 +138,6 @@
   import path from 'path'
   import {ipcRenderer, remote, shell} from 'electron'
   import objectPicker from 'object-picker'
-  import xss from 'xss'
 
   import CodeMirror from 'codemirror/lib/codemirror'
   import 'codemirror/addon/scroll/simplescrollbars.js'
@@ -441,7 +440,7 @@
 
           editor.on('change', e => {
             if (!this.shouldCheckContentSaved) return
-            const content = xss(e.getValue())
+            const content = e.getValue()
             console.log('changed')
             setTimeout(() => {
               this.updateSaved({

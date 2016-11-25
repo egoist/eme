@@ -1414,10 +1414,6 @@ cssesc@^0.1.0:
   version "0.1.0"
   resolved "http://registry.npm.taobao.org/cssesc/download/cssesc-0.1.0.tgz#c814903e45623371a0477b40109aaafbeeaddbb4"
 
-cssfilter@^0.0.8:
-  version "0.0.8"
-  resolved "http://registry.npm.taobao.org/cssfilter/download/cssfilter-0.0.8.tgz#6564caccba8a76dd9b4b920668b9fb7fda50e54c"
-
 "cssnano@>=2.6.1 <4":
   version "3.8.0"
   resolved "http://registry.npm.taobao.org/cssnano/download/cssnano-3.8.0.tgz#bb90ac5292f42b679d9a05f6da0e9697556bb80d"
@@ -3233,6 +3229,10 @@ map-obj@^1.0.0, map-obj@^1.0.1:
 markdown-it-front-matter@^0.1.2:
   version "0.1.2"
   resolved "http://registry.npm.taobao.org/markdown-it-front-matter/download/markdown-it-front-matter-0.1.2.tgz#e50bf56e77e6a4f5ac4ffa894d4d45ccd9896b20"
+
+markdown-it-sanitizer:
+  version "0.4.3"
+  resolved "http://registry.npm.taobao.org/markdown-it-sanitizer/download/markdown-it-sanitizer-0.4.3.tgz#2ba34e9fe16e6372ce7192fb50b37d9dfbff0102"
 
 markdown-it-task-lists@^1.4.0:
   version "1.4.1"
@@ -5429,13 +5429,6 @@ xmlbuilder@8.2.2:
 xmldom@0.1.x:
   version "0.1.22"
   resolved "http://registry.npm.taobao.org/xmldom/download/xmldom-0.1.22.tgz#10de4e5e964981f03c8cc72fadc08d14b6c3aa26"
-
-xss@^0.3.1:
-  version "0.3.1"
-  resolved "http://registry.npm.taobao.org/xss/download/xss-0.3.1.tgz#6e998748e0e680868ea274043d8d63f8fc23aed5"
-  dependencies:
-    commander "^2.9.0"
-    cssfilter "^0.0.8"
 
 xtend@^4.0.0:
   version "4.0.1"

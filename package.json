@@ -10,7 +10,7 @@
     "dev": "node tasks/dev.js",
     "install:all": "npm install && cd app && npm install",
     "start": "cross-env NODE_ENV=development electron app/",
-    "build": "rm -rf app/dist && webpack --progress --config scripts/webpack.config.prod.js",
+    "build": "rm -rf app/dist && webpack --progress --config scripts/webpack.config.prod.js --profile --json > stats.json",
     "watch": "webpack --config scripts/webpack.config.dev.js --watch",
     "dev-server": "node scripts/server.js",
     "macos": "node tasks/build.js macos",
@@ -75,6 +75,7 @@
     "hint.css": "2.4.1",
     "markdown-it": "^8.1.0",
     "markdown-it-front-matter": "^0.1.2",
+    "markdown-it-sanitizer": "^0.4.3",
     "markdown-it-task-lists": "^1.4.0",
     "object-picker": "^0.2.0",
     "pify": "^2.3.0",
@@ -83,7 +84,6 @@
     "vue": "^2.1.3",
     "vue-template-compiler": "^2.1.3",
     "vuex": "^1",
-    "wordcount": "^1.1.1",
-    "xss": "^0.3.1"
+    "wordcount": "^1.1.1"
   }
 }
