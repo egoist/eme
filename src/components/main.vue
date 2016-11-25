@@ -64,9 +64,6 @@
   .preview {
     padding: 10px;
     overflow-x: hidden;
-    &.preview-presentation {
-      padding: 0;
-    }
     &::-webkit-scrollbar {
       width: 0;
     }
@@ -123,23 +120,14 @@
       <div
         :class="[
           'preview',
-          'preview-' + index,
-          {
-            'preview-presentation': tab.isPresentationMode
-          }
+          'preview-' + index
         ]"
         :style="{width: getSplitWidth('preview')}"
         v-show="currentTab && currentTab.writingMode !== 'editor'">
-        <presentation
-          :slides="tab.html"
-          :style="{'font-size': settings.fontSize + 'px'}"
-          v-if="tab.isPresentationMode && currentTabIndex === index">
-        </presentation>
         <div
           :class="'markdown-body markdown-body-' + index"
           :style="{'font-size': settings.fontSize + 'px'}"
-          v-html="tab.html"
-          v-else>
+          v-html="tab.html">
         </div>
       </div>
     </div>
@@ -175,7 +163,6 @@
   import handleError from 'utils/handle-error'
   import {createOrUpdateGist} from 'utils/gist'
   import tip from 'components/tip'
-  import presentation from 'components/presentation'
 
   const currentWindow = remote.getCurrentWindow()
   const config = currentWindow.$config
@@ -251,7 +238,6 @@
         }
       },
       handleScroll(e) {
-        if (this.currentTab.isPresentationMode) return
         const index = this.currentTabIndex
         const codePort = e ?
           e.target :
@@ -410,14 +396,10 @@
           isFocusMode: false,
           writingMode: this.settings.writingMode,
           isVimMode: false,
-          isPresentationMode: false,
           pdf: '',
           exporting: false,
           rename: false,
           split: this.settings.writingMode === 'default' ? 50 : 100,
-          slideIndex: 0,
-          isSlideSwitching: false,
-          slideDirection: 'left',
           gist
         }
         this.$store.dispatch('INIT_NEW_TAB', {
@@ -532,10 +514,6 @@
           this.$store.dispatch('TOGGLE_FOCUS_MODE')
         })
 
-        ipcRenderer.on('toggle-presentation-mode', () => {
-          this.$store.dispatch('TOGGLE_PRESENTATION_MODE')
-        })
-
         ipcRenderer.on('toggle-vim-mode', () => {
           if (this.currentTab.isVimMode) {
             this.editor.setOption('keyMap', 'default')
@@ -639,8 +617,7 @@
               css: [
                 appPath('vendor/github-markdown-css/github-markdown.css'),
                 appPath('vendor/katex/katex.min.css'),
-                appPath('vendor/css/print.css'),
-                appPath('dist/presentation.css')
+                appPath('vendor/css/print.css')
               ],
               data: {
                 saveTo: filePath,
@@ -807,8 +784,7 @@
       }
     },
     components: {
-      tip,
-      presentation
+      tip
     }
   }
 </script>

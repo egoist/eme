@@ -34,7 +34,6 @@ export default ({html, css, data}) => {
           })
 
           ipcRenderer.send('pdf-window-ready', {
-            isPresentation: ${Array.isArray(html)},
             saveTo: window.saveTo
           })
         })

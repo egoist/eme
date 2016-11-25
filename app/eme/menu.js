@@ -234,13 +234,6 @@ module.exports = cb => {
           }
         },
         {
-          label: 'Toggle Presentation Mode',
-          accelerator: keys.presentationMode,
-          click(item, focusedWindow) {
-            if (focusedWindow) focusedWindow.webContents.send('toggle-presentation-mode')
-          }
-        },
-        {
           type: 'separator'
         },
         {

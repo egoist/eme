@@ -67,7 +67,6 @@
     "webpack-visualizer-plugin": "^0.1.5"
   },
   "dependencies": {
-    "animate.css": "^3.5.1",
     "babel-runtime": "^6.11.6",
     "codemirror": "^5.17.0",
     "color-preset": "^1.0.1",

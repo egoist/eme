@@ -17,7 +17,6 @@ const postcss = [
 module.exports = {
   entry: {
     app: ['./src/index.js'],
-    presentation: './src/css/presentation.css',
     vendor: ['vue', 'vuex']
   },
   output: {

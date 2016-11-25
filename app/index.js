@@ -126,8 +126,7 @@ ipcMain.on('pdf-window-ready', (e, options) => {
   const page = pdfWindow.webContents
   page.on('did-finish-load', () => {
     page.printToPDF({
-      pageSize: options.isPresentation ? 'Tabloid' : 'A4',
-      landscape: options.isPresentation
+      pageSize: 'A4'
     }, (err, pdfData) => {
       if (err) {
         return console.log(err)

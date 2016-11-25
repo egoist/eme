@@ -25,16 +25,6 @@ const renderHTML = tab => {
 
   const data = fm(tab.content)
 
-  if (tab.isPresentationMode) {
-    return {
-      attrs: data.attributes,
-      html: data.body.split('\n\n---\n\n')
-        .map(content => render({
-          content,
-          filePath: tab.filePath
-        }))
-    }
-  }
   return {
     attrs: data.attributes,
     html: render({content: data.body, filePath: tab.filePath})
@@ -63,8 +53,7 @@ const mutations = {
     if (tab.writingMode !== 'editor') {
       const parsed = renderHTML({
         filePath: tab.filePath,
-        content,
-        isPresentationMode: tab.isPresentationMode
+        content
       })
       tab.html = parsed.html
       tab.attrs = parsed.attrs
@@ -84,8 +73,7 @@ const mutations = {
     const tab = state.tabs[index]
     const parsed = renderHTML({
       content,
-      filePath,
-      isPresentationMode: tab.isPresentationMode
+      filePath
     })
     tab.content = content
     tab.html = parsed.html
@@ -194,39 +182,6 @@ const mutations = {
   TOGGLE_VIM_MODE(state) {
     const tab = state.tabs[state.currentTabIndex]
     tab.isVimMode = !tab.isVimMode
-  },
-  TOGGLE_PRESENTATION_MODE(state) {
-    const tab = state.tabs[state.currentTabIndex]
-    tab.isPresentationMode = !tab.isPresentationMode
-    const parsed = renderHTML(tab)
-    tab.html = parsed.html
-    tab.attrs = parsed.attrs
-    tab.slideIndex = 0
-  },
-  MOVE_SLIDE(state, direction) {
-    const tab = state.tabs[state.currentTabIndex]
-    if (tab.isSlideSwitching && direction === tab.slideDirection) {
-      return
-    }
-    if (direction === 'right') {
-      tab.slideDirection = 'left'
-      if (tab.slideIndex === tab.html.length - 1) {
-        tab.slideIndex = 0
-      } else {
-        tab.slideIndex++
-      }
-    } else if (direction === 'left') {
-      tab.slideDirection = 'right'
-      if (tab.slideIndex === 0) {
-        tab.slideIndex = tab.html.length - 1
-      } else {
-        tab.slideIndex--
-      }
-    }
-  },
-  SLIDE_SWITCHING(state, payload) {
-    const tab = state.tabs[state.currentTabIndex]
-    tab.isSlideSwitching = payload
   },
   UPDATE_FILE_GIST(state, gistId) {
     const tab = state.tabs[state.currentTabIndex]

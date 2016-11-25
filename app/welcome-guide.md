@@ -20,22 +20,6 @@ One step further, you may want to hide the header and footer when you are writin
 
 For developers, you may miss the vim key binding, here it is. Use <kbd>Ctrl/CMD + I</kbd> to toggle it.
 
-## Presentation Mode
-
-You can event write markdown and render then in slides! Here's an example:
-
-```markdown
-# title 
-## subtitle
-
----
-
-# another title
-## another subtitle
-```
-
-Use <kbd>Ctrl/CMD + K</kbd> to toggle it!
-
 ## Shortcuts
 
 Please view: https://github.com/egoist/eme/wiki/Key-bindings

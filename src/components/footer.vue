@@ -72,14 +72,8 @@
       fill: #ccc;
     }
   }
-  .presentation-footer-control,
   .writing-modes {
     display: inline-block;
-  }
-  .presentation-footer-control {
-    svg {
-      width: 14px;
-    }
   }
 </style>
 
@@ -111,10 +105,6 @@
       </select>
     </span>
     <div class="footer-right">
-      <presentation-control
-        :writing-mode="status.writingMode"
-        v-if="status.isPresentationMode">
-      </presentation-control>
       <writing-modes
         :writing-mode="status.writingMode"
         :current-tab-index="currentTabIndex"
@@ -129,7 +119,6 @@
   import {shell} from 'electron'
   import wordCount from 'wordcount'
 
-  import PresentationControl from 'components/presentation-control'
   import WritingModes from 'components/writing-modes'
 
   export default {
@@ -147,7 +136,6 @@
               'untitled',
             writingMode: tab.writingMode,
             pdf: tab.pdf,
-            isPresentationMode: tab.isPresentationMode,
             gist: tab.gist,
             exporting: tab.exporting
           }
@@ -163,7 +151,6 @@
       }
     },
     components: {
-      PresentationControl,
       WritingModes
     }
   }
