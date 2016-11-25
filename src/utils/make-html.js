@@ -20,7 +20,7 @@ export default ({html, css, data}) => {
           `<div class="markdown-body">${html}</div>`}
       </body>
       <script>
-        window.saveTo = ${JSON.stringify(data.saveTo)}
+        window.saveTo = ${JSON.stringify(data.saveTo)}
       </script>
       <script>
         const {ipcRenderer} = require('electron')
