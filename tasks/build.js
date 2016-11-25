@@ -11,7 +11,6 @@ const target = args._[0]
 
 const platforms = {}
 const defaults = {
-  version: '1.3.2',
   dir: './app',
   'app-version': pkg.version,
   out: 'dist',
