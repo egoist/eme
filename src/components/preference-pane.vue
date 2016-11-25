@@ -291,7 +291,7 @@
         <div class="form-group">
           <label>GitHub Gist</label>
           <label>
-            <input v-model="settings.autoSaveGist" type="checkbox"> Auto-update GitHub Gist after you save the file (only available when you filled in a GitHub token above)
+            <input v-model="settings.autoSaveGist" type="checkbox"> Auto-update GitHub Gist after you save the file (only available when you filled in a GitHub token below)
           </label>
           <p class="label-description" v-if="settings.autoSaveGist">Generate a private token at
           &nbsp;<a target="_blank" href="https://github.com/settings/tokens">github.com/settings/tokens</a>, and select scope `gist`.
