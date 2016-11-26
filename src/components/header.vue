@@ -21,9 +21,6 @@
         overflow: auto;
         overflow-y: hidden;
       }
-      &.undraggable {
-        -webkit-app-region: no-drag;
-      }
     }
     .tab {
       height: $header-height;
@@ -156,7 +153,6 @@
     :class="{'single-tab': tabs.length === 1}"
     @dblclick="createNewTab">
     <div class="tab-container"
-      :class="{undraggable: tabs.length > 1}"
       v-el:tab-container>
       <div class="tab"
         @click="setCurrentTab($index)"
