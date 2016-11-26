@@ -1,5 +1,7 @@
 <template>
-  <span class="svg-icon" v-html="icon"></span>
+  <span class="svg-icon">
+    {{{ icon }}}
+  </span>
 </template>
 
 <script>

@@ -93,18 +93,18 @@
     <div
       class="tab-body"
       :class="[
-        'tab-body-' + index,
+        'tab-body-' + $index,
         writingModeClassName,
         {
           'vim-mode': currentTab && currentTab.isVimMode,
           resizing: resizing
         }
       ]"
-      v-for="(tab, index) in tabs"
-      @mousemove="resizeMove($event, index)"
+      v-for="tab in tabs"
+      @mousemove="resizeMove($event, $index)"
       @mouseup="resizeEnd"
       @mouseleave="resizeEnd"
-      v-show="index === currentTabIndex">
+      v-show="$index === currentTabIndex">
       <div
         class="editor"
         :class="{'focus-mode': tab.isFocusMode}"
@@ -114,20 +114,20 @@
           'border-right-width': currentTab && currentTab.writingMode === 'default' ? '1px' : '0'
         }"
         v-show="currentTab && currentTab.writingMode !== 'preview'">
-        <textarea class="editor-input" :id="'editor-' + index">{{ tab.content }}</textarea>
-        <div class="resize-bar" @mousedown="resizeStart($event, index)"></div>
+        <textarea class="editor-input" :id="'editor-' + $index">{{ tab.content }}</textarea>
+        <div class="resize-bar" @mousedown="resizeStart($event, $index)"></div>
       </div>
       <div
         :class="[
           'preview',
-          'preview-' + index
+          'preview-' + $index
         ]"
         :style="{width: getSplitWidth('preview')}"
         v-show="currentTab && currentTab.writingMode !== 'editor'">
         <div
-          :class="'markdown-body markdown-body-' + index"
-          :style="{'font-size': settings.fontSize + 'px'}"
-          v-html="tab.html">
+          :class="'markdown-body markdown-body-' + $index"
+          :style="{'font-size': settings.fontSize + 'px'}">
+          {{{ tab.html }}}
         </div>
       </div>
     </div>
@@ -207,7 +207,7 @@
     created() {
       document.title = 'untitled - EME'
     },
-    mounted() {
+    ready() {
       this.createNewTab()
 
       this.listenIpc()

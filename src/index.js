@@ -4,7 +4,7 @@ import store from './vuex/store'
 import app from './app'
 
 new Vue({
-  el: '#app',
+  el: 'body',
   store,
-  render: h => h(app)
+  components: {app}
 })

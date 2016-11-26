@@ -21,6 +21,9 @@
         overflow: auto;
         overflow-y: hidden;
       }
+      &.undraggable {
+        -webkit-app-region: no-drag;
+      }
     }
     .tab {
       height: $header-height;
@@ -38,9 +41,9 @@
       overflow: hidden;
       text-overflow: ellipsis;
       .tab-title {
+        -webkit-user-select: none;
         width: 100%;
         display: block;
-        user-select: none;
         &.rename-input {
           height: 24px;
           line-height: 24px;
@@ -148,33 +151,38 @@
 
 <template>
   <header
-    class="header"
-    :class="{'single-tab': tabs.length === 1}">
-    <div class="tab-container">
+    class="header single-tab"
+    v-el:header
+    :class="{'single-tab': tabs.length === 1}"
+    @dblclick="createNewTab">
+    <div class="tab-container"
+      :class="{undraggable: tabs.length > 1}"
+      v-el:tab-container>
       <div class="tab"
-        @click="setCurrentTab(index)"
-        :id="'tab-' + index"
-        :data-index="index"
-        v-for="(tab, index) in tabs"
-        key="index"
-        :class="{'current-tab': index === currentTabIndex, unsaved: !tab.saved}"
-        @mouseover="hoverTab(index)"
-        @mouseleave="unhoverTab(index)">
+        @click="setCurrentTab($index)"
+        :id="'tab-' + $index"
+        :data-index="$index"
+        v-for="tab in tabs"
+        track-by="$index"
+        :class="{'current-tab': $index === currentTabIndex, unsaved: !tab.saved}"
+        @mouseover="hoverTab($index)"
+        @mouseleave="unhoverTab($index)">
         <span class="tab-title" v-if="tab && !tab.rename">
           {{ tab.title || 'untitled' }}
         </span>
         <input type="text"
           v-if="tab && tab.rename"
           class="rename-input tab-title"
+          @dblclick.stop
           @click.stop
-          @keyup.enter="renameCurrentFile($event, index)"
-          @keyup.esc="cancelRename($event, index)"
+          @keyup.enter="renameCurrentFile($event, $index)"
+          @keyup.esc="cancelRename($event, $index)"
           :value="tab.title" />
         <span
           class="tab-indicator"
           v-if="!dragging">
           <span class="dot" v-show="!tab.saved"></span>
-          <span class="cross" @click.stop="closeTab($event, index)">×</span>
+          <span class="cross" @click.stop="closeTab($event, $index)">×</span>
         </span>
         <span class="tab-indicator" v-if="dragging"></span>
       </div>
@@ -182,9 +190,9 @@
     <svg-icon
       class="settings-trigger"
       name="settings"
-      @mousedown.native="clickable = true"
-      @mousemove.native="clickable = false"
-      @mouseup.native="openSettings">>
+      @mousedown="clickable = true"
+      @mousemove="clickable = false"
+      @mouseup="openSettings">
     </svg-icon>
   </header>
 </template>
@@ -224,6 +232,11 @@
             event.emit('focus-current-tab')
           }, 200)
         }
+      }
+    },
+    data() {
+      return {
+        clickable: false
       }
     },
     created() {
