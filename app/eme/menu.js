@@ -12,6 +12,7 @@ const compare = require('semver-compare')
 const config = require('./config')
 const {InstallShell} = require('./shell')
 const event = require('./event')
+const _ = require('./utils')
 
 const version = app.getVersion()
 const checkForUpdates = {
@@ -191,6 +192,7 @@ module.exports = cb => {
       submenu: [
         {
           label: 'Reload',
+          visible: Boolean(_.isDev),
           accelerator: 'CmdOrCtrl+R',
           click(item, focusedWindow) {
             if (focusedWindow) focusedWindow.reload()
