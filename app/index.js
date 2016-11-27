@@ -45,7 +45,6 @@ const showAboutWindow = () => {
     type: 'info',
     detail: [
       `Version ${app.getVersion()}`,
-      `Date ${pkg.date || 'Unknown'}`,
       `Shell ${process.versions.electron}`,
       `Renderer ${process.versions.chrome}`,
       `Node ${process.versions.node}`
