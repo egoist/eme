@@ -88,7 +88,7 @@
 </style>
 
 <template>
-  <div class="main" :style="{'font-family': settings.font}">
+  <div class="main">
     <tip v-if="tabs.length === 0"></tip>
     <div
       class="tab-body"
@@ -109,8 +109,9 @@
         class="editor"
         :class="{'focus-mode': tab.isFocusMode}"
         :style="{
+          'font-family': settings.editor.font,
           width: getSplitWidth('editor'),
-          'font-size': settings.fontSize + 'px',
+          'font-size': settings.editor.fontSize + 'px',
           'border-right-width': currentTab && currentTab.writingMode === 'default' ? '1px' : '0'
         }"
         v-show="currentTab && currentTab.writingMode !== 'preview'">
@@ -122,11 +123,19 @@
           'preview',
           'preview-' + $index
         ]"
-        :style="{width: getSplitWidth('preview')}"
+        :style="{
+          width: getSplitWidth('preview'),
+          'font-family': settings.preview.font
+        }"
         v-show="currentTab && currentTab.writingMode !== 'editor'">
+        <style>
+          .markdown-body code,.markdown-body pre {
+            font-family: {{ settings.preview.codeFont === 'inherit' ? settings.preview.font : settings.preview.codeFont }}
+          }
+        </style>
         <div
           :class="'markdown-body markdown-body-' + $index"
-          :style="{'font-size': settings.fontSize + 'px'}">
+          :style="{'font-size': settings.preview.fontSize + 'px'}">
           {{{ tab.html }}}
         </div>
       </div>
@@ -411,15 +420,15 @@
           const textarea = tabEl.querySelector(`#editor-${index}`)
           const editor = CodeMirror.fromTextArea(textarea, {
             mode: 'gfm',
-            theme: this.settings.colorSchema,
+            theme: this.settings.editor.theme,
             lineNumbers: false,
             matchBrackets: true,
             lineWrapping: true,
             scrollbarStyle: 'simple',
             autofocus: true,
             dragDrop: false,
-            tabSize: this.settings.tabSize,
-            indentWithTabs: this.settings.indentWithTabs,
+            tabSize: this.settings.editor.tabSize,
+            indentWithTabs: this.settings.editor.indentWithTabs,
             extraKeys: {
               Enter: 'newlineAndIndentContinueMarkdownList',
               Tab: cm => {
@@ -562,11 +571,14 @@
         })
         ipcRenderer.on('toggle-night-mode', () => {
           this.$store.dispatch('TOGGLE_NIGHT_MODE')
+
           this.updateEditorOptions({
-            theme: this.settings.colorSchema
+            theme: this.settings.editor.theme
           })
+
           config.set('settings.theme', this.settings.theme)
-          config.set('settings.colorSchema', this.settings.colorSchema)
+          config.set('settings.preview.highlight', this.settings.preview.highlight)
+          config.set('settings.editor.theme', this.settings.editor.theme)
         })
 
         window.onbeforeunload = () => {

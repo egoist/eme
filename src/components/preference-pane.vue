@@ -105,6 +105,41 @@
         }
       }
     }
+    .pane-sub-tabs {
+      margin-bottom: 20px;
+      display: flex;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+    }
+    .pane-sub-tab {
+      font-size: 14px;
+      display: inline-block;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-bottom-color: #afafaf;
+      padding: 0 10px;
+      text-align: center;
+      cursor: default;
+      user-select: none;
+      &:first-child {
+        border-radius: 5px 0 0 5px;
+      }
+      &:last-child {
+        border-radius: 0 5px 5px 0;
+      }
+      &:not(:last-child) {
+        border-right: none;
+      }
+      &.active {
+        background-color: #3694f7;
+        color: white;
+        border-color: #3694f7;
+        &+span {
+          border-left: none;
+        }
+      }
+    }
   }
 </style>
 
@@ -121,7 +156,29 @@
       </div>
     </div>
     <div class="pane-body" v-show="active === 0">
-      <form class="row">
+      <div class="pane-sub-header">
+        <div class="pane-sub-tabs">
+          <span
+            class="pane-sub-tab"
+            :class="{active: activeSub.general === 'app'}"
+            @click="activeSub.general = 'app'">
+            App
+          </span>
+          <span
+            class="pane-sub-tab"
+            :class="{active: activeSub.general === 'editor'}"
+            @click="activeSub.general = 'editor'">
+            Editor
+          </span>
+          <span
+            class="pane-sub-tab"
+            :class="{active: activeSub.general === 'preview'}"
+            @click="activeSub.general = 'preview'">
+            Preview
+          </span>
+        </div>
+      </div>
+      <form class="row" v-if="activeSub.general === 'app'">
         <div class="col col-half">
           <div class="form-group">
             <label>App Theme</label>
@@ -138,28 +195,9 @@
               </option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Markdown Color Schema</label>
-            <select class="form-control" v-model="settings.colorSchema">
-              <option
-                :value="colorSchema"
-                v-for="colorSchema in colorSchemas"
-                :selected="settings.colorSchema === colorSchema">
-                {{ colorSchema }}
-              </option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Code Highlight Style</label>
-            <select class="form-control" v-model="settings.highlight">
-              <option
-                :value="highlight"
-                v-for="highlight in highlights"
-                :selected="settings.highlight === highlight">
-                {{ highlight }}
-              </option>
-            </select>
-          </div>
+        </div>
+
+        <div class="col col-half">
           <div class="form-group">
             <label>Default Writing Mode</label>
             <select class="form-control" v-model="settings.writingMode">
@@ -181,34 +219,92 @@
             </select>
           </div>
         </div>
+      </form>
+
+      <form class="row" v-if="activeSub.general === 'editor'">
         <div class="col col-half">
           <div class="form-group">
-            <label>Font Size: {{ settings.fontSize }}px</label>
+            <label>Editor Theme</label>
+            <select class="form-control" v-model="settings.editor.theme">
+              <option
+                :value="theme"
+                v-for="theme in editorThemes"
+                :selected="settings.editor.theme === theme">
+                {{ theme }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="col col-half">
+          <div class="form-group">
+            <label>Font Size: {{ settings.editor.fontSize }}px</label>
             <input
               type="range"
               min="12"
               max="60"
               class="form-control"
-              v-model="settings.fontSize">
+              v-model="settings.editor.fontSize">
           </div>
           <div class="form-group">
             <label>Font Family</label>
             <input
               type="text"
               class="form-control"
-              v-model="settings.font">
+              v-model="settings.editor.font">
           </div>
           <div class="form-group">
             <label>Tab Size</label>
             <input
               type="number"
               class="form-control"
-              v-model="settings.tabSize">
+              v-model="settings.editor.tabSize">
           </div>
           <div class="form-group">
             <label>
-              <input type="checkbox" v-model="settings.indentWithTabs"> Indent With Tabs
+              <input type="checkbox" v-model="settings.editor.indentWithTabs"> Indent With Tabs
             </label>
+          </div>
+        </div>
+      </form>
+
+      <form class="row" v-if="activeSub.general === 'preview'">
+        <div class="col col-half">
+          <div class="form-group">
+            <label>Code Syntax Highlight</label>
+            <select class="form-control" v-model="settings.preview.highlight">
+              <option
+                :value="highlight"
+                v-for="highlight in highlights"
+                :selected="settings.preview.highlight === highlight">
+                {{ highlight }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Code Font</label>
+            <input
+              type="text"
+              class="form-control"
+              v-model="settings.preview.codeFont">
+          </div>
+        </div>
+
+        <div class="col col-half">
+          <div class="form-group">
+            <label>Font Size: {{ settings.preview.fontSize }}px</label>
+            <input
+              type="range"
+              min="12"
+              max="60"
+              class="form-control"
+              v-model="settings.preview.fontSize">
+          </div>
+          <div class="form-group">
+            <label>Font Family</label>
+            <input
+              type="text"
+              class="form-control"
+              v-model="settings.preview.font">
           </div>
         </div>
       </form>
@@ -320,8 +416,11 @@
       return {
         tabs: ['General', 'Keys', 'Sync'],
         active: 0,
+        activeSub: {
+          general: 'app'
+        },
         settings: JSON.parse(JSON.stringify($config.get('settings'))),
-        colorSchemas: [
+        editorThemes: [
           'base16-light',
           'tomorrow-night-bright'
         ],
@@ -340,9 +439,9 @@
       update() {
         this.$store.dispatch('UPDATE_SETTINGS', this.settings)
         event.emit('update-editor-options', {
-          theme: this.settings.colorSchema,
-          tabSize: this.settings.tabSize,
-          indentWithTabs: this.settings.indentWithTabs
+          theme: this.settings.editor.theme,
+          tabSize: this.settings.editor.tabSize,
+          indentWithTabs: this.settings.editor.indentWithTabs
         })
       }
     },

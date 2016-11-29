@@ -62,7 +62,7 @@
         tabsAmount: state => state.editor.tabs.length,
         showPreferencePane: state => state.app.showPreferencePane,
         theme: state => state.app.settings.theme,
-        highlight: state => state.app.settings.highlight
+        highlight: state => state.app.settings.preview.highlight
       },
       actions: {
         togglePreferencePane({dispatch}) {

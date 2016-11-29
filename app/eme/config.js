@@ -14,15 +14,22 @@ const config = new Config({
     gists: {},
     settings: {
       theme: 'white',
-      colorSchema: 'base16-light',
-      highlight: 'github',
-      fontSize: 16,
-      font: 'Menlo, "DejaVu Sans Mono", "Lucida Console", monos',
       writingMode: 'default',
-      tabSize: 2,
-      indentWithTabs: false,
       tokens: {
         github: ''
+      },
+      editor: {
+        theme: 'base16-light',
+        font: `"fira code", menlo, "lucida console"`,
+        fontSize: 16,
+        tabSize: 2,
+        indentWithTabs: false
+      },
+      preview: {
+        highlight: 'github',
+        font: `"fira code", menlo, "lucida console"`,
+        codeFont: 'inherit',
+        fontSize: 16
       },
       autoSaveGist: false,
       keys: {

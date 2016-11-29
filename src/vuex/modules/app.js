@@ -18,10 +18,12 @@ const mutations = {
     const {theme} = state.settings
     if (theme === 'dark') {
       state.settings.theme = 'white'
-      state.settings.colorSchema = 'base16-light'
+      state.settings.preview.highlight = 'github'
+      state.settings.editor.theme = 'base16-light'
     } else {
       state.settings.theme = 'dark'
-      state.settings.colorSchema = 'tomorrow-night-bright'
+      state.settings.preview.highlight = 'tomorrow-night-bright'
+      state.settings.editor.theme = 'tomorrow-night-bright'
     }
   }
 }
