@@ -119,7 +119,7 @@ const mutations = {
   CLOSE_TAB(state, indexToClose) {
     const tab = state.tabs[index]
     if (tab && tab.watcher) {
-      watcher.close()
+      tab.watcher.close()
     }
     if (state.currentTabIndex !== 0 && indexToClose <= state.currentTabIndex) {
       state.currentTabIndex--

@@ -711,7 +711,7 @@
         if (tab) {
           let reload = tab.saved
           if (!reload) {
-            const filename = tab.filePath ? path.basename(tab.filePath) : 'untitled'
+            const filename = path.basename(tab.filePath)
             const clickedButton = remote.dialog.showMessageBox(currentWindow, {
               type: 'question',
               title: 'EME',
@@ -719,7 +719,7 @@
               detail: 'Your changes will be lost if you reload the file.',
               buttons: ['Reload', 'Don\'t Reload']
             })
-            reload = clickedButton === 0;
+            reload = clickedButton === 0
           }
           if (reload) {
             console.log("RELOAD")
@@ -729,7 +729,7 @@
             this.editor.getDoc().setValue(content)
             this.$store.dispatch('UPDATE_CONTENT', {
               index,
-              content,
+              content
             })
             this.updateSaved({
               index,
