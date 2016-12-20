@@ -210,7 +210,8 @@
     data() {
       return {
         resizing: false,
-        shouldCheckContentSaved: true
+        shouldCheckContentSaved: true,
+        shouldListenFileWatcher: true
       }
     },
     created() {
@@ -284,7 +285,9 @@
           index,
           filePath
         })
+        this.shouldListenFileWatcher = false
         await fs.writeFile(filePath, tab.content, 'utf8')
+        this.shouldListenFileWatcher = true
         console.log(`saved as ${filePath}`)
         this.updateSaved({index, saved: true})
       },
@@ -376,11 +379,19 @@
         const index = this.currentTabIndex
         const content = await fs.readFile(filePath, 'utf8')
         this.editor.getDoc().setValue(content)
+        const watcher = fs.watch(filePath, {persistent: false}, (eventType, filename) => {
+          if (eventType === 'change') {
+            if (this.shouldListenFileWatcher) {
+              this.reloadTab(index)
+            }
+          }
+        })
         this.$store.dispatch('UPDATE_CONTENT_WITH_FILEPATH', {
           index,
           content,
           filePath,
-          gist: config.get('gists')[filePath] || ''
+          gist: config.get('gists')[filePath] || '',
+          watcher
         })
         this.updateSaved({
           index,
@@ -391,12 +402,20 @@
       async createNewTab(tab = {}, created = () => {}) {
         let content = ''
         let gist = ''
+        let watcher = null
+        const index = this.tabs.length
         const filePath = tab.filePath || ''
         if (filePath) {
           content = await fs.readFile(filePath, 'utf8')
           gist = config.get('gists')[filePath] || ''
+          watcher = fs.watch(filePath, {persistent: false}, (eventType, filename) => {
+            if (eventType === 'change') {
+              if (this.shouldListenFileWatcher) {
+                this.reloadTab(index)
+              }
+            }
+          })
         }
-        const index = this.tabs.length
         const tabDefaults = {
           content,
           saved: true,
@@ -408,7 +427,8 @@
           exporting: false,
           rename: false,
           split: this.settings.writingMode === 'default' ? 50 : 100,
-          gist
+          gist,
+          watcher
         }
         this.$store.dispatch('INIT_NEW_TAB', {
           ...tabDefaults,
@@ -685,6 +705,40 @@
           this.editor.setOption(option, options[option])
         }
         this.editor.refresh()
+      },
+      async reloadTab(index) {
+        const tab = this.tabs[index]
+        if (tab) {
+          let reload = tab.saved
+          if (!reload) {
+            const filename = path.basename(tab.filePath)
+            const clickedButton = remote.dialog.showMessageBox(currentWindow, {
+              type: 'question',
+              title: 'EME',
+              message: `The ${filename} has been modyfied.`,
+              detail: 'Your changes will be lost if you reload the file.',
+              buttons: ['Reload', 'Don\'t Reload']
+            })
+            reload = clickedButton === 0
+          }
+          if (reload) {
+            console.log("RELOAD")
+            this.shouldCheckContentSaved = false
+            this.shouldListenFileWatcher = false
+            const content = await fs.readFile(tab.filePath, 'utf8')
+            this.editor.getDoc().setValue(content)
+            this.$store.dispatch('UPDATE_CONTENT', {
+              index,
+              content
+            })
+            this.updateSaved({
+              index,
+              saved: true
+            })
+            this.shouldListenFileWatcher = true
+            this.shouldCheckContentSaved = true
+          }
+        }
       },
       async closeTab(index) {
         const tab = this.tabs[index]

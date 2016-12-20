@@ -68,7 +68,8 @@ const mutations = {
     index,
     content,
     filePath,
-    gist
+    gist,
+    watcher
   }) {
     const tab = state.tabs[index]
     const parsed = renderHTML({
@@ -80,6 +81,7 @@ const mutations = {
     tab.attrs = parsed.attrs
     tab.filePath = filePath
     tab.gist = gist
+    tab.watcher = watcher
     document.title = `${path.basename(filePath)} - EME`
   },
   UPDATE_SAVE_STATUS(state, {index, saved}) {
@@ -115,6 +117,10 @@ const mutations = {
     state.currentTabIndex = index
   },
   CLOSE_TAB(state, indexToClose) {
+    const tab = state.tabs[index]
+    if (tab && tab.watcher) {
+      tab.watcher.close()
+    }
     if (state.currentTabIndex !== 0 && indexToClose <= state.currentTabIndex) {
       state.currentTabIndex--
     }
