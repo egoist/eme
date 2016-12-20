@@ -335,6 +335,8 @@
           this.handleSave(index).catch(handleError)
         }
       },
+      // TODO: remove file watcher for old file
+      // and add file watcher for renamed file
       async handleRenamed(index, name) {
         const tab = this.tabs[index]
 
@@ -379,7 +381,7 @@
         const index = this.currentTabIndex
         const content = await fs.readFile(filePath, 'utf8')
         this.editor.getDoc().setValue(content)
-        const watcher = fs.watch(filePath, {persistent: false}, (eventType, filename) => {
+        const watcher = fs.watch(filePath, {persistent: false}, eventType => {
           if (eventType === 'change') {
             if (this.shouldListenFileWatcher) {
               this.reloadTab(index)
@@ -408,7 +410,7 @@
         if (filePath) {
           content = await fs.readFile(filePath, 'utf8')
           gist = config.get('gists')[filePath] || ''
-          watcher = fs.watch(filePath, {persistent: false}, (eventType, filename) => {
+          watcher = fs.watch(filePath, {persistent: false}, eventType => {
             if (eventType === 'change') {
               if (this.shouldListenFileWatcher) {
                 this.reloadTab(index)
@@ -722,7 +724,7 @@
             reload = clickedButton === 0
           }
           if (reload) {
-            console.log("RELOAD")
+            console.log('RELOAD')
             this.shouldCheckContentSaved = false
             this.shouldListenFileWatcher = false
             const content = await fs.readFile(tab.filePath, 'utf8')
