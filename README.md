@@ -17,6 +17,7 @@ You can manually download the latest release [here](https://github.com/egoist/em
 ## WIKI
 
 - [Key bindings](https://github.com/egoist/eme/wiki/Key-bindings)
+- [...more](https://github.com/egoist/eme/wiki)
 
 ## Contribute
 
