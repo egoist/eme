@@ -303,6 +303,13 @@ module.exports = cb => {
             const file = path.join(__dirname, '../welcome-guide.md')
             openFileInWindow(focusedWindow, file)
           }
+        },
+        {
+          label: 'Math Typesetting',
+          click(item, focusedWindow) {
+            const file = path.join(__dirname, '../math-typesetting.md')
+            openFileInWindow(focusedWindow, file)
+          }
         }
       ]
     }
