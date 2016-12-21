@@ -3,10 +3,10 @@ import store from 'src/vuex/store'
 const transition = {
   type: 'animation',
   beforeEnter() {
-    store.dispatch('SLIDE_SWITCHING', true)
+    store.commit('SLIDE_SWITCHING', true)
   },
   afterLeave() {
-    store.dispatch('SLIDE_SWITCHING', false)
+    store.commit('SLIDE_SWITCHING', false)
   }
 }
 
@@ -17,6 +17,10 @@ const types = [
   'zoom'
 ]
 
+/**
+ * TODO Replace Vue.transition(`${type}-${direction}`) with a component that uses the new <transition> or <transition-group> element as its root
+ * @deprecated in Vue2, use transition elements instead: https://vuejs.org/v2/guide/transitions.html#Reusable-Transitions
+ */
 export default Vue => {
   const makeTransition = (type, direction) => {
     const directions = direction === 'left' ?

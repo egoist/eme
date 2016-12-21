@@ -122,23 +122,23 @@
   import WritingModes from 'components/writing-modes'
 
   export default {
-    vuex: {
-      getters: {
-        currentTabIndex: state => state.editor.currentTabIndex,
-        status: state => {
-          const tab = state.editor.tabs[state.editor.currentTabIndex] || {}
-          return {
-            wordCount: tab.content ? wordCount(tab.content) : 0,
-            charCount: tab.content ? tab.content.length : 0,
-            lineCount: (tab.content && tab.editor) ? tab.editor.lineCount() : 0,
-            filePath: tab.filePath ?
-              tildify(tab.filePath) :
-              'untitled',
-            writingMode: tab.writingMode,
-            pdf: tab.pdf,
-            gist: tab.gist,
-            exporting: tab.exporting
-          }
+    computed: {
+      currentTabIndex() {
+        return this.$store.state.editor.currentTabIndex
+      },
+      status() {
+        const tab = this.$store.state.editor.tabs[this.$store.state.editor.currentTabIndex] || {}
+        return {
+          wordCount: tab.content ? wordCount(tab.content) : 0,
+          charCount: tab.content ? tab.content.length : 0,
+          lineCount: (tab.content && tab.editor) ? tab.editor.lineCount() : 0,
+          filePath: tab.filePath ?
+            tildify(tab.filePath) :
+            'untitled',
+          writingMode: tab.writingMode,
+          pdf: tab.pdf,
+          gist: tab.gist,
+          exporting: tab.exporting
         }
       }
     },

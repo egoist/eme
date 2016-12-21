@@ -148,10 +148,11 @@
     <header class="pane-header">Preferences</header>
     <div class="pane-tabs">
       <div
+        v-for="(tab, index) in tabs"
         class="pane-tab"
-        :class="{active: active === $index}"
-        @click="active = $index"
-        v-for="tab in tabs">
+        :class="{active: active === index}"
+        @click="active = index"
+        >
         {{ tab }}
       </div>
     </div>
@@ -437,7 +438,7 @@
     },
     methods: {
       update() {
-        this.$store.dispatch('UPDATE_SETTINGS', this.settings)
+        this.$store.commit('UPDATE_SETTINGS', this.settings)
         event.emit('update-editor-options', {
           theme: this.settings.editor.theme,
           tabSize: this.settings.editor.tabSize,
