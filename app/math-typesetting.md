@@ -7,7 +7,7 @@ $$
 \frac{this}{a} \frac{is}{block}
 $$
 
-# Symbols
+## Symbols
 
 This list of symbols is copied from [here](http://web.ift.uib.no/Teori/KURS/WRK/TeX/symALL.html).
 
