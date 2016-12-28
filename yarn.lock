@@ -3189,10 +3189,6 @@ markdown-it-front-matter@^0.1.2:
   version "0.1.2"
   resolved "http://registry.npm.taobao.org/markdown-it-front-matter/download/markdown-it-front-matter-0.1.2.tgz#e50bf56e77e6a4f5ac4ffa894d4d45ccd9896b20"
 
-markdown-it-sanitizer@^0.4.3:
-  version "0.4.3"
-  resolved "http://registry.npm.taobao.org/markdown-it-sanitizer/download/markdown-it-sanitizer-0.4.3.tgz#2ba34e9fe16e6372ce7192fb50b37d9dfbff0102"
-
 markdown-it-task-lists@^1.4.0:
   version "1.4.1"
   resolved "http://registry.npm.taobao.org/markdown-it-task-lists/download/markdown-it-task-lists-1.4.1.tgz#ca7babc76a678e10837d75a90183f45112b87b05"
