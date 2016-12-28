@@ -129,11 +129,6 @@
           'font-family': settings.preview.font
         }"
         v-show="currentTab && currentTab.writingMode !== 'editor'">
-        <!--style>
-          .markdown-body code,.markdown-body pre {
-            font-family: {{ settings.preview.codeFont === 'inherit' ? settings.preview.font : settings.preview.codeFont }}
-          }
-        </style-->
         <div
           :class="'markdown-body markdown-body-' + index"
           :style="{'font-size': settings.preview.fontSize + 'px'}"
@@ -185,6 +180,11 @@
     }
   }
 
+  // Update this stylesheet to match user prefs in the watch-object
+  const customStyleElement = document.createElement("style")
+  customStyleElement.id = "customStyle"
+  document.head.appendChild(customStyleElement)
+
   export default {
     computed: {
       editor() {
@@ -206,6 +206,11 @@
       },
       settings() {
         return this.$store.state.app.settings
+      },
+      customStyle() {
+        return `.markdown-body code,.markdown-body pre {
+                  font-family: ${ this.settings.preview.codeFont === 'inherit' ? this.settings.preview.font : this.settings.preview.codeFont }
+                }`
       }
     },
     data() {
@@ -217,12 +222,18 @@
     },
     created() {
       document.title = 'untitled - EME'
+        customStyleElement.innerHTML = this.customStyle
     },
     mounted() {
       this.createNewTab()
 
       this.listenIpc()
       this.handleDrag()
+    },
+    watch: {
+      'settings.preview.codeFont'(font) {
+        customStyleElement.innerHTML = this.customStyle
+      }
     },
     methods: {
       getSplitWidth(area) {
