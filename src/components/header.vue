@@ -159,7 +159,7 @@
         @click="setCurrentTab(index)"
         :id="'tab-' + index"
         :data-index="index"
-        :key="index"
+        :key="tab.id"
         :class="{'current-tab': index === currentTabIndex, unsaved: !tab.saved}"
         @mouseover="hoverTab(index)"
         @mouseleave="unhoverTab(index)">
