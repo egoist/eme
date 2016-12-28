@@ -634,7 +634,7 @@
           closeInOrder(() => this.saveAppState({tabs, currentTabIndex}))
         })
 
-        ipcRenderer.on('show-save-pdf-dialog',async () => {
+        ipcRenderer.on('show-save-pdf-dialog', async () => {
           const filePath = await dialog.showSaveDialog(currentWindow, {
             filters: [
               {name: 'PDF', extensions: ['pdf']}

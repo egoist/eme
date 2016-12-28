@@ -1,6 +1,6 @@
 import {remote} from 'electron'
 
-export default (function (...args) {
+export default (() => {
   const dialog = {}
   Object.keys(remote.dialog).forEach(method => {
     dialog[method] = (...args) => {
