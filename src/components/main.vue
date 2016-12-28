@@ -167,6 +167,7 @@
   import event from 'utils/event'
   import makeHTML from 'utils/make-html'
   import fs from 'utils/fs-promise'
+  import nfs from 'fs'
   import {appPath} from 'utils/resolve-path'
   import handleError from 'utils/handle-error'
   import dialog from 'utils/dialog'
@@ -382,7 +383,7 @@
         const index = this.currentTabIndex
         const content = await fs.readFile(filePath, 'utf8')
         this.editor.getDoc().setValue(content)
-        const watcher = fs.watch(filePath, {persistent: false}, eventType => {
+        const watcher = nfs.watch(filePath, {persistent: false}, eventType => {
           if (eventType === 'change') {
             if (this.shouldListenFileWatcher) {
               this.reloadTab(index)
@@ -411,7 +412,7 @@
         if (filePath) {
           content = await fs.readFile(filePath, 'utf8')
           gist = config.get('gists')[filePath] || ''
-          watcher = fs.watch(filePath, {persistent: false}, eventType => {
+          watcher = nfs.watch(filePath, {persistent: false}, eventType => {
             if (eventType === 'change') {
               if (this.shouldListenFileWatcher) {
                 this.reloadTab(index)
