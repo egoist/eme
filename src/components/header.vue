@@ -159,12 +159,12 @@
         @click="setCurrentTab(index)"
         :id="'tab-' + index"
         :data-index="index"
-        track-by="index"
+        :key="index"
         :class="{'current-tab': index === currentTabIndex, unsaved: !tab.saved}"
         @mouseover="hoverTab(index)"
         @mouseleave="unhoverTab(index)">
         <span class="tab-title" v-if="tab && !tab.rename">
-          {{ tab.title || 'untitled' }}
+          {{ tab.title || 'untitled-' + (tab.id) }}
         </span>
         <input type="text"
           v-if="tab && tab.rename"
@@ -220,7 +220,8 @@
             return {
               title: path.basename(tab.filePath),
               saved: tab.saved,
-              rename: tab.rename
+              rename: tab.rename,
+              id: tab.id
             }
           })
         },
@@ -237,7 +238,7 @@
         const index = getLeftTabIndex(this.tabs.length, this.currentTabIndex)
         this.setCurrentTab(index)
       })
-      Mousetrap.bindGlobal(`${cmdOrCtrl}+shift+]`, () => {
+      Mousetrap.bindGlobal(`${cmdOrCtrl}+shift+]`, () => {        
         if (this.tabs.length < 2) return
         const index = getRightTabIndex(this.tabs.length, this.currentTabIndex)
         this.setCurrentTab(index)

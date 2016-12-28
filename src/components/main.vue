@@ -91,7 +91,8 @@
   <div class="main">
     <tip v-if="tabs.length === 0"></tip>
     <div
-      v-for="(tab, index) in tabs"    
+      v-for="(tab, index) in tabs"
+      :key="tab.id"
       class="tab-body"
       :class="[
         'tab-body-' + index,
@@ -174,6 +175,13 @@
 
   const currentWindow = remote.getCurrentWindow()
   const config = currentWindow.$config
+  
+  const tabId = {
+    id: 0,
+    create () {
+      return this.id++
+    }
+  }
 
   export default {
     computed: {
@@ -411,6 +419,7 @@
         }
         const tabDefaults = {
           content,
+          id: tabId.create(),
           saved: true,
           editor: null,
           isFocusMode: false,
@@ -463,7 +472,7 @@
           editor.on('change', e => {
             if (!this.shouldCheckContentSaved) return
             const content = e.getValue()
-            console.log('changed')
+            console.log(`Tab ${index} changed. New length ${content.length}`)
             setTimeout(() => {
               this.updateSaved({
                 index: this.currentTabIndex,
@@ -719,7 +728,7 @@
             this.shouldCheckContentSaved = false
             this.shouldListenFileWatcher = false
             const content = await fs.readFile(tab.filePath, 'utf8')
-            this.editor.getDoc().setValue(content)
+            tab.editor.getDoc().setValue(content)
             this.$store.commit('UPDATE_CONTENT', {
               index,
               content
