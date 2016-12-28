@@ -732,7 +732,7 @@
             this.shouldCheckContentSaved = false
             this.shouldListenFileWatcher = false
             const content = await fs.readFile(tab.filePath, 'utf8')
-            this.editor.getDoc().setValue(content)
+            tab.editor.getDoc().setValue(content)
             this.$store.dispatch('UPDATE_CONTENT', {
               index,
               content
