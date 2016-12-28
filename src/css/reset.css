@@ -23,9 +23,19 @@
   }
 }
 
-.markdown-body ul,
-.markdown-body ol {
-  padding-left: 1.3em;
+.markdown-body ul{
+  padding-left: 20px;
+}
+
+.markdown-body {
+  .task-list {
+    padding-left: 0;
+    .task-list-item {
+      input {
+        margin: 0;
+      }
+    }
+  }
 }
 
 input, textarea {

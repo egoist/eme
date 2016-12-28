@@ -168,8 +168,10 @@
   import event from 'utils/event'
   import makeHTML from 'utils/make-html'
   import fs from 'utils/fs-promise'
+  import nfs from 'fs'
   import {appPath} from 'utils/resolve-path'
   import handleError from 'utils/handle-error'
+  import dialog from 'utils/dialog'
   import {createOrUpdateGist} from 'utils/gist'
   import tip from 'components/tip'
 
@@ -293,7 +295,7 @@
       async handleSave(index) {
         try {
           const tab = this.tabs[index]
-          const filePath = tab.filePath || remote.dialog.showSaveDialog(currentWindow, {
+          const filePath = tab.filePath || await dialog.showSaveDialog(currentWindow, {
             filters: [
               {name: 'Markdown', extensions: ['markdown', 'md']}
             ]
@@ -310,7 +312,7 @@
       },
       async handleSaveAs(index) {
         const tab = this.tabs[index]
-        const filePath = remote.dialog.showSaveDialog(currentWindow, {
+        const filePath = await dialog.showSaveDialog(currentWindow, {
           filters: [
             {name: 'Markdown', extensions: ['markdown', 'md']}
           ]
@@ -334,8 +336,6 @@
           this.handleSave(index).catch(handleError)
         }
       },
-      // TODO: remove file watcher for old file
-      // and add file watcher for renamed file
       async handleRenamed(index, name) {
         const tab = this.tabs[index]
 
@@ -355,7 +355,7 @@
             message: `"${name}" already exists.`
           })
         } catch (e) {
-          // store old filename to delete in gist in the end
+          // store old filename to delete in gist at the end
           let oldFilePath = tab.filePath
           await fs.rename(tab.filePath, newPath)
           this.$store.commit('UPDATE_FILE_PATH', {
@@ -363,6 +363,11 @@
             filePath: newPath
           })
           console.log(`renamed as ... ${newPath}`)
+          // update file watcher
+          if (tab.watcher) {
+            tab.watcher.close()
+            tab.watcher = this.watchFile(newPath, index)
+          }
           // remove old file in recent file history
           // add new file to histoy
           ipcRenderer.send('add-recent-file', newPath)
@@ -380,13 +385,7 @@
         const index = this.currentTabIndex
         const content = await fs.readFile(filePath, 'utf8')
         this.editor.getDoc().setValue(content)
-        const watcher = fs.watch(filePath, {persistent: false}, eventType => {
-          if (eventType === 'change') {
-            if (this.shouldListenFileWatcher) {
-              this.reloadTab(index)
-            }
-          }
-        })
+        const watcher = this.watchFile(filePath, index)
         this.$store.commit('UPDATE_CONTENT_WITH_FILEPATH', {
           index,
           content,
@@ -400,6 +399,18 @@
         })
         this.shouldCheckContentSaved = true
       },
+      watchFile(filePath, index) {
+        if (filePath) {
+          return nfs.watch(filePath, {persistent: false}, eventType => {
+            if (eventType === 'change') {
+              if (this.shouldListenFileWatcher) {
+                this.reloadTab(index)
+              }
+            }
+          })
+        }
+        return null
+      },
       async createNewTab(tab = {}, created = () => {}) {
         let content = ''
         let gist = ''
@@ -409,13 +420,7 @@
         if (filePath) {
           content = await fs.readFile(filePath, 'utf8')
           gist = config.get('gists')[filePath] || ''
-          watcher = fs.watch(filePath, {persistent: false}, eventType => {
-            if (eventType === 'change') {
-              if (this.shouldListenFileWatcher) {
-                this.reloadTab(index)
-              }
-            }
-          })
+          watcher = this.watchFile(filePath, index)
         }
         const tabDefaults = {
           content,
@@ -492,7 +497,7 @@
           created()
         }, 0)
       },
-      handleOpen(filePath) {
+      async handleOpen(filePath) {
         const openFile = filePath => {
           ipcRenderer.send('add-recent-file', filePath)
           if (this.currentTab && this.currentTab.saved && !this.currentTab.filePath) {
@@ -506,7 +511,7 @@
         if (filePath) {
           openFile(filePath)
         } else {
-          const files = remote.dialog.showOpenDialog(currentWindow, {
+          const files = await dialog.showOpenDialog(currentWindow, {
             properties: ['openFile'],
             filters: [
               {name: 'Markdown', extensions: ['markdown', 'md']}
@@ -521,7 +526,7 @@
         })
 
         ipcRenderer.on('open-file', (e, filePath) => {
-          this.handleOpen(filePath)
+          this.handleOpen(filePath).catch(handleError)
         })
 
         ipcRenderer.on('open-last-session', () => {
@@ -603,11 +608,10 @@
           config.set('settings.editor.theme', this.settings.editor.theme)
         })
 
-        window.onbeforeunload = () => {
-          if (currentWindow.$state.unsaved === 0) {
-            return
+        window.onbeforeunload = e => {
+          if (currentWindow.$state.unsaved !== 0) {
+            e.returnValue = false
           }
-          return false
         }
 
         ipcRenderer.on('close-and-exit', () => {
@@ -634,8 +638,8 @@
           closeInOrder(() => this.saveAppState({tabs, currentTabIndex}))
         })
 
-        ipcRenderer.on('show-save-pdf-dialog', () => {
-          const filePath = remote.dialog.showSaveDialog(currentWindow, {
+        ipcRenderer.on('show-save-pdf-dialog', async () => {
+          const filePath = await dialog.showSaveDialog(currentWindow, {
             filters: [
               {name: 'PDF', extensions: ['pdf']}
             ]
@@ -714,7 +718,7 @@
           let reload = tab.saved
           if (!reload) {
             const filename = path.basename(tab.filePath)
-            const clickedButton = remote.dialog.showMessageBox(currentWindow, {
+            const clickedButton = await dialog.showMessageBox(currentWindow, {
               type: 'question',
               title: 'EME',
               message: `The ${filename} has been modyfied.`,
@@ -746,7 +750,7 @@
         const tab = this.tabs[index]
         if (tab && !tab.saved) {
           const filename = tab.filePath ? path.basename(tab.filePath) : 'untitled'
-          const clickedButton = remote.dialog.showMessageBox(currentWindow, {
+          const clickedButton = await dialog.showMessageBox(currentWindow, {
             type: 'question',
             title: 'EME',
             message: `Do you want to save the changes you made to ${filename} ?`,
