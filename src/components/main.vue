@@ -337,8 +337,6 @@
           this.handleSave(index).catch(handleError)
         }
       },
-      // TODO: remove file watcher for old file
-      // and add file watcher for renamed file
       async handleRenamed(index, name) {
         const tab = this.tabs[index]
 
@@ -358,7 +356,7 @@
             message: `"${name}" already exists.`
           })
         } catch (e) {
-          // store old filename to delete in gist in the end
+          // store old filename to delete in gist at the end
           let oldFilePath = tab.filePath
           await fs.rename(tab.filePath, newPath)
           this.$store.dispatch('UPDATE_FILE_PATH', {
@@ -366,6 +364,11 @@
             filePath: newPath
           })
           console.log(`renamed as ... ${newPath}`)
+          // update file watcher
+          if (tab.watcher) {
+            tab.watcher.close()
+            tab.watcher = this.watchFile(newPath, index)
+          }
           // remove old file in recent file history
           // add new file to histoy
           ipcRenderer.send('add-recent-file', newPath)
@@ -383,13 +386,7 @@
         const index = this.currentTabIndex
         const content = await fs.readFile(filePath, 'utf8')
         this.editor.getDoc().setValue(content)
-        const watcher = nfs.watch(filePath, {persistent: false}, eventType => {
-          if (eventType === 'change') {
-            if (this.shouldListenFileWatcher) {
-              this.reloadTab(index)
-            }
-          }
-        })
+        const watcher = this.watchFile(filePath, index)
         this.$store.dispatch('UPDATE_CONTENT_WITH_FILEPATH', {
           index,
           content,
@@ -403,6 +400,18 @@
         })
         this.shouldCheckContentSaved = true
       },
+      watchFile(filePath, index) {
+        if (filePath) {
+          return nfs.watch(filePath, {persistent: false}, eventType => {
+            if (eventType === 'change') {
+              if (this.shouldListenFileWatcher) {
+                this.reloadTab(index)
+              }
+            }
+          })
+        }
+        return null
+      },
       async createNewTab(tab = {}, created = () => {}) {
         let content = ''
         let gist = ''
@@ -412,13 +421,7 @@
         if (filePath) {
           content = await fs.readFile(filePath, 'utf8')
           gist = config.get('gists')[filePath] || ''
-          watcher = nfs.watch(filePath, {persistent: false}, eventType => {
-            if (eventType === 'change') {
-              if (this.shouldListenFileWatcher) {
-                this.reloadTab(index)
-              }
-            }
-          })
+          watcher = this.watchFile(filePath, index)
         }
         const tabDefaults = {
           content,
