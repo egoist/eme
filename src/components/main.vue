@@ -792,9 +792,11 @@
 
         holder.ondrop = e => {
           e.preventDefault()
+          let loadingChain = Promise.resolve()
           for (const f of e.dataTransfer.files) {
-            this.createNewTab({filePath: f.path})
+            loadingChain = loadingChain.then(() => this.createNewTab({filePath: f.path}))
           }
+          loadingChain.catch(handleError)
           return false
         }
       },
