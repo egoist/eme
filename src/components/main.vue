@@ -169,16 +169,10 @@
   import dialog from 'utils/dialog'
   import {createOrUpdateGist} from 'utils/gist'
   import tip from 'components/tip'
+  import {tabId} from 'utils/tab'
 
   const currentWindow = remote.getCurrentWindow()
   const config = currentWindow.$config
-  
-  const tabId = {
-    id: 0,
-    create () {
-      return this.id++
-    }
-  }
 
   // Update this stylesheet to match user prefs in the watch-object
   const customStyleElement = document.createElement("style")
@@ -222,7 +216,7 @@
     },
     created() {
       document.title = 'untitled - EME'
-        customStyleElement.innerHTML = this.customStyle
+      customStyleElement.innerHTML = this.customStyle
     },
     mounted() {
       this.createNewTab()
