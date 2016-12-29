@@ -149,36 +149,36 @@
 <template>
   <header
     class="header single-tab"
-    v-el:header
+    ref="header"
     :class="{'single-tab': tabs.length === 1}"
     @dblclick="createNewTab">
     <div class="tab-container"
-      v-el:tab-container>
+      ref="tab-container">
       <div class="tab"
-        @click="setCurrentTab($index)"
-        :id="'tab-' + $index"
-        :data-index="$index"
-        v-for="tab in tabs"
-        track-by="$index"
-        :class="{'current-tab': $index === currentTabIndex, unsaved: !tab.saved}"
-        @mouseover="hoverTab($index)"
-        @mouseleave="unhoverTab($index)">
+        v-for="(tab, index) in tabs"
+        @click="setCurrentTab(index)"
+        :id="'tab-' + index"
+        :data-index="index"
+        :key="tab.id"
+        :class="{'current-tab': index === currentTabIndex, unsaved: !tab.saved}"
+        @mouseover="hoverTab(index)"
+        @mouseleave="unhoverTab(index)">
         <span class="tab-title" v-if="tab && !tab.rename">
-          {{ tab.title || 'untitled' }}
+          {{ tab.title || 'untitled-' + (tab.id) }}
         </span>
         <input type="text"
           v-if="tab && tab.rename"
           class="rename-input tab-title"
           @dblclick.stop
           @click.stop
-          @keyup.enter="renameCurrentFile($event, $index)"
-          @keyup.esc="cancelRename($event, $index)"
+          @keyup.enter="renameCurrentFile($event, index)"
+          @keyup.esc="cancelRename($event, index)"
           :value="tab.title" />
         <span
           class="tab-indicator"
           v-if="!dragging">
           <span class="dot" v-show="!tab.saved"></span>
-          <span class="cross" @click.stop="closeTab($event, $index)">×</span>
+          <span class="cross" @click.stop="closeTab($event, index)">×</span>
         </span>
         <span class="tab-indicator" v-if="dragging"></span>
       </div>
@@ -186,9 +186,9 @@
     <svg-icon
       class="settings-trigger"
       name="settings"
-      @mousedown="clickable = true"
-      @mousemove="clickable = false"
-      @mouseup="openSettings">
+      @mousedown.native="clickable = true"
+      @mousemove.native="clickable = false"
+      @mouseup.native="openSettings">
     </svg-icon>
   </header>
 </template>
@@ -209,31 +209,28 @@
   }
 
   export default {
-    vuex: {
-      getters: {
-        tabs: state => state.editor.tabs.map(tab => {
-          return {
-            title: path.basename(tab.filePath),
-            saved: tab.saved,
-            rename: tab.rename
-          }
-        }),
-        currentTabIndex: state => state.editor.currentTabIndex,
-        dragging: state => state.editor.draggingTab
-      },
-      actions: {
-        setCurrentTab({dispatch}, index) {
-          dispatch('SET_CURRENT_TAB', index)
-          setTimeout(() => {
-            event.emit('focus-current-tab')
-          }, 200)
-        }
-      }
-    },
     data() {
       return {
         clickable: false
       }
+    },
+    computed: {
+        tabs() {
+          return this.$store.state.editor.tabs.map(tab => {
+            return {
+              title: path.basename(tab.filePath),
+              saved: tab.saved,
+              rename: tab.rename,
+              id: tab.id
+            }
+          })
+        },
+        currentTabIndex() {
+          return this.$store.state.editor.currentTabIndex
+        },
+        dragging() {
+          return this.$store.state.editor.draggingTab
+        }
     },
     created() {
       Mousetrap.bindGlobal(`${cmdOrCtrl}+shift+[`, () => {
@@ -241,7 +238,7 @@
         const index = getLeftTabIndex(this.tabs.length, this.currentTabIndex)
         this.setCurrentTab(index)
       })
-      Mousetrap.bindGlobal(`${cmdOrCtrl}+shift+]`, () => {
+      Mousetrap.bindGlobal(`${cmdOrCtrl}+shift+]`, () => {        
         if (this.tabs.length < 2) return
         const index = getRightTabIndex(this.tabs.length, this.currentTabIndex)
         this.setCurrentTab(index)
@@ -259,14 +256,14 @@
         if (name) {
           event.emit('file-rename', index, name)
         } else {
-          this.$store.dispatch('UPDATE_RENAME_STATUS', {
+          this.$store.commit('UPDATE_RENAME_STATUS', {
             index,
             rename: false
           })
         }
       },
       cancelRename(e, index) {
-        this.$store.dispatch('UPDATE_RENAME_STATUS', {
+        this.$store.commit('UPDATE_RENAME_STATUS', {
           index,
           rename: false
         })
@@ -278,10 +275,17 @@
         $(`#tab-${index}`).classList.remove('hover')
       },
       openSettings() {
+        console.log("Settings. Clickable: ", this.clickable)
         if (this.clickable) {
-          this.$store.dispatch('TOGGLE_PREFERENCE_PANE')
+          this.$store.commit('TOGGLE_PREFERENCE_PANE')
         }
-      }
+      },
+      setCurrentTab(index) {
+          this.$store.commit('SET_CURRENT_TAB', index)
+          setTimeout(() => {
+            event.emit('focus-current-tab')
+          }, 200)
+        }
     },
     components: {
       SvgIcon

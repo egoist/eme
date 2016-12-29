@@ -44,7 +44,7 @@
         tip: randomTip()
       }
     },
-    ready() {
+    mounted() {
       this.interval = setInterval(() => {
         this.tip = randomTip()
       }, 20000)

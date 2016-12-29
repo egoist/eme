@@ -22,7 +22,8 @@ body {
 
 html,
 body,
-#app {
+#app,
+#eme {
   height: 100%;
   width: 100%;
 }

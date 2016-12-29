@@ -57,17 +57,18 @@
         platform
       }
     },
-    vuex: {
-      getters: {
-        tabsAmount: state => state.editor.tabs.length,
-        showPreferencePane: state => state.app.showPreferencePane,
-        theme: state => state.app.settings.theme,
-        highlight: state => state.app.settings.preview.highlight
+    computed: {
+      theme() {
+        return this.$store.state.app.settings.theme
       },
-      actions: {
-        togglePreferencePane({dispatch}) {
-          dispatch('TOGGLE_PREFERENCE_PANE')
-        }
+      tabsAmount() {
+        return this.$store.state.editor.tabs.length
+      },
+      showPreferencePane() {
+        return this.$store.state.app.showPreferencePane
+      },
+      highlight() {
+        return this.$store.state.app.settings.preview.highlight
       }
     },
     components: {
@@ -76,7 +77,7 @@
       appFooter,
       preferencePane
     },
-    ready() {
+    mounted() {
       ipcRenderer.on('toggle-distraction-free-mode', () => {
         this.isDistractionFreeMode = !this.isDistractionFreeMode
       })
@@ -94,6 +95,9 @@
             !this.isDistractionFreeMode ||
             (this.isDistractionFreeMode && !this.isFullScreen)
           )
+      },
+      togglePreferencePane({dispatch}) {
+        this.$store.commit('TOGGLE_PREFERENCE_PANE')
       }
     }
   }

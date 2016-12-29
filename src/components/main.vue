@@ -91,20 +91,21 @@
   <div class="main">
     <tip v-if="tabs.length === 0"></tip>
     <div
+      v-for="(tab, index) in tabs"
+      :key="tab.id"
       class="tab-body"
       :class="[
-        'tab-body-' + $index,
+        'tab-body-' + index,
         writingModeClassName,
         {
           'vim-mode': currentTab && currentTab.isVimMode,
           resizing: resizing
         }
       ]"
-      v-for="tab in tabs"
-      @mousemove="resizeMove($event, $index)"
+      @mousemove="resizeMove($event, index)"
       @mouseup="resizeEnd"
       @mouseleave="resizeEnd"
-      v-show="$index === currentTabIndex">
+      v-show="index === currentTabIndex">
       <div
         class="editor"
         :class="{'focus-mode': tab.isFocusMode}"
@@ -115,28 +116,23 @@
           'border-right-width': currentTab && currentTab.writingMode === 'default' ? '1px' : '0'
         }"
         v-show="currentTab && currentTab.writingMode !== 'preview'">
-        <textarea class="editor-input" :id="'editor-' + $index">{{ tab.content }}</textarea>
-        <div class="resize-bar" @mousedown="resizeStart($event, $index)"></div>
+        <textarea class="editor-input" :id="'editor-' + index">{{ tab.content }}</textarea>
+        <div class="resize-bar" @mousedown="resizeStart($event, index)"></div>
       </div>
       <div
         :class="[
           'preview',
-          'preview-' + $index
+          'preview-' + index
         ]"
         :style="{
           width: getSplitWidth('preview'),
           'font-family': settings.preview.font
         }"
         v-show="currentTab && currentTab.writingMode !== 'editor'">
-        <style>
-          .markdown-body code,.markdown-body pre {
-            font-family: {{ settings.preview.codeFont === 'inherit' ? settings.preview.font : settings.preview.codeFont }}
-          }
-        </style>
         <div
-          :class="'markdown-body markdown-body-' + $index"
-          :style="{'font-size': settings.preview.fontSize + 'px'}">
-          {{{ tab.html }}}
+          :class="'markdown-body markdown-body-' + index"
+          :style="{'font-size': settings.preview.fontSize + 'px'}"
+          v-html="tab.html">
         </div>
       </div>
     </div>
@@ -176,29 +172,20 @@
 
   const currentWindow = remote.getCurrentWindow()
   const config = currentWindow.$config
+  
+  const tabId = {
+    id: 0,
+    create () {
+      return this.id++
+    }
+  }
+
+  // Update this stylesheet to match user prefs in the watch-object
+  const customStyleElement = document.createElement("style")
+  customStyleElement.id = "customStyle"
+  document.head.appendChild(customStyleElement)
 
   export default {
-    vuex: {
-      getters: {
-        tabs: state => state.editor.tabs,
-        currentTabIndex: state => state.editor.currentTabIndex,
-        currentTab: state => state.editor.tabs[state.editor.currentTabIndex],
-        settings: state => state.app.settings
-      },
-      actions: {
-        updateSaved({dispatch}, payload) {
-          dispatch('UPDATE_SAVE_STATUS', payload)
-        },
-        updateFileGist({dispatch}, gistId) {
-          dispatch('UPDATE_FILE_GIST', gistId)
-          const filePath = this.currentTab.filePath
-          config.set('gists', {
-            ...config.get('gists'),
-            [filePath]: gistId
-          })
-        }
-      }
-    },
     computed: {
       editor() {
         return this.currentTab && this.currentTab.editor
@@ -207,6 +194,23 @@
         return this.currentTab ?
           `writing-mode-${this.currentTab.writingMode}` :
           'writing-mode-default'
+      },
+      tabs() {
+        return this.$store.state.editor.tabs
+      },
+      currentTabIndex() {
+        return this.$store.state.editor.currentTabIndex
+      },
+      currentTab() {
+        return this.tabs[this.currentTabIndex];
+      },
+      settings() {
+        return this.$store.state.app.settings
+      },
+      customStyle() {
+        return `.markdown-body code,.markdown-body pre {
+                  font-family: ${ this.settings.preview.codeFont === 'inherit' ? this.settings.preview.font : this.settings.preview.codeFont }
+                }`
       }
     },
     data() {
@@ -218,12 +222,18 @@
     },
     created() {
       document.title = 'untitled - EME'
+        customStyleElement.innerHTML = this.customStyle
     },
-    ready() {
+    mounted() {
       this.createNewTab()
 
       this.listenIpc()
       this.handleDrag()
+    },
+    watch: {
+      'settings.preview.codeFont'(font) {
+        customStyleElement.innerHTML = this.customStyle
+      }
     },
     methods: {
       getSplitWidth(area) {
@@ -244,7 +254,7 @@
         if (state.tabs.length > 0) {
           const startTabsCount = this.tabs.length
           state.tabs.forEach(tab => {
-            this.createNewTab(tab, () => this.$store.dispatch('SET_CURRENT_TAB', startTabsCount + state.currentTabIndex))
+            this.createNewTab(tab, () => this.$store.commit('SET_CURRENT_TAB', startTabsCount + state.currentTabIndex))
           })
         }
       },
@@ -283,7 +293,7 @@
       },
       async save({index, filePath}) {
         const tab = this.tabs[index]
-        this.$store.dispatch('UPDATE_FILE_PATH', {
+        this.$store.commit('UPDATE_FILE_PATH', {
           index,
           filePath
         })
@@ -326,7 +336,7 @@
       async handleRename(index) {
         const tab = this.tabs[index]
         if (tab.filePath) {
-          this.$store.dispatch('UPDATE_RENAME_STATUS', {
+          this.$store.commit('UPDATE_RENAME_STATUS', {
             index,
             rename: true
           })
@@ -342,7 +352,7 @@
 
         const newPath = path.join(path.dirname(tab.filePath), name)
 
-        this.$store.dispatch('UPDATE_RENAME_STATUS', {
+        this.$store.commit('UPDATE_RENAME_STATUS', {
           index,
           rename: false
         })
@@ -359,7 +369,7 @@
           // store old filename to delete in gist at the end
           let oldFilePath = tab.filePath
           await fs.rename(tab.filePath, newPath)
-          this.$store.dispatch('UPDATE_FILE_PATH', {
+          this.$store.commit('UPDATE_FILE_PATH', {
             index,
             filePath: newPath
           })
@@ -387,7 +397,7 @@
         const content = await fs.readFile(filePath, 'utf8')
         this.editor.getDoc().setValue(content)
         const watcher = this.watchFile(filePath, index)
-        this.$store.dispatch('UPDATE_CONTENT_WITH_FILEPATH', {
+        this.$store.commit('UPDATE_CONTENT_WITH_FILEPATH', {
           index,
           content,
           filePath,
@@ -425,6 +435,7 @@
         }
         const tabDefaults = {
           content,
+          id: tabId.create(),
           saved: true,
           editor: null,
           isFocusMode: false,
@@ -437,7 +448,7 @@
           gist,
           watcher
         }
-        this.$store.dispatch('INIT_NEW_TAB', {
+        this.$store.commit('INIT_NEW_TAB', {
           ...tabDefaults,
           ...tab,
           filePath
@@ -477,13 +488,13 @@
           editor.on('change', e => {
             if (!this.shouldCheckContentSaved) return
             const content = e.getValue()
-            console.log('changed')
+            console.log(`Tab ${index} changed. New length ${content.length}`)
             setTimeout(() => {
               this.updateSaved({
                 index: this.currentTabIndex,
                 saved: false
               })
-              this.$store.dispatch('UPDATE_CONTENT', {
+              this.$store.commit('UPDATE_CONTENT', {
                 index: this.currentTabIndex,
                 content
               })
@@ -491,7 +502,7 @@
             })
           })
 
-          this.$store.dispatch('SET_EDITOR', {index, editor})
+          this.$store.commit('SET_EDITOR', {index, editor})
 
           tabEl.querySelector('.CodeMirror-scroll').addEventListener('scroll', this.handleScroll)
           created()
@@ -546,7 +557,7 @@
 
         ipcRenderer.on('toggle-focus-mode', () => {
           this.editor.setOption('styleActiveLine', !this.currentTab.isFocusMode)
-          this.$store.dispatch('TOGGLE_FOCUS_MODE')
+          this.$store.commit('TOGGLE_FOCUS_MODE')
         })
 
         ipcRenderer.on('toggle-vim-mode', () => {
@@ -555,7 +566,7 @@
           } else {
             this.editor.setOption('keyMap', 'vim')
           }
-          this.$store.dispatch('TOGGLE_VIM_MODE')
+          this.$store.commit('TOGGLE_VIM_MODE')
         })
 
         ipcRenderer.on('win-focus', () => {
@@ -597,7 +608,7 @@
           closeInOrder(() => this.saveAppState({tabs, currentTabIndex}))
         })
         ipcRenderer.on('toggle-night-mode', () => {
-          this.$store.dispatch('TOGGLE_NIGHT_MODE')
+          this.$store.commit('TOGGLE_NIGHT_MODE')
 
           this.updateEditorOptions({
             theme: this.settings.editor.theme
@@ -646,7 +657,7 @@
           })
 
           if (filePath) {
-            this.$store.dispatch('START_EXPORTING', {
+            this.$store.commit('START_EXPORTING', {
               index: this.currentTabIndex
             })
             const html = makeHTML({
@@ -667,7 +678,7 @@
 
         ipcRenderer.on('finish-exporting-pdf', (e, err, filePath) => {
           if (!err) {
-            this.$store.dispatch('FINISH_EXPORTING_PDF', {
+            this.$store.commit('FINISH_EXPORTING_PDF', {
               index: this.currentTabIndex,
               pdf: filePath
             })
@@ -733,7 +744,7 @@
             this.shouldListenFileWatcher = false
             const content = await fs.readFile(tab.filePath, 'utf8')
             tab.editor.getDoc().setValue(content)
-            this.$store.dispatch('UPDATE_CONTENT', {
+            this.$store.commit('UPDATE_CONTENT', {
               index,
               content
             })
@@ -760,18 +771,18 @@
           if (clickedButton === 0) {
             const saved = await this.handleSave(index)
             if (saved) {
-              this.$store.dispatch('CLOSE_TAB', index)
+              this.$store.commit('CLOSE_TAB', index)
               return {saved: true}
             }
           } else if (clickedButton === 2) {
-            this.$store.dispatch('UPDATE_SAVE_STATUS', {index, saved: true})
-            this.$store.dispatch('CLOSE_TAB', index)
+            this.$store.commit('UPDATE_SAVE_STATUS', {index, saved: true})
+            this.$store.commit('CLOSE_TAB', index)
             return {saved: false}
           }
           return false
         }
         if (tab) {
-          this.$store.dispatch('CLOSE_TAB', index)
+          this.$store.commit('CLOSE_TAB', index)
         }
         return {saved: true}
       },
@@ -802,7 +813,7 @@
         if (this.resizing) {
           const dx = e.pageX - this.startX
           const totalWidth = this.$el.parentNode.offsetWidth
-          this.$store.dispatch('UPDATE_EDITOR_SPLIT', {
+          this.$store.commit('UPDATE_EDITOR_SPLIT', {
             index,
             split: this.startSplit + (dx / totalWidth * 100)
           })
@@ -852,7 +863,18 @@
           const res = await err.data.json()
           handleError({message: res.message})
         }
-      }
+      },
+      updateSaved(payload) {
+          this.$store.commit('UPDATE_SAVE_STATUS', payload)
+      },
+      updateFileGist(gistId) {
+          this.$store.commit('UPDATE_FILE_GIST', gistId)
+          const filePath = this.currentTab.filePath
+          config.set('gists', {
+            ...config.get('gists'),
+            [filePath]: gistId
+          })
+        }
     },
     components: {
       tip
