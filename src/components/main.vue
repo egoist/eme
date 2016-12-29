@@ -203,7 +203,7 @@
       },
       customStyle() {
         return `.markdown-body code,.markdown-body pre {
-                  font-family: ${ this.settings.preview.codeFont === 'inherit' ? this.settings.preview.font : this.settings.preview.codeFont }
+                  font-family: ${ this.settings.preview.codeFont === 'inherit' ? this.settings.preview.font : this.settings.preview.codeFont };
                 }`
       }
     },
