@@ -41,17 +41,7 @@
         type: Number
       }
     },
-    vuex: {
-      actions: {
-        setWritingMode({dispatch}, mode) {
-          dispatch('SET_WRITING_MODE', {
-            index: this.currentTabIndex,
-            mode
-          })
-        }
-      }
-    },
-    ready() {
+    mounted() {
       this.addListeners()
     },
     methods: {
@@ -67,6 +57,12 @@
       },
       removeListeners() {
         window.removeEventListener('keydown', this.handleSwitchingMode)
+      },
+      setWritingMode(mode) {
+        this.$store.commit('SET_WRITING_MODE', {
+          index: this.currentTabIndex,
+          mode
+        })
       }
     },
     beforeDestroy() {
