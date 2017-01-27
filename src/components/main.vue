@@ -175,8 +175,8 @@
   const config = currentWindow.$config
 
   // Update this stylesheet to match user prefs in the watch-object
-  const customStyleElement = document.createElement("style")
-  customStyleElement.id = "customStyle"
+  const customStyleElement = document.createElement('style')
+  customStyleElement.id = 'customStyle'
   document.head.appendChild(customStyleElement)
 
   export default {
@@ -196,15 +196,15 @@
         return this.$store.state.editor.currentTabIndex
       },
       currentTab() {
-        return this.tabs[this.currentTabIndex];
+        return this.tabs[this.currentTabIndex]
       },
       settings() {
         return this.$store.state.app.settings
       },
       customStyle() {
         return `.markdown-body code,.markdown-body pre {
-                  font-family: ${ this.settings.preview.codeFont === 'inherit' ? this.settings.preview.font : this.settings.preview.codeFont };
-                }`
+          font-family: ${this.settings.preview.codeFont === 'inherit' ? this.settings.preview.font : this.settings.preview.codeFont};
+        }`
       }
     },
     data() {
@@ -225,7 +225,7 @@
       this.handleDrag()
     },
     watch: {
-      'settings.preview.codeFont'(font) {
+      'settings.preview.codeFont'() {
         customStyleElement.innerHTML = this.customStyle
       }
     },
@@ -861,16 +861,16 @@
         }
       },
       updateSaved(payload) {
-          this.$store.commit('UPDATE_SAVE_STATUS', payload)
+        this.$store.commit('UPDATE_SAVE_STATUS', payload)
       },
       updateFileGist(gistId) {
-          this.$store.commit('UPDATE_FILE_GIST', gistId)
-          const filePath = this.currentTab.filePath
-          config.set('gists', {
-            ...config.get('gists'),
-            [filePath]: gistId
-          })
-        }
+        this.$store.commit('UPDATE_FILE_GIST', gistId)
+        const filePath = this.currentTab.filePath
+        config.set('gists', {
+          ...config.get('gists'),
+          [filePath]: gistId
+        })
+      }
     },
     components: {
       tip

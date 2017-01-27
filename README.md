@@ -25,16 +25,16 @@ Pull requests are always welcome! Check out the [these issues](https://github.co
 
 
 1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
-2. Install the dependencies: `npm run install:all`
-3. Build the code and watch for changes: `npm run watch`
-4. In a new tab, start the application: `npm start`
+2. Install the dependencies: `yarn`
+3. Build the code and watch for changes: `yarn watch`
+4. In a new tab, start the application: `yarn start`
 
 If you want to build the binary for a specified platform, run the command:
 
 ```bash
-$ npm run macos # .dmg
-$ npm run windows # portable .exe
-$ npm run linux # .deb
+$ yarn mac    # .dmg
+$ yarn win    # .exe
+$ yarn linux  # .deb
 ```
 
 After that, you'll see the binaries in the `./dist` folder!

@@ -22,7 +22,6 @@ sanitizer.config = {
     iframe: ['src', 'frameborder', 'allowfullscreen'],
     input: ['checked', 'class', 'disabled', 'type'],
     div: ['id'],
-    span: [],
     pre: [],
     td: ['colspan', 'rowspan', 'style'],
     th: ['colspan', 'rowspan', 'style'],
@@ -39,7 +38,7 @@ sanitizer.config = {
     if (frame.tag === 'input') {
       const isTaskItem = (frame.attribs.class && frame.attribs.class.indexOf('task-list-item-checkbox') > -1)
       const isCheckbox = (frame.attribs.type && frame.attribs.type === 'checkbox')
-      const isDisabled = frame.attribs.hasOwnProperty('disabled')
+      const isDisabled = Object.prototype.hasOwnProperty.call(frame.attribs, 'disabled')
       return !(isTaskItem && isCheckbox && isDisabled)
     }
 
@@ -48,8 +47,8 @@ sanitizer.config = {
     return !String(frame.attribs.src).match(/^(https?:)?\/\/(www\.)?youtube\.com/)
   },
   transformTags: {
-    'td': sanitizeCellStyle,
-    'th': sanitizeCellStyle
+    td: sanitizeCellStyle,
+    th: sanitizeCellStyle
   }
 }
 
@@ -66,7 +65,7 @@ function sanitizeCellStyle(tagName, attribs) {
       delete attributes.style
     }
     return {
-      tagName: tagName,
+      tagName,
       attribs: attributes
     }
   }

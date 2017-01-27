@@ -215,22 +215,22 @@
       }
     },
     computed: {
-        tabs() {
-          return this.$store.state.editor.tabs.map(tab => {
-            return {
-              title: path.basename(tab.filePath),
-              saved: tab.saved,
-              rename: tab.rename,
-              id: tab.id
-            }
-          })
-        },
-        currentTabIndex() {
-          return this.$store.state.editor.currentTabIndex
-        },
-        dragging() {
-          return this.$store.state.editor.draggingTab
-        }
+      tabs() {
+        return this.$store.state.editor.tabs.map(tab => {
+          return {
+            title: path.basename(tab.filePath),
+            saved: tab.saved,
+            rename: tab.rename,
+            id: tab.id
+          }
+        })
+      },
+      currentTabIndex() {
+        return this.$store.state.editor.currentTabIndex
+      },
+      dragging() {
+        return this.$store.state.editor.draggingTab
+      }
     },
     created() {
       Mousetrap.bindGlobal(`${cmdOrCtrl}+shift+[`, () => {
@@ -238,7 +238,7 @@
         const index = getLeftTabIndex(this.tabs.length, this.currentTabIndex)
         this.setCurrentTab(index)
       })
-      Mousetrap.bindGlobal(`${cmdOrCtrl}+shift+]`, () => {        
+      Mousetrap.bindGlobal(`${cmdOrCtrl}+shift+]`, () => {
         if (this.tabs.length < 2) return
         const index = getRightTabIndex(this.tabs.length, this.currentTabIndex)
         this.setCurrentTab(index)
@@ -275,17 +275,17 @@
         $(`#tab-${index}`).classList.remove('hover')
       },
       openSettings() {
-        console.log("Settings. Clickable: ", this.clickable)
+        console.log('Settings. Clickable: ', this.clickable)
         if (this.clickable) {
           this.$store.commit('TOGGLE_PREFERENCE_PANE')
         }
       },
       setCurrentTab(index) {
-          this.$store.commit('SET_CURRENT_TAB', index)
-          setTimeout(() => {
-            event.emit('focus-current-tab')
-          }, 200)
-        }
+        this.$store.commit('SET_CURRENT_TAB', index)
+        setTimeout(() => {
+          event.emit('focus-current-tab')
+        }, 200)
+      }
     },
     components: {
       SvgIcon

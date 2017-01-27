@@ -128,7 +128,7 @@ const mutations = {
     setTimeout(() => {
       focusEditor(state.tabs, state.currentTabIndex)
     }, 0)
-    state.tabs.splice(indexToClose, 1)    
+    state.tabs.splice(indexToClose, 1)
   },
   SET_WRITING_MODE(state, {index, mode}) {
     const tab = state.tabs[index]

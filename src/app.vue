@@ -96,7 +96,7 @@
             (this.isDistractionFreeMode && !this.isFullScreen)
           )
       },
-      togglePreferencePane({dispatch}) {
+      togglePreferencePane() {
         this.$store.commit('TOGGLE_PREFERENCE_PANE')
       }
     }
