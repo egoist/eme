@@ -14,7 +14,8 @@
     "dist": "npm run mac && npm run linux && npm run win",
     "mac": "build --mac",
     "linux": "build --linux deb tar.xz",
-    "win": "build --win --ia32"
+    "win": "build --win --ia32",
+    "stats": "webpack-bundle-analyzer stats.json"
   },
   "build": {
     "appId": "com.egoistian.eme",
@@ -74,8 +75,8 @@
     "vue-style-loader": "^1.0.0",
     "vue-template-compiler": "^2.1.8",
     "webpack": "^1.14.0",
-    "webpack-hot-middleware": "^2.12.1",
-    "webpack-visualizer-plugin": "^0.1.5"
+    "webpack-bundle-analyzer": "^2.2.1",
+    "webpack-hot-middleware": "^2.12.1"
   },
   "dependencies": {
     "babel-runtime": "^6.11.6",
