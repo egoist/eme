@@ -302,7 +302,7 @@
           const tab = this.tabs[index]
           const filePath = tab.filePath || await dialog.showSaveDialog(currentWindow, {
             filters: [
-              {name: 'Markdown', extensions: ['markdown', 'md']}
+              {name: 'Markdown', extensions: ['md', 'markdown']}
             ]
           })
           if (filePath) {
@@ -319,7 +319,7 @@
         const tab = this.tabs[index]
         const filePath = await dialog.showSaveDialog(currentWindow, {
           filters: [
-            {name: 'Markdown', extensions: ['markdown', 'md']}
+            {name: 'Markdown', extensions: ['md', 'markdown']}
           ]
         })
         if (filePath) {
