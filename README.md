@@ -1,10 +1,10 @@
-# EME [![version](https://img.shields.io/github/release/egoist/eme.svg?style=flat-square)](https://github.com/egoist/eme/releases) [![downloads](https://img.shields.io/github/downloads/egoist/eme/total.svg?style=flat-square)](https://github.com/egoist/eme/releases) [![downloads latest](https://img.shields.io/github/downloads/egoist/eme/latest/total.svg?style=flat-square)](https://github.com/egoist/eme/releases/latest) [![build](https://img.shields.io/circleci/project/egoist/eme/dev.svg?style=flat-square)](https://circleci.com/gh/egoist/eme) [![donate](https://img.shields.io/badge/$-donate-ff69b4.svg?maxAge=2592000&style=flat-square)](#donate)
+# EME [![version](https://img.shields.io/github/release/Aaron19960821/eme.svg?style=flat-square)](https://github.com/egoist/eme/releases) [![downloads](https://img.shields.io/github/downloads/Aaron19960821/eme/total.svg?style=flat-square)](https://github.com/Aaron19960821/eme/releases) [![downloads latest](https://img.shields.io/github/downloads/Aaron19960821/eme/latest/total.svg?style=flat-square)](https://github.com/Aaron19960821/eme/releases/latest) [![build](https://img.shields.io/circleci/project/egoist/eme/dev.svg?style=flat-square)](https://circleci.com/gh/egoist/eme)
 
 ![preview](/media/preview.png)
 
 ## Download
 
-You can manually download the latest release [here](https://github.com/egoist/eme/releases)
+You can manually download the latest release [here](https://github.com/Aaron19960821/eme/releases)
 
 ## Features
 
@@ -50,4 +50,4 @@ If you are not available for this, simply spreading the word for us would help t
 
 ## License
 
-MIT &copy; [YUCWANG](https://github.com/Aaron19960821)
+MIT &copy; [Yuchen Wang](https://github.com/Aaron19960821)
