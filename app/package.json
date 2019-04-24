@@ -1,11 +1,11 @@
 {
   "name": "EME",
   "productName": "EME",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "Elegant Markdown Editor",
   "author": {
-    "name": "EGOIST",
-    "email": "0x142857@gmail.com"
+    "name": "Yuchen Wang",
+    "email": "wyc8094@gmail.com"
   },
   "homepage": "https://github.com/egoist/eme",
   "main": "index.js",

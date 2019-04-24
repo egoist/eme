@@ -18,7 +18,7 @@
     "stats": "webpack-bundle-analyzer stats.json"
   },
   "build": {
-    "appId": "com.egoistian.eme",
+    "appId": "com.yucwang.eme",
     "category": "public.app-category.utilities",
     "asar": true,
     "win": {
@@ -29,7 +29,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/egoist/eme.git"
+    "url": "git+https://github.com/Aaron19960821/eme.git"
   },
   "keywords": [
     "markdown",

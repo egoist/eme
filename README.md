@@ -19,37 +19,35 @@ You can manually download the latest release [here](https://github.com/egoist/em
 - [Key bindings](https://github.com/egoist/eme/wiki/Key-bindings)
 - [...more](https://github.com/egoist/eme/wiki)
 
-## Contribute
+## BUILD
 
-Pull requests are always welcome! Check out the [these issues](https://github.com/egoist/eme/issues?q=is%3Aissue+is%3Aopen+label%3A%22contribution+welcome%22) to get started fast.
-
-
-1. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
-2. Install the dependencies: `yarn`
-3. Build the code and watch for changes: `yarn watch`
-4. In a new tab, start the application: `yarn start`
-
-If you want to build the binary for a specified platform, run the command:
-
-```bash
-$ yarn mac    # .dmg
-$ yarn win    # .exe
-$ yarn linux  # .deb
+1. Clone this repo to your local devices.
 ```
+git clone https://github.com/Aaron19960821/eme
+```
+2. Install all dependencies.
+```
+yarn install
+```
+3. Build the app.
+```
+yarn app
+```
+4. Dump the package
+```
+# For mac
+yarn mac
+# For linux
+yarn linux
+# For windows
+yarn win
+```
+Check out the ouput in **./dist** directory.
 
-After that, you'll see the binaries in the `./dist` folder!
-
-## Donate
-
-If you are enjoying this app, please consider making a donation to keep it alive, I will try my best to dedicate more time or even full time to work on it. 😉
-
-- [Donate via Paypal](https://www.paypal.me/egoistian/10)
-- [Donate via Wechat](http://ww4.sinaimg.cn/large/a15b4afegw1f72ib6rj67j20u00tvgnj.jpg)
-- [Donate via Alipay](http://ww4.sinaimg.cn/large/a15b4afegw1f72ib54hybj20qo0nndh5.jpg)
-- [Donate via Bitcoin](http://ww4.sinaimg.cn/large/a15b4afegw1f72icbcu0gj202s02sdfl.jpg) `1NUSDCWti9FBJLiUxaLY1zJnwcSDc5Tfci`
+## Contribution
 
 If you are not available for this, simply spreading the word for us would help too!
 
 ## License
 
-MIT &copy; [EGOIST](https://github.com/egoist)
+MIT &copy; [YUCWANG](https://github.com/Aaron19960821)
