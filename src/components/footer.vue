@@ -117,7 +117,7 @@
 <script>
   import tildify from 'tildify'
   import {shell} from 'electron'
-  import wordCount from 'wordcount'
+  import {count} from '@wordpress/wordcount'
 
   import WritingModes from 'components/writing-modes'
 
@@ -129,7 +129,7 @@
       status() {
         const tab = this.$store.state.editor.tabs[this.$store.state.editor.currentTabIndex] || {}
         return {
-          wordCount: tab.content ? wordCount(tab.content) : 0,
+          wordCount: tab.content ? count(tab.content) : 0,
           charCount: tab.content ? tab.content.length : 0,
           lineCount: (tab.content && tab.editor) ? tab.editor.lineCount() : 0,
           filePath: tab.filePath ?
