@@ -443,8 +443,8 @@
           watcher
         }
         this.$store.commit('INIT_NEW_TAB', {
-          ...tabDefaults,
-          ...tab,
+          tabDefaults,
+          tab,
           filePath
         })
         setTimeout(() => {
@@ -866,10 +866,6 @@
       updateFileGist(gistId) {
         this.$store.commit('UPDATE_FILE_GIST', gistId)
         const filePath = this.currentTab.filePath
-        config.set('gists', {
-          ...config.get('gists'),
-          [filePath]: gistId
-        })
       }
     },
     components: {

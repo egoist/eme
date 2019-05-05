@@ -3,8 +3,8 @@ const webpack = require('webpack')
 const config = require('./webpack.config')
 
 config.plugins = config.plugins.concat([
-  new webpack.optimize.OccurenceOrderPlugin(),
   new webpack.optimize.UglifyJsPlugin({
+    sourceMap: true,
     compressor: {
       warnings: false
     },
