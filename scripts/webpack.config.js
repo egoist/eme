@@ -16,7 +16,7 @@ const postcss = [
 
 module.exports = {
   entry: {
-    app: ['./src/index.ts'],
+    app: './src/index.ts',
     vendor: ['vue', 'vuex']
   },
   output: {
@@ -24,7 +24,7 @@ module.exports = {
     filename: '[name].js'
   },
   resolve: {
-    extensions: ['', '.js', '.vue', '.css', '.json'],
+    extensions: ['', '.ts', '.js', '.vue', '.css', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.common.js',
       src: path.join(__dirname, '../src'),
@@ -60,7 +60,23 @@ module.exports = {
       {
         test: /\.svg$/,
         loaders: ['svg-inline']
-      }
+      },
+      {
+        test: /\.ts$/,
+        exclude: /node_modules|vue\/src/,
+        loader: "ts-loader",
+        options: {
+          appendTsSuffixTo: [/\.vue$/],
+        }
+      },
+      {
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+        exclude: /node_modules/,
+        options: {
+          appendTsSuffixTo: [/\.vue$/],
+        }
+      },
     ]
   },
   babel: {
