@@ -2623,7 +2623,7 @@ electron-builder-util@~11.6.1:
     source-map-support "^0.4.10"
     stat-mode "^0.2.2"
 
-electron-builder@^20.14.7:
+electron-builder@^20.13.4:
   version "20.39.0"
   resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-20.39.0.tgz#ab2f5b556f36dea3947eb43ef312a955ba7f9d16"
   integrity sha512-50SNZ/G+iE9MpTwxzeHt1Cqg8jZKeFLuJ9wubR4e/8VIzAe0ERUmwAQw+77UrlwXZD/PKKoYblc0Sr08Vm4exg==
