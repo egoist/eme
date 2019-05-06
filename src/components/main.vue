@@ -866,7 +866,7 @@
       updateFileGist(gistId) {
         this.$store.commit('UPDATE_FILE_GIST', gistId)
         const filePath = this.currentTab.filePath
-        config.set('gist', {
+        config.set('gists', {
           ...config.get('gists'),
           [filePath]: gistId
         })
