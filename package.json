@@ -14,18 +14,18 @@
     "watch": "webpack --config scripts/webpack.config.dev.js --watch",
     "dist": "npm run mac && npm run linux && npm run win",
     "mac": "build --mac",
-    "linux": "build --linux deb tar.xz",
-    "win": "build --win --ia32",
+    "linux": "electron-builder --linux deb tar.xz",
+    "win": "electron-builder --win --ia32",
     "stats": "webpack-bundle-analyzer stats.json"
   },
   "build": {
     "appId": "com.egoistian.eme",
-    "category": "public.app-category.utilities",
     "asar": true,
     "win": {
-      "target": [
-        "squirrel"
-      ]
+      "target": "squirrel"
+    },
+    "linux": {
+      "category": "public.app-category.utilities"
     }
   },
   "repository": {
@@ -51,7 +51,7 @@
     "electron": "^2.0.18",
     "electron-builder": "^20.14.7",
     "electron-builder-squirrel-windows": "^11.6.1",
-    "electron-devtools-installer": "^1.1.5",
+    "electron-devtools-installer": "^2.0.0",
     "electron-packager": "^11.2.1",
     "eslint": "^3.12.2",
     "eslint-config-xo-space": "^0.15.0",

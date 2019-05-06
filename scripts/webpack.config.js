@@ -20,7 +20,7 @@ module.exports = {
     vendor: ['vue', 'vuex']
   },
   output: {
-    path: process.cwd() + '/app/dist',
+    path: process.cwd() + '/app/libvue',
     filename: '[name].js'
   },
   resolve: {
