@@ -64,10 +64,6 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: /node_modules/,
-        options: {
-          presets: [['es2015', {"module": false}], 'stage-1'],
-          plugins: ['transform-runtime']
-        }
       },
       {
         test: /\.svg$/,

@@ -37,6 +37,7 @@
     "editor"
   ],
   "devDependencies": {
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
     "autoprefixer": "^6.4.0",
     "babel-core": "^6.18.2",
     "babel-eslint": "^6.1.2",
