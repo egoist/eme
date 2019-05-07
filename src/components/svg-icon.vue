@@ -5,34 +5,40 @@
   </span>
 </template>
 
-<script>
-  import pencil from 'src/svg/pencil.svg'
-  import alignHorizontalMiddle from 'src/svg/align-horizontal-middle.svg'
-  import eye from 'src/svg/eye.svg'
-  import arrowLeft from 'src/svg/arrow-left.svg'
-  import arrowRight from 'src/svg/arrow-right.svg'
-  import settings from 'src/svg/settings.svg'
+<script lang="ts">
+  import Vue from "vue";
 
-  const icons = {
+  import pencil from 'src/svg/pencil.svg';
+  import alignHorizontalMiddle from 'src/svg/align-horizontal-middle.svg';
+  import eye from 'src/svg/eye.svg';
+  import arrowLeft from 'src/svg/arrow-left.svg';
+  import arrowRight from 'src/svg/arrow-right.svg';
+  import settings from 'src/svg/settings.svg';
+
+  interface IconArray {
+    [key: string]: string;
+  }
+
+  const icons: IconArray = {
     pencil,
     alignHorizontalMiddle,
     eye,
     arrowRight,
     arrowLeft,
-    settings
+    settings,
   }
 
-  export default {
+  export default Vue.extend ({
     props: {
       name: {
-        required: true,
-        type: String
+        type: String,
+        required: true
       }
     },
     computed: {
-      icon() {
-        return icons[this.name]
+      icon(): string {
+        return icons[this.name];
       }
     }
-  }
+  });
 </script>
