@@ -97,7 +97,6 @@
     "pify": "^2.3.0",
     "sanitize-html": "^1.13.0",
     "sumchecker": "^2.0.1",
-    "tildify": "^1.2.0",
     "unique-random-array": "^1.0.0",
     "vuex": "^2.1.1"
   }
