@@ -405,14 +405,16 @@
   </div>
 </template>
 
-<script>
-  import {remote, ipcRenderer} from 'electron'
-  import event from 'utils/event'
+<script lang="ts">
+  import Vue from "vue";
 
-  const currentWindow = remote.getCurrentWindow()
-  const $config = currentWindow.$config
+  import {remote, ipcRenderer} from 'electron';
+  import event from 'utils/event';
 
-  export default {
+  const currentWindow: any = remote.getCurrentWindow();
+  const $config = currentWindow.$config;
+
+  export default Vue.extend ({
     data() {
       return {
         tabs: ['General', 'Keys', 'Sync'],
@@ -429,12 +431,12 @@
           'github',
           'tomorrow-night-bright'
         ]
-      }
+      };
     },
     created() {
       this.$watch('settings', () => {
         this.update()
-      }, {deep: true})
+      }, {deep: true});
     },
     methods: {
       update() {
@@ -443,12 +445,12 @@
           theme: this.settings.editor.theme,
           tabSize: this.settings.editor.tabSize,
           indentWithTabs: this.settings.editor.indentWithTabs
-        })
+        });
       }
     },
     beforeDestroy() {
-      $config.set('settings', this.settings)
-      ipcRenderer.send('reload-menu')
+      $config.set('settings', this.settings);
+      ipcRenderer.send('reload-menu');
     }
-  }
+  });
 </script>
