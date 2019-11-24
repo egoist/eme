@@ -14,7 +14,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.13.1",
+    "axios": "^0.18.1",
     "conf": "github:egoist-robot/conf",
     "electron-context-menu": "^0.4.0",
     "electron-window-state": "^3.0.3",
