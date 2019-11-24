@@ -80,7 +80,7 @@
     "vue-style-loader": "^1.0.0",
     "vue-template-compiler": "^2.6.10",
     "webpack": "^2.7.0",
-    "webpack-bundle-analyzer": "^2.2.1",
+    "webpack-bundle-analyzer": "^3.3.2",
     "webpack-hot-middleware": "^2.12.1"
   },
   "dependencies": {
