@@ -20,6 +20,7 @@
   "build": {
     "appId": "com.egoistian.eme",
     "asar": true,
+    "copyright": "Copyright @2019 The EME authors",
     "win": {
       "target": "squirrel"
     },
