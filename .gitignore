@@ -1,7 +1,7 @@
 node_modules
 *.log
 .DS_Store
-/app/dist
+/app/libvue
 /dist
 stats.html
 stats.json

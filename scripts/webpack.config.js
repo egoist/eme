@@ -16,17 +16,17 @@ const postcss = [
 
 module.exports = {
   entry: {
-    app: ['./src/index.js'],
+    app: './src/index.ts',
     vendor: ['vue', 'vuex']
   },
   output: {
-    path: process.cwd() + '/app/dist',
+    path: process.cwd() + '/app/libvue',
     filename: '[name].js'
   },
   resolve: {
-    extensions: ['', '.js', '.vue', '.css', '.json'],
+    extensions: ['.js', '.vue', '.css', '.json', '.ts'],
     alias: {
-      'vue$': 'vue/dist/vue.common.js',
+      'vue$': 'vue/dist/vue.esm.js',
       src: path.join(__dirname, '../src'),
       utils: path.join(__dirname, '../src/utils'),
       components: path.join(__dirname, '../src/components'),
@@ -36,48 +36,52 @@ module.exports = {
     }
   },
   module: {
-    loaders: [
+    rules: [
       {
-        test: /\.js$/,
-        loaders: ['babel'],
-        exclude: [/node_modules/]
+        test: /\.tsx?$/,
+        loaders: 'ts-loader',
+        exclude: /node_modules/,
+        options: {
+          appendTsSuffixTo: [/\.vue$/],
+        }
       },
       {
         test: /\.vue$/,
-        loaders: ['vue']
+        loader: 'vue-loader',
+        options: {
+          autoprefixer: false,
+          postcss,
+          loaders: {
+            css: ExtractTextPlugin.extract({
+              fallback: 'vue-style-loader',
+              loader: 'css-loader?sourceMap'
+            }
+            )
+          }
+        }
       },
       {
-        test: /\.css$/,
-        loader: ExtractTextPlugin.extract(
-          'style-loader',
-          'css-loader!postcss-loader'
-        )
-      },
-      {
-        test: /\.json$/,
-        loaders: ['json']
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/,
       },
       {
         test: /\.svg$/,
-        loaders: ['svg-inline']
-      }
-    ]
+        exclude: /node_modules/,
+        loader: 'svg-inline-loader'
+      },
+      {
+        test: /\.css$/,
+        exclude: /node_modules/,
+        loader: ExtractTextPlugin.extract(
+          {
+            fallback: 'style-loader',
+            loader: 'css-loader!postcss-loader'
+          }
+        )
+      },
+    ],
   },
-  babel: {
-    presets: ['es2015', 'stage-1'],
-    plugins: ['transform-runtime']
-  },
-  vue: {
-    autoprefixer: false,
-    postcss,
-    loaders: {
-      css: ExtractTextPlugin.extract(
-        'vue-style-loader',
-        'css-loader?sourceMap'
-      )
-    }
-  },
-  postcss,
   target: 'electron-renderer',
   plugins: [
     new webpack.ExternalsPlugin('commonjs2', [
@@ -89,5 +93,7 @@ module.exports = {
       name: 'vendor',
       filename: 'vendor.js'
     })
-  ]
+  ],
+
+  devtool: '#eval-source-map'
 }

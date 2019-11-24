@@ -24,13 +24,15 @@
   </div>
 </template>
 
-<script>
-  import {ipcRenderer} from 'electron'
-  import SvgIcon from 'components/svg-icon'
+<script lang="ts">
+  import Vue from "vue";
 
-  const modes = ['editor', 'default', 'preview']
+  import {ipcRenderer} from 'electron';
+  import SvgIcon from 'components/svg-icon';
 
-  export default {
+  const modes = ['editor', 'default', 'preview'];
+
+  export default Vue.extend ({
     props: {
       writingMode: {
         required: true,
@@ -42,34 +44,33 @@
       }
     },
     mounted() {
-      this.addListeners()
+      this.addListeners();
     },
     methods: {
       addListeners() {
         ipcRenderer.on('switch-writing-mode', () => {
-          const current = modes.indexOf(this.writingMode)
+          const current = modes.indexOf(this.writingMode);
           if (current === modes.length - 1) {
-            this.setWritingMode(modes[0])
+            this.setWritingMode(modes[0]);
           } else {
-            this.setWritingMode(modes[current + 1])
+            this.setWritingMode(modes[current + 1]);
           }
-        })
+        });
       },
       removeListeners() {
-        window.removeEventListener('keydown', this.handleSwitchingMode)
       },
-      setWritingMode(mode) {
+      setWritingMode(mode: string) {
         this.$store.commit('SET_WRITING_MODE', {
           index: this.currentTabIndex,
           mode
-        })
+        });
       }
     },
     beforeDestroy() {
-      this.removeListeners()
+      this.removeListeners();
     },
     components: {
       SvgIcon
     }
-  }
+  });
 </script>

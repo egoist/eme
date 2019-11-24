@@ -7,24 +7,25 @@
     "lint": "npm run lint:app && npm run lint:src",
     "lint:app": "eslint app/index.js app/eme --ext .js --fix",
     "lint:src": "eslint src/* src/* --ext .js --ext .vue --fix",
-    "postinstall": "install-app-deps",
+    "postinstall": "electron-builder install-app-deps",
     "app": "cross-env NODE_ENV=development electron app/",
     "build": "rm -rf app/dist && webpack --progress --config scripts/webpack.config.prod.js --profile --json > stats.json",
     "watch": "webpack --config scripts/webpack.config.dev.js --watch",
     "dist": "npm run mac && npm run linux && npm run win",
-    "mac": "build --mac",
-    "linux": "build --linux deb tar.xz",
-    "win": "build --win --ia32",
+    "mac": "electron-build --mac",
+    "linux": "electron-builder --linux deb tar.xz",
+    "win": "electron-builder --win --ia32",
     "stats": "webpack-bundle-analyzer stats.json"
   },
   "build": {
     "appId": "com.egoistian.eme",
-    "category": "public.app-category.utilities",
     "asar": true,
+    "copyright": "Copyright @2019 The EME authors",
     "win": {
-      "target": [
-        "squirrel"
-      ]
+      "target": "squirrel"
+    },
+    "linux": {
+      "category": "public.app-category.utilities"
     }
   },
   "repository": {
@@ -36,30 +37,31 @@
     "editor"
   ],
   "devDependencies": {
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
     "autoprefixer": "^6.4.0",
     "babel-core": "^6.18.2",
     "babel-eslint": "^6.1.2",
-    "babel-loader": "^6.2.4",
+    "babel-loader": "^7.1.3",
     "babel-plugin-transform-runtime": "^6.9.0",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-stage-1": "^6.5.0",
     "cross-env": "^2.0.0",
     "css-loader": "^0.23.1",
     "devtron": "^1.2.1",
-    "electron-builder": "^11.7.0",
+    "electron": "^2.0.18",
+    "electron-builder": "^20.13.4",
     "electron-builder-squirrel-windows": "^11.6.1",
-    "electron-devtools-installer": "^1.1.5",
-    "electron-packager": "^7.5.1",
-    "electron-prebuilt": "^1.3.2",
+    "electron-devtools-installer": "^2.0.0",
+    "electron-packager": "^11.2.1",
     "eslint": "^3.12.2",
     "eslint-config-xo-space": "^0.15.0",
     "eslint-plugin-babel": "^4.0.0",
     "eslint-plugin-vue": "^2.0.0",
-    "extract-text-webpack-plugin": "^1.0.1",
+    "extract-text-webpack-plugin": "^2.1.2",
     "file-loader": "^0.9.0",
     "json-loader": "^0.5.4",
     "minimist": "^1.2.0",
-    "postcss-import": "^9.0.0",
+    "postcss-import": "^9.1.0",
     "postcss-loader": "^1.2.1",
     "postcss-mixins": "^5.0.0",
     "postcss-nested": "^1.0.0",
@@ -68,17 +70,21 @@
     "shelljs": "^0.7.4",
     "style-loader": "^0.13.1",
     "svg-inline-loader": "^0.6.1",
+    "ts-loader": "^3.5.0",
+    "typescript": "^3.4.5",
     "url-loader": "^0.5.7",
+    "vue": "^2.6.10",
     "vue-hot-reload-api": "^2.0.6",
     "vue-html-loader": "^1.2.3",
-    "vue-loader": "^10.0.2",
+    "vue-loader": "^12.0.3",
     "vue-style-loader": "^1.0.0",
-    "vue-template-compiler": "^2.1.8",
-    "webpack": "^1.14.0",
+    "vue-template-compiler": "^2.6.10",
+    "webpack": "^2.7.0",
     "webpack-bundle-analyzer": "^2.2.1",
     "webpack-hot-middleware": "^2.12.1"
   },
   "dependencies": {
+    "@wordpress/wordcount": "^2.2.0",
     "babel-runtime": "^6.11.6",
     "codemirror": "^5.17.0",
     "color-preset": "^0.1.1",
@@ -91,10 +97,8 @@
     "object-picker": "^0.2.0",
     "pify": "^2.3.0",
     "sanitize-html": "^1.13.0",
-    "tildify": "^1.2.0",
+    "sumchecker": "^2.0.1",
     "unique-random-array": "^1.0.0",
-    "vue": "^2.1.8",
-    "vuex": "^2.1.1",
-    "wordcount": "^1.1.1"
+    "vuex": "^2.1.1"
   }
 }

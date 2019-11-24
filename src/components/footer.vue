@@ -114,22 +114,24 @@
   </footer>
 </template>
 
-<script>
-  import tildify from 'tildify'
-  import {shell} from 'electron'
-  import wordCount from 'wordcount'
+<script lang='ts'>
+  import Vue from "vue";
 
-  import WritingModes from 'components/writing-modes'
+  import {shell} from 'electron';
 
-  export default {
+  import countTabContent from 'utils/wordcount';
+  import tildify from 'utils/tildify';
+  import WritingModes from 'components/writing-modes';
+
+  export default Vue.extend ({
     computed: {
       currentTabIndex() {
-        return this.$store.state.editor.currentTabIndex
+        return this.$store.state.editor.currentTabIndex;
       },
       status() {
-        const tab = this.$store.state.editor.tabs[this.$store.state.editor.currentTabIndex] || {}
+        const tab = this.$store.state.editor.tabs[this.$store.state.editor.currentTabIndex] || {};
         return {
-          wordCount: tab.content ? wordCount(tab.content) : 0,
+          wordCount: tab.content ? countTabContent(tab.content) : 0,
           charCount: tab.content ? tab.content.length : 0,
           lineCount: (tab.content && tab.editor) ? tab.editor.lineCount() : 0,
           filePath: tab.filePath ?
@@ -139,19 +141,19 @@
           pdf: tab.pdf,
           gist: tab.gist,
           exporting: tab.exporting
-        }
+        };
       }
     },
     methods: {
-      openPDF(pdf) {
-        shell.showItemInFolder(pdf)
+      openPDF(pdf: string) {
+        shell.showItemInFolder(pdf);
       },
-      openURL(id) {
-        shell.openExternal(`https://gist.github.com/${id}`)
+      openURL(id: string) {
+        shell.openExternal(`https://gist.github.com/${id}`);
       }
     },
     components: {
       WritingModes
     }
-  }
+  });
 </script>
