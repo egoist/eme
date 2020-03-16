@@ -60,7 +60,7 @@
     "extract-text-webpack-plugin": "^2.1.2",
     "file-loader": "^0.9.0",
     "json-loader": "^0.5.4",
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.2",
     "postcss-import": "^9.1.0",
     "postcss-loader": "^1.2.1",
     "postcss-mixins": "^5.0.0",
