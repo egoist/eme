@@ -1,0 +1,29 @@
+# Copyright 2020 The EME Authors
+
+name: Build_Check
+on: [push]
+
+env:
+  BUILD_TYPE: Debug
+
+jobs:
+  build:
+    name: Build_Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Prepare Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10
+      - name: Install Dependencies
+        run: |
+          yarn install
+      - name: Build App
+        run: |
+          yarn build
+      - name: Build
+        env:
+          GH_TOKEN: ${{ secrets.github_token }}
+        run: |
+          yarn linux
