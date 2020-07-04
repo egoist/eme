@@ -1,0 +1,23 @@
+# Copyright 2020 The EME Authors
+
+name: Build_Check
+on: [push]
+
+env:
+  BUILD_TYPE: Debug
+
+job:
+  build:
+    name: Build_Check
+    runs_on: macOS-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install # Install Dependencies
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: build # Build App
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: mac # Build on mac
