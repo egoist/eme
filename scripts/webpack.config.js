@@ -63,7 +63,9 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/,
+        exclude: file => (
+          /node_modules/.test(file) 
+        )
       },
       {
         test: /\.svg$/,
