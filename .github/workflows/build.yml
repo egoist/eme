@@ -19,5 +19,7 @@ jobs:
         with:
           cmd: build # Build App
       - uses: borales/actions-yarn@v2.0.0
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
           cmd: linux # Build on mac
