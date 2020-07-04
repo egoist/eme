@@ -37,7 +37,7 @@
     "cross-env": "^2.0.0",
     "css-loader": "^0.23.1",
     "devtron": "^1.2.1",
-    "electron": "^2.0.18",
+    "electron": "^9.0.5",
     "electron-builder": "^22.0.0",
     "electron-builder-squirrel-windows": "^11.6.1",
     "electron-devtools-installer": "^2.0.0",
