@@ -54,7 +54,7 @@ module.exports = {
           loaders: {
             css: ExtractTextPlugin.extract({
               fallback: 'vue-style-loader',
-              loader: 'css-loader?sourceMap'
+              use: 'css-loader?sourceMap'
             }
             )
           }
@@ -76,7 +76,7 @@ module.exports = {
         loader: ExtractTextPlugin.extract(
           {
             fallback: 'style-loader',
-            loader: 'css-loader!postcss-loader'
+            use: 'css-loader!postcss-loader'
           }
         )
       },
