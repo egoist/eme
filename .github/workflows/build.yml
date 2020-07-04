@@ -6,7 +6,7 @@ on: [push]
 env:
   BUILD_TYPE: Debug
 
-job:
+jobs:
   build:
     name: Build_Check
     runs_on: macOS-latest
