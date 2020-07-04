@@ -12,9 +12,9 @@
     "build": "rm -rf app/dist && webpack --progress --config scripts/webpack.config.prod.js --profile --json > stats.json",
     "watch": "webpack --config scripts/webpack.config.dev.js --watch",
     "dist": "npm run mac && npm run linux && npm run win",
-    "mac": "electron-builder --config electron-builder.json",
-    "linux": "electron-builder --linux deb tar.xz --config electron-builder.json",
-    "win": "electron-builder --win --ia32 --config electron-builder.json",
+    "mac": "electron-builder --mac --config electron-builder.json",
+    "linux": "electron-builder --linux --config electron-builder.json",
+    "win": "electron-builder --config electron-builder.json",
     "stats": "webpack-bundle-analyzer stats.json"
   },
   "repository": {

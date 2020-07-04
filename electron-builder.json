@@ -7,7 +7,11 @@
     "target": "squirrel"
   },
   "linux": {
-    "category": "public.app-category.utilities"
+    "category": "public.app-category.utilities",
+    "target": [
+      "deb",
+      "tar.xz"
+    ]
   },
   "mac": {
     "icon": "build/icons/icon.icns"
