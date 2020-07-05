@@ -65,56 +65,41 @@ const reloadMenu = () => {
   Menu.setApplicationMenu(buildMenu(menuOptions))
 }
 
-const getSingleInstanceLock = app.requestSingleInstanceLock()
-
 let mainWindow // eslint-disable-line
 let pdfWindow // eslint-disable-line
 
 let locationToOpen = null // Cache locationToOpen when app is not ready.
 
-if (!getSingleInstanceLock) {
-  app.quit();
-} else {
-  app.on('second-instance', (e, commandLine, workingDirectory) => {
-    // Someone tried to run a second instance, we should focus our window.
-    if (mainWindow) {
-      if (mainWindow.isMinimized()) {
-        mainWindow.restore()
-      }
-      mainWindow.focus()
-    }
+app.on('ready', () => {
+  const argv = parseShellCommand()
+  Menu.setApplicationMenu(appMenu)
+  mainWindow = createMainWindow()
+  mainWindow.on('closed', () => {
+    mainWindow = null
   })
 
-  app.on('ready', () => {
-    const argv = parseShellCommand()
-    Menu.setApplicationMenu(appMenu)
-    mainWindow = createMainWindow()
-    mainWindow.on('closed', () => {
-      mainWindow = null
-    })
-  
-    if (!isDev) {
-      const {pathsToOpen, resourcePath} = argv
-      const pathToOpen = pathsToOpen[0]
-  
-      if (pathsToOpen && resourcePath) {
-        locationToOpen = path.resolve(resourcePath, pathToOpen)
-      }
-  
-      // Open the file
-      if (locationToOpen != null) {
-        mainWindow.webContents.on('did-finish-load', () => {
-          mainWindow.webContents.send('open-file', locationToOpen)
-          locationToOpen = null
-        })
-      }
+  if (!isDev) {
+    const {pathsToOpen, resourcePath} = argv
+    const pathToOpen = pathsToOpen[0]
+
+    if (pathsToOpen && resourcePath) {
+      locationToOpen = path.resolve(resourcePath, pathToOpen)
     }
-  
-    if (platform === 'darwin') {
-      mainWindow.setSheetOffset(36)
+
+    // Open the file
+    if (locationToOpen != null) {
+      mainWindow.webContents.on('did-finish-load', () => {
+        mainWindow.webContents.send('open-file', locationToOpen)
+        locationToOpen = null
+      })
     }
-  })
-}
+  }
+
+  if (platform === 'darwin') {
+    mainWindow.setSheetOffset(36)
+  }
+})
+
 
 app.on('window-all-closed', () => {
   if (platform !== 'darwin') {
