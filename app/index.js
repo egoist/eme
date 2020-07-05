@@ -74,9 +74,6 @@ app.on('ready', () => {
   const argv = parseShellCommand()
   Menu.setApplicationMenu(appMenu)
   mainWindow = createMainWindow()
-  mainWindow.on('closed', () => {
-    mainWindow = null
-  })
 
   if (!isDev) {
     const {pathsToOpen, resourcePath} = argv
@@ -100,19 +97,24 @@ app.on('ready', () => {
   }
 })
 
-
 app.on('window-all-closed', () => {
   if (platform !== 'darwin') {
     app.quit()
+  } else {
+    mainWindow = null
   }
 })
 
-app.on('activate', () => {
+app.on('activate', (e, hasVisibleWindows) => {
   if (mainWindow == null) {
     mainWindow = createMainWindow()
     if (platform === 'darwin') {
       mainWindow.setSheetOffset(36)
     }
+  }
+
+  if (!hasVisibleWindows) {
+    mainWindow.show()
   }
 
   // Open the file

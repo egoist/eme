@@ -10,7 +10,7 @@ const postcss = [
   require('postcss-simple-vars'),
   require('postcss-mixins'),
   require('autoprefixer')({
-    browsers: ['last 2 Chrome versions']
+    overrideBrowsersList: ['last 2 Chrome versions']
   })
 ]
 
