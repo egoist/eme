@@ -67,6 +67,9 @@ const reloadMenu = () => {
 
 let mainWindow // eslint-disable-line
 let pdfWindow // eslint-disable-line
+
+let locationToOpen = null // Cache locationToOpen when app is not ready.
+
 app.on('ready', () => {
   const argv = parseShellCommand()
   Menu.setApplicationMenu(appMenu)
@@ -75,10 +78,16 @@ app.on('ready', () => {
   if (!isDev) {
     const {pathsToOpen, resourcePath} = argv
     const pathToOpen = pathsToOpen[0]
-    if (pathToOpen && resourcePath) {
-      const locationToOpen = path.resolve(resourcePath, pathToOpen)
+
+    if (pathsToOpen && resourcePath) {
+      locationToOpen = path.resolve(resourcePath, pathToOpen)
+    }
+
+    // Open the file
+    if (locationToOpen != null) {
       mainWindow.webContents.on('did-finish-load', () => {
         mainWindow.webContents.send('open-file', locationToOpen)
+        locationToOpen = null
       })
     }
   }
@@ -91,21 +100,41 @@ app.on('ready', () => {
 app.on('window-all-closed', () => {
   if (platform !== 'darwin') {
     app.quit()
+  } else {
+    mainWindow = null
   }
 })
 
-app.on('activate', () => {
-  if (emeWindow.wins === 0) {
+app.on('activate', (e, hasVisibleWindows) => {
+  if (mainWindow == null) {
     mainWindow = createMainWindow()
     if (platform === 'darwin') {
       mainWindow.setSheetOffset(36)
     }
+  }
+
+  if (!hasVisibleWindows) {
+    mainWindow.show()
+  }
+
+  // Open the file
+  if (locationToOpen != null) {
+    mainWindow.webContents.on('did-finish-load', () => {
+      mainWindow.webContents.send('open-file', locationToOpen)
+      locationToOpen = null
+    })
   }
 })
 
 app.on('open-file', (e, filePath) => {
   e.preventDefault()
   console.log(filePath)
+  
+  if (mainWindow == null) {
+    locationToOpen = filePath
+  } else {
+    mainWindow.webContents.send('open-file', filePath)
+  }
 })
 
 ipcMain.on('close-focus-window', () => {

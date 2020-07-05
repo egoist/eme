@@ -1,11 +1,6 @@
 {
-presets: [
-           ['es2015', {"module": false}],
-           'stage-1'
-],
-
-plugins: [
-  'transform-runtime',
-  'transform-object-rest-spread'
-]
+  plugins: ["@babel/plugin-syntax-object-rest-spread",
+            "@babel/plugin-transform-runtime",
+            "@babel/plugin-transform-spread",
+            "@babel/plugin-proposal-object-rest-spread"]
 }

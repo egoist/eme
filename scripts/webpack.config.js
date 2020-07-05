@@ -10,7 +10,7 @@ const postcss = [
   require('postcss-simple-vars'),
   require('postcss-mixins'),
   require('autoprefixer')({
-    browsers: ['last 2 Chrome versions']
+    overrideBrowsersList: ['last 2 Chrome versions']
   })
 ]
 
@@ -54,7 +54,7 @@ module.exports = {
           loaders: {
             css: ExtractTextPlugin.extract({
               fallback: 'vue-style-loader',
-              loader: 'css-loader?sourceMap'
+              use: 'css-loader?sourceMap'
             }
             )
           }
@@ -63,7 +63,9 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/,
+        exclude: file => (
+          /node_modules/.test(file) 
+        )
       },
       {
         test: /\.svg$/,
@@ -76,7 +78,7 @@ module.exports = {
         loader: ExtractTextPlugin.extract(
           {
             fallback: 'style-loader',
-            loader: 'css-loader!postcss-loader'
+            use: 'css-loader!postcss-loader'
           }
         )
       },

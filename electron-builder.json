@@ -1,0 +1,26 @@
+{
+  "appId": "com.egoistian.eme",
+  "asar": true,
+  "copyright": "Copyright @2020 The EME Authors",
+  "win": {
+    "icon": "build/icons/icon.ico",
+    "target": "squirrel"
+  },
+  "linux": {
+    "category": "public.app-category.utilities",
+    "target": [
+      "deb",
+      "tar.xz"
+    ]
+  },
+  "mac": {
+    "icon": "build/icons/icon.icns"
+  },
+
+  "fileAssociations": {
+      "ext": "md",
+      "icon": "build/icons/markdown_file_association.icns",
+      "name": "Markdown File",
+      "role": "Editor"
+  }
+}
