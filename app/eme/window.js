@@ -24,7 +24,10 @@ class Window {
       height: 600,
       minWidth: 430,
       minHeight: 250,
-      titleBarStyle: 'hidden-inset'
+      titleBarStyle: 'hidden-inset',
+      webPreferences: {
+        nodeIntegration: true
+      }
     }, windowState))
 
     const web = win.webContents
