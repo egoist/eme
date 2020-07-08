@@ -95,11 +95,13 @@ module.exports = cb => {
           accelerator: keys.openFile,
           click(item, focusedWindow) {
             dialog.showOpenDialog(focusedWindow, {
-              properties: ['openFile']
+              properties: ['openFile', 'multiSelections']
             }).then(result => {
-              if (!result.canceled) {
-                const locationToOpen = result.filePaths
-                openFileInWindow(focusedWindow, locationToOpen[0])
+              if (result && !result.canceled) {
+                const locationsToOpen = result.filePaths
+                locationsToOpen.forEach(singleLocation => {
+                  openFileInWindow(focusedWindow, singleLocation)
+                })
               }
             }).catch(err => {
               console.log(err)
