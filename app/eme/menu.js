@@ -48,7 +48,7 @@ const checkForUpdates = {
 }
 
 module.exports = cb => {
-  const openFileInWindow = (win, file) => {
+  const openFileInWindow = async (win, file) => {
     if (win) {
       win.webContents.send('open-file', file)
     } else {
@@ -94,7 +94,16 @@ module.exports = cb => {
           label: 'Open',
           accelerator: keys.openFile,
           click(item, focusedWindow) {
-            openFileInWindow(focusedWindow)
+            dialog.showOpenDialog(focusedWindow, {
+              properties: ['openFile']
+            }).then(result => {
+              if (!result.canceled) {
+                const locationToOpen = result.filePaths
+                openFileInWindow(focusedWindow, locationToOpen[0])
+              }
+            }).catch(err => {
+              console.log(err)
+            })
           }
         },
         {
