@@ -4,9 +4,8 @@ export default (() => {
   const dialog = {}
   Object.keys(remote.dialog).forEach(method => {
     dialog[method] = (...args) => {
-      return new Promise(resolve => {
-        remote.dialog[method](...args, resolve)
-      })
+      const result = remote.dialog[method](...args)
+      return result
     }
   })
   return dialog

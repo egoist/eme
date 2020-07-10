@@ -48,7 +48,7 @@ const checkForUpdates = {
 }
 
 module.exports = cb => {
-  const openFileInWindow = (win, file) => {
+  const openFileInWindow = async (win, file) => {
     if (win) {
       win.webContents.send('open-file', file)
     } else {
@@ -94,7 +94,18 @@ module.exports = cb => {
           label: 'Open',
           accelerator: keys.openFile,
           click(item, focusedWindow) {
-            openFileInWindow(focusedWindow)
+            dialog.showOpenDialog(focusedWindow, {
+              properties: ['openFile', 'multiSelections']
+            }).then(result => {
+              if (result && !result.canceled) {
+                const locationsToOpen = result.filePaths
+                locationsToOpen.forEach(singleLocation => {
+                  openFileInWindow(focusedWindow, singleLocation)
+                })
+              }
+            }).catch(err => {
+              console.log(err)
+            })
           }
         },
         {
@@ -316,7 +327,7 @@ module.exports = cb => {
   ]
 
   if (process.platform === 'darwin') {
-    const name = app.getName()
+    const name = app.name
     template.unshift({
       label: name,
       submenu: [

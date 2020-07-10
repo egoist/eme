@@ -18,7 +18,7 @@
     "conf": "github:egoist-robot/conf",
     "electron-context-menu": "^0.4.0",
     "electron-window-state": "^3.0.3",
-    "front-matter": "^2.1.0",
+    "front-matter": "^4.0.1",
     "match-at": "^0.1.0",
     "semver-compare": "^1.0.0",
     "tildify": "^1.2.0",

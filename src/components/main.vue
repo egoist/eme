@@ -755,7 +755,7 @@
         const tab = this.tabs[index]
         if (tab && !tab.saved) {
           const filename = tab.filePath ? path.basename(tab.filePath) : 'untitled'
-          const clickedButton = await dialog.showMessageBox(currentWindow, {
+          const clickedButton = await dialog.showMessageBoxSync(currentWindow, {
             type: 'question',
             title: 'EME',
             message: `Do you want to save the changes you made to ${filename} ?`,
