@@ -2,6 +2,7 @@
   "compilerOptions": {
     "outDir": "./dist/",
     "allowJs": true,
+    "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "strict": true,
     "noImplicitReturns": true,
