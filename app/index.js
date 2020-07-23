@@ -106,6 +106,12 @@ app.on('window-all-closed', () => {
 })
 
 app.on('activate', (e, hasVisibleWindows) => {
+  // If the application is not ready, then
+  // just return and wait when the app is ready.
+  if (!app.isReady()) {
+    return
+  }
+
   if (mainWindow == null) {
     mainWindow = createMainWindow()
     if (platform === 'darwin') {
