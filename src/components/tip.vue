@@ -32,26 +32,28 @@
   </div>
 </template>
 
-<script>
-  import random from 'unique-random-array'
-  import tips from 'utils/tips'
+<script lang="ts">
+  import tips from "utils/tips";
+  import uniqueRandomArray from "unique-random-array";
+  import Vue from "vue";
 
-  const randomTip = random(tips)
+  const randomTips = uniqueRandomArray(tips);
 
-  export default {
-    data() {
+  export default Vue.extend({
+    data: function() {
       return {
-        tip: randomTip()
-      }
+        tip: randomTips(),
+        interval: 0
+      };
     },
     mounted() {
-      this.interval = setInterval(() => {
-        this.tip = randomTip()
-      }, 20000)
+      this.interval = window.setInterval(() => {
+        this.tip = randomTips();
+      }, 20000);
     },
     beforeDestroy() {
-      clearInterval(this.interval)
-      this.interval = null
+      clearInterval(this.interval);
     }
-  }
+  });
+
 </script>
