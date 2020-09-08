@@ -14,6 +14,7 @@ const config = new Config({
     gists: {},
     settings: {
       theme: 'light',
+      themeControl: 'system',
       writingMode: 'default',
       tokens: {
         github: ''

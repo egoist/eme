@@ -602,14 +602,18 @@
           closeInOrder(() => this.saveAppState({tabs, currentTabIndex}))
         })
         ipcRenderer.on('change-theme', (e, themeControl, theme) => {
-          if (theme !== this.settings.theme || themeControl != this.settings.themeControl) {
+          if (themeControl !== this.settings.themeControl) {
+            this.$store.commit('CHANGE_THEME_CONTROL', themeControl)
+            config.set('settings.themeControl', this.settings.themeControl)
+          }
+
+          if (theme !== this.settings.theme) {
             this.$store.commit('CHANGE_THEME', theme)
 
             this.updateEditorOptions({
               theme: this.settings.editor.theme
             })
 
-            config.set('settings.themeControl', this.settings.themeControl)
             config.set('settings.theme', this.settings.theme)
             config.set('settings.preview.highlight', this.settings.preview.highlight)
             config.set('settings.editor.theme', this.settings.editor.theme)

@@ -24,6 +24,9 @@ const mutations = {
       state.settings.preview.highlight = 'tomorrow-night-bright'
       state.settings.editor.theme = 'tomorrow-night-bright'
     }
+  },
+  CHANGE_THEME_CONTROL(state, themeControl) {
+    state.settings.themeControl = themeControl
   }
 }
 
