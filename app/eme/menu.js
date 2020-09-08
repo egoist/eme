@@ -220,20 +220,32 @@ module.exports = cb => {
           submenu: [
             {
               label: 'System Setting',
+              type: 'checkbox',
+              checked: settings.themeControl === 'system',
               click(item, focusedWindow) {
-                if (focusedWindow) focusedWindow.webContents.send('toggle-night-mode', 'light')
+                if (focusedWindow) {
+                  focusedWindow.webContents.send('change-theme', 'system', 'light')
+                }
               }
             },
             {
               label: 'Light',
+              type: 'checkbox',
+              checked: settings.themeControl === 'manual' && settings.theme === 'light',
               click(item, focusedWindow) {
-                if (focusedWindow) focusedWindow.webContents.send('toggle-night-mode', 'light')
+                if (focusedWindow) {
+                  focusedWindow.webContents.send('change-theme', 'manual', 'light')
+                }
               }
             },
             {
               label: "Night",
+              type: 'checkbox',
+              checked: settings.themeControl === 'manual' && settings.theme === 'dark',
               click(item, focusedWindow) {
-                if (focusedWindow) focusedWindow.webContents.send('toggle-night-mode', 'night')
+                if (focusedWindow) {
+                  focusedWindow.webContents.send('change-theme', 'manual', 'dark')
+                }
               }
             }
           ],
