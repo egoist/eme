@@ -601,16 +601,18 @@
 
           closeInOrder(() => this.saveAppState({tabs, currentTabIndex}))
         })
-        ipcRenderer.on('toggle-night-mode', () => {
-          this.$store.commit('TOGGLE_NIGHT_MODE')
+        ipcRenderer.on('toggle-night-mode', (e, theme) => {
+          if (theme !== this.settings.theme) {
+            this.$store.commit('TOGGLE_NIGHT_MODE')
 
-          this.updateEditorOptions({
-            theme: this.settings.editor.theme
-          })
+            this.updateEditorOptions({
+              theme: this.settings.editor.theme
+            })
 
-          config.set('settings.theme', this.settings.theme)
-          config.set('settings.preview.highlight', this.settings.preview.highlight)
-          config.set('settings.editor.theme', this.settings.editor.theme)
+            config.set('settings.theme', this.settings.theme)
+            config.set('settings.preview.highlight', this.settings.preview.highlight)
+            config.set('settings.editor.theme', this.settings.editor.theme)
+          }
         })
 
         window.onbeforeunload = e => {

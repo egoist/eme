@@ -17,7 +17,7 @@ const mutations = {
   TOGGLE_NIGHT_MODE(state) {
     const {theme} = state.settings
     if (theme === 'dark') {
-      state.settings.theme = 'white'
+      state.settings.theme = 'light'
       state.settings.preview.highlight = 'github'
       state.settings.editor.theme = 'base16-light'
     } else {

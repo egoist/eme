@@ -216,11 +216,27 @@ module.exports = cb => {
           type: 'separator'
         },
         {
-          label: 'Toggle Night Mode',
-          accelerator: keys.toggleNightMode,
-          click(item, focusedWindow) {
-            if (focusedWindow) focusedWindow.webContents.send('toggle-night-mode')
-          }
+          label: 'Theme',
+          submenu: [
+            {
+              label: 'System Setting',
+              click(item, focusedWindow) {
+                if (focusedWindow) focusedWindow.webContents.send('toggle-night-mode', 'light')
+              }
+            },
+            {
+              label: 'Light',
+              click(item, focusedWindow) {
+                if (focusedWindow) focusedWindow.webContents.send('toggle-night-mode', 'light')
+              }
+            },
+            {
+              label: "Night",
+              click(item, focusedWindow) {
+                if (focusedWindow) focusedWindow.webContents.send('toggle-night-mode', 'night')
+              }
+            }
+          ],
         },
         {
           type: 'separator'
