@@ -1,6 +1,7 @@
 // Copyright 2020 @The EME Authors
 
 'use strict'
+
 const axios = require('axios')
 const compare = require('semver-compare')
 const config = require('./config')
