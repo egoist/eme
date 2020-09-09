@@ -1,17 +1,20 @@
+// Copyright 2020 @The EME Authors
+
 'use strict'
-const path = require('path')
-const {
-  Menu,
-  shell,
-  app,
-  dialog
-} = require('electron')
-const tildify = require('tildify')
 const axios = require('axios')
 const compare = require('semver-compare')
 const config = require('./config')
-const {InstallShell} = require('./shell')
 const event = require('./event')
+const path = require('path')
+const tildify = require('tildify')
+const {
+  app,
+  dialog,
+  Menu,
+  shell
+} = require('electron')
+const { changeTheme, isSystemInNightMode } = require('./utils/theme')
+const { InstallShell } = require('./shell')
 const _ = require('./utils')
 
 const version = app.getVersion()
@@ -223,9 +226,8 @@ module.exports = cb => {
               type: 'radio',
               checked: settings.themeControl === 'system',
               click(item, focusedWindow) {
-                if (focusedWindow) {
-                  focusedWindow.webContents.send('change-theme', 'system', 'light')
-                }
+                var theme = isSystemInNightMode() ? 'dark' : 'light'
+                changeTheme(focusedWindow, 'system', theme)
               }
             },
             {
@@ -233,9 +235,7 @@ module.exports = cb => {
               type: 'radio',
               checked: settings.themeControl === 'manual' && settings.theme === 'light',
               click(item, focusedWindow) {
-                if (focusedWindow) {
-                  focusedWindow.webContents.send('change-theme', 'manual', 'light')
-                }
+                changeTheme(focusedWindow, 'manual', 'light')
               }
             },
             {
@@ -243,9 +243,7 @@ module.exports = cb => {
               type: 'radio',
               checked: settings.themeControl === 'manual' && settings.theme === 'dark',
               click(item, focusedWindow) {
-                if (focusedWindow) {
-                  focusedWindow.webContents.send('change-theme', 'manual', 'dark')
-                }
+                changeTheme(focusedWindow, 'manual', 'dark')
               }
             }
           ],
