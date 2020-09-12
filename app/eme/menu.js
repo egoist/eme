@@ -1,17 +1,21 @@
+// Copyright 2020 @The EME Authors
+
 'use strict'
-const path = require('path')
-const {
-  Menu,
-  shell,
-  app,
-  dialog
-} = require('electron')
-const tildify = require('tildify')
+
 const axios = require('axios')
 const compare = require('semver-compare')
 const config = require('./config')
-const {InstallShell} = require('./shell')
 const event = require('./event')
+const path = require('path')
+const tildify = require('tildify')
+const {
+  app,
+  dialog,
+  Menu,
+  shell
+} = require('electron')
+const { changeTheme, isSystemInNightMode } = require('./utils/theme')
+const { InstallShell } = require('./shell')
 const _ = require('./utils')
 
 const version = app.getVersion()
@@ -216,11 +220,34 @@ module.exports = cb => {
           type: 'separator'
         },
         {
-          label: 'Toggle Night Mode',
-          accelerator: keys.toggleNightMode,
-          click(item, focusedWindow) {
-            if (focusedWindow) focusedWindow.webContents.send('toggle-night-mode')
-          }
+          label: 'Theme',
+          submenu: [
+            {
+              label: 'System Setting',
+              type: 'radio',
+              checked: settings.themeControl === 'system',
+              click(item, focusedWindow) {
+                var theme = isSystemInNightMode() ? 'dark' : 'light'
+                changeTheme(focusedWindow, 'system', theme)
+              }
+            },
+            {
+              label: 'Light',
+              type: 'radio',
+              checked: settings.themeControl === 'manual' && settings.theme === 'light',
+              click(item, focusedWindow) {
+                changeTheme(focusedWindow, 'manual', 'light')
+              }
+            },
+            {
+              label: "Night",
+              type: 'radio',
+              checked: settings.themeControl === 'manual' && settings.theme === 'dark',
+              click(item, focusedWindow) {
+                changeTheme(focusedWindow, 'manual', 'dark')
+              }
+            }
+          ],
         },
         {
           type: 'separator'

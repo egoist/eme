@@ -1,25 +1,27 @@
+// Copyright 2020 @The EME Authors
+
 'use strict'
+const buildMenu = require('./eme/menu')
+const config = require('./eme/config')
+const contextMenu = require('./eme/context-menu')
+const emeWindow = require('./eme/window')
+const event = require('./eme/event')
 const fs = require('fs')
 const os = require('os')
 const path = require('path')
+const pkg = require('./package.json')
+const windowStateKeeper = require('electron-window-state')
 const {
   app,
   BrowserWindow,
   Menu,
   ipcMain,
-  dialog
+  dialog,
+  nativeTheme
 } = require('electron')
-const windowStateKeeper = require('electron-window-state')
-const event = require('./eme/event')
-const buildMenu = require('./eme/menu')
-const emeWindow = require('./eme/window')
-const config = require('./eme/config')
-const {parseShellCommand} = require('./eme/shell')
-const {
-  isDev
-} = require('./eme/utils')
-const contextMenu = require('./eme/context-menu')
-const pkg = require('./package.json')
+const { isDev } = require('./eme/utils')
+const { changeTheme, isSystemInNightMode } = require('./eme/utils/theme')
+const { parseShellCommand } = require('./eme/shell')
 
 require('electron-context-menu')(contextMenu)
 
@@ -211,4 +213,17 @@ ipcMain.on('reload-menu', () => {
 
 event.on('reload-menu', () => {
   reloadMenu()
+})
+
+// Electron uses **nativeTheme** API to support native theme
+// on MacOS and Windows. We register a listener here to adjust
+// app's appearance when native theme of system changes.
+nativeTheme.on('updated', () => {
+  const themeControl = config.get('settings').themeControl
+  if (themeControl === 'system') {
+    const theme = isSystemInNightMode() ? 'dark' : 'light'
+    if (mainWindow) {
+      changeTheme(mainWindow, themeControl, theme)
+    }
+  }
 })

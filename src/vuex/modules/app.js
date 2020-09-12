@@ -14,10 +14,9 @@ const mutations = {
   UPDATE_SETTINGS(state, settings) {
     state.settings = settings
   },
-  TOGGLE_NIGHT_MODE(state) {
-    const {theme} = state.settings
-    if (theme === 'dark') {
-      state.settings.theme = 'white'
+  CHANGE_THEME(state, theme) {
+    if (theme == 'light') {
+      state.settings.theme = 'light'
       state.settings.preview.highlight = 'github'
       state.settings.editor.theme = 'base16-light'
     } else {
@@ -25,6 +24,9 @@ const mutations = {
       state.settings.preview.highlight = 'tomorrow-night-bright'
       state.settings.editor.theme = 'tomorrow-night-bright'
     }
+  },
+  CHANGE_THEME_CONTROL(state, themeControl) {
+    state.settings.themeControl = themeControl
   }
 }
 

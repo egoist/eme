@@ -13,7 +13,8 @@ const config = new Config({
     },
     gists: {},
     settings: {
-      theme: 'white',
+      theme: 'light',
+      themeControl: 'system',
       writingMode: 'default',
       tokens: {
         github: ''

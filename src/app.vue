@@ -2,7 +2,7 @@
 <style src="codemirror/lib/codemirror.css"></style>
 <style src="src/css/normalize"></style>
 <style src="src/css/reset"></style>
-<style src="src/css/theme/white"></style>
+<style src="src/css/theme/light"></style>
 <style src="src/css/theme/dark"></style>
 <style>
   .overlay {
