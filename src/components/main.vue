@@ -300,7 +300,7 @@
       async handleSave(index) {
         try {
           const tab = this.tabs[index]
-          const filePath = tab.filePath || await dialog.showSaveDialog(currentWindow, {
+          const filePath = tab.filePath || await dialog.showSaveDialogSync(currentWindow, {
             filters: [
               {name: 'Markdown', extensions: ['md', 'markdown']}
             ]
@@ -317,7 +317,7 @@
       },
       async handleSaveAs(index) {
         const tab = this.tabs[index]
-        const filePath = await dialog.showSaveDialog(currentWindow, {
+        const filePath = await dialog.showSaveDialogSync(currentWindow, {
           filters: [
             {name: 'Markdown', extensions: ['md', 'markdown']}
           ]
