@@ -78,7 +78,7 @@
     "codemirror": "^5.17.0",
     "color-preset": "^0.1.1",
     "fetch-enhance": "^0.1.1",
-    "highlight.js": "^9.5.0",
+    "highlight.js": "^10.1.2",
     "hint.css": "2.3.2",
     "markdown-it": "^7.0.0",
     "markdown-it-front-matter": "^0.1.2",
