@@ -85,7 +85,7 @@
     "markdown-it-task-lists": "^1.4.0",
     "object-picker": "^0.2.0",
     "pify": "^2.3.0",
-    "sanitize-html": "^1.13.0",
+    "sanitize-html": "^2.3.2",
     "sumchecker": "^2.0.1",
     "unique-random-array": "^2.0.0",
     "vuex": "^2.1.1"
