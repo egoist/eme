@@ -75,7 +75,7 @@
   "dependencies": {
     "@wordpress/wordcount": "^2.2.0",
     "babel-runtime": "^6.11.6",
-    "codemirror": "^5.17.0",
+    "codemirror": "^5.58.2",
     "color-preset": "^0.1.1",
     "fetch-enhance": "^0.1.1",
     "highlight.js": "^9.5.0",
